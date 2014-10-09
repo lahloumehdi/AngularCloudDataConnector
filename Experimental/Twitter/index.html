@@ -1,0 +1,48 @@
+﻿<!-- Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+
+<!doctype html>
+<html lang="en" ng-app="testTwitter">
+<head>
+    <meta charset="utf-8">
+    <title>Twitter Test</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+
+    <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.2.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.js"></script>
+    <!-- <script src="../../angular.js"></script>-->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-route.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-resource.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/bootstrap/3.1.1/bootstrap.min.js"></script>
+    <script src="../../output/AngularCloudDataConnector.js"></script>
+    <script src="../../output/providers/TwitterService.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
+</head>
+<body ng-controller="pageController" style="margin:5px;">
+    <div>
+        <div class="page-header">
+            <h1>Twitter<span class="badge">{{tweets.length}}</span></h1>
+        </div>
+        <div id="errorMessage" ng-bind="errorMessage" class="alert">
+        </div>
+
+        <div id="workingZone">
+            <label>Hashtags:</label>
+            <div class="navbar-form">
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="hashtags" ng-model="hashTags"/>
+                </div>
+                <button class="btn btn-success" ng-click="sync();">Filter</button>
+            </div>
+
+            <div>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="tweet in tweets">
+                        <div class="text-success h3"><a href="{{tweet.source}}">{{tweet.text}}</a></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

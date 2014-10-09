@@ -1,0 +1,46 @@
+﻿<!-- Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+
+<!doctype html>
+<html lang="en" ng-app="testApp">
+<head>
+  <meta charset="utf-8">
+  <title>Angular Cloud Data Connector Nitrogen Provider Test </title>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+  <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.2.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.js"></script>
+  <script src="//ajax.aspnetcdn.com/ajax/bootstrap/3.1.1/bootstrap.min.js"></script>
+  <script src="//api.nitrogen.io/client/nitrogen.js"></script>
+  <script src="../../Output/AngularCloudDataConnector.js"></script>
+  <script src="../../Output/Providers/NitrogenService.js"></script>
+</head>
+<body ng-controller="testController">
+  <div ng-repeat="device in devices">
+    <div class="panel panel-default">
+      <div class="panel-heading"> {{ device.name }}</div>
+      <div class="panel-body"> {{ device.id }}</div>
+    </div>
+  </div>
+  <div ng-repeat="reading in readings">
+    <div class="panel panel-default">
+      <div class="panel-heading"> {{ reading.id }}</div>
+      <div class="panel-body"> {{ reading }} </div>
+    </div>
+  </div>
+  <script>
+        var app = angular.module('testApp', ['DataModule', 'NitrogenDataModule']);
+        app.controller('testController', ['$scope', 'dataService', 'nitrogenDataService',
+          function ($scope, dataService, nitrogenDataService) {
+              $scope.greeting = "Hello Data!";
+              dataService.addSource(nitrogenDataService);
+              nitrogenDataService.connect('test@nitrogen.io', 'DxTest12', function (err) {
+                dataService.connect(function (results) {
+                  var r = results;
+                  console.dir(r);
+                }, $scope, 3);
+              });
+          }
+        ]);
+
+  </script>
+</body>
+</html>

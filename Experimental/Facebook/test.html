@@ -1,0 +1,60 @@
+﻿<!-- Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+
+<!doctype html>
+<html lang="en" ng-app="facebookTest">
+<head>
+    <meta charset="utf-8">
+    <title>Angular Cloud Data Connector Facebook Provider Test </title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.2.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/mobileservices/MobileServices.Web-1.1.0.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-route.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/bootstrap/3.1.1/bootstrap.min.js"></script>
+    <script src="//rawgit.com/obibring/angular-facebook/master/lib/angular-facebook.js"></script>
+    <script src="../../output/AngularCloudDataConnector.js"></script>
+    <script src="../../output/Providers/FacebookService.js"></script>
+</head>
+<body ng-controller="facebookTestController">
+    <div ng-repeat="person in me">
+        <div class="panel panel-default">
+            <div class="panel-heading"> {{ person.name }}</div>
+            <div class="panel-body"> {{ person.gender }}</div>
+        </div>
+    </div>
+
+    <div ng-repeat="person in friends">
+        <div class="panel panel-default">
+            <div class="panel-heading"> {{ person.name }}</div>
+            <div class="panel-body"> {{ person.id }}</div>
+        </div>
+    </div>
+
+    <script>
+        var app = angular.module('facebookTest', ['DataModule', 'FacebookDataModule']);
+        app.controller('facebookTestController', ['$scope', 'dataService', 'facebookDataService',
+          function ($scope, dataService, facebookDataService) {
+              $scope.greeting = "Hello Data!";
+              facebookDataService.addSource([{ 'tableName': 'me', 'path': '/me' }, { 'tableName': 'friends', 'path': '/me/friends' }]);
+              dataService.addSource(facebookDataService);
+
+              facebookDataService.login(function () {
+                  $scope.$apply($scope.FacebookLoginComplete = true);
+              });
+
+              $scope.$watch('FacebookLoginComplete', function () {
+                  if ($scope.FacebookLoginComplete == true) {
+                      dataService.connect(function (results) {
+                          for (var result in results) {
+                              $scope.$apply($scope[result] = results[result]);
+                          }
+                      })
+                  }
+              });
+          }
+          
+        ]);
+       
+    </script>
+</body>
+</html>

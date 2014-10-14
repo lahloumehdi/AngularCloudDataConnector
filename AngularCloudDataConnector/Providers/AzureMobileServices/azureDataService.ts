@@ -2,6 +2,7 @@
 
 /// <reference path="../../core/IDataService.ts" />
 
+declare var angular;
 declare var WindowsAzure;
 
 module AngularCloudDataConnector {

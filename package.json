@@ -1,0 +1,30 @@
+{
+  "name": "AngularCloudDataConnector",
+  "version": "0.1.0",
+  "description": "ACDC is a library for angular.js that allows you to work seamlessly with many data sources. ACDC supports offline mode and can handle for you all CRUD operations. ",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MSOpenTech/AngularCloudDataConnector"
+  },
+  "keywords": [
+    "Angular",
+    "Cloud",
+    "Data",
+    "Connector"
+  ],
+  "author": "MSOpenTech",
+  "license": "Apache License, Version 2.0",
+  "bugs": {
+    "url": "https://github.com/MSOpenTech/AngularCloudDataConnector/issues"
+  },
+  "homepage": "https://github.com/MSOpenTech/AngularCloudDataConnector",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-typescript": "^0.4.5",
+    "load-grunt-tasks": "^1.0.0",
+    "ts-compiler": "^2.0.0",
+    "typescript": "^1.3.0"
+  }
+}

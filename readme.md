@@ -10,6 +10,7 @@ List of stable providers:
 - Azure Mobile Services
 
 List of experimentals providers:
+- Amazon Web Services (DynamoDB) 
 - Facebook (read only)
 - Twitter (read only)
 - Ordrin (read only)

@@ -188,6 +188,8 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 
+node_modules/
+
 packages
 /Output
 /AngularCloudDataConnector/Providers/FacebookServices/facebookDataService.js

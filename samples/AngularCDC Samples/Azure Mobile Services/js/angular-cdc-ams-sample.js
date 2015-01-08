@@ -26,7 +26,7 @@ var app = angular.module('demoApp', ['ngAnimate', 'AngularCDC', 'AngularCDC.Azur
                   
                     angularCDCService.commit(function () {
                         // Things went well, call a sync
-                        $scope.sync();
+                        //$scope.sync();
                     }, function () {
                         console.log('Problem adding data');
                     });
@@ -40,7 +40,7 @@ var app = angular.module('demoApp', ['ngAnimate', 'AngularCDC', 'AngularCDC.Azur
                     // entity is already controlled, we just need to call a commit
                     angularCDCService.commit(function () {
                         // Things went well, call a sync
-                        $scope.sync();
+                        //$scope.sync();
                     }, function (err) {
                         console.log('Problem updating data: ' + err.message);
                     });
@@ -49,10 +49,6 @@ var app = angular.module('demoApp', ['ngAnimate', 'AngularCDC', 'AngularCDC.Azur
 
                 };
 
-                //function to sync the data
-                $scope.sync = function () {
-                    angularCDCService.readAll();
-                }; 
 
                 //intialize the connection to Azure Mobile Services, and register provider to AngularCDC
                 $scope.initialize = function () {

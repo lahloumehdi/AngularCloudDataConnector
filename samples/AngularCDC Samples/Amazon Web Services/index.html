@@ -72,7 +72,7 @@
         <!-- <p>This lesson shows the use of the Angular Cloud Data Connector. It loads property information from Windows Azure Mobile Services.</p> -->
         <div ng-container class="container-fluid">
             <div class="row">
-                <div class="person" ng-repeat="person in people | filter:searchText | orderBy:directionalSort">
+                <div class="person" ng-repeat="person in people track  by $index | filter:searchText | orderBy:directionalSort">
                     <div class="col-sm-6 col-md-4 col-lg-2 clickable" ng-click="Edit('Edit', person)">
                         <div class="panel panel-primary card">
                             <div class="panel-heading">{{ person.firstname }} {{ person.lastname }}</div>

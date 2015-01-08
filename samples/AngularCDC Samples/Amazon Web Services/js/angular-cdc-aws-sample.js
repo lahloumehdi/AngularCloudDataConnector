@@ -25,8 +25,6 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAWS'
                     angularCDCService.add(tableName, entity);
 
                     angularCDCService.commit(function () {
-                        // Things went well, call a sync
-                        $scope.sync();
                     }, function () {
                         console.log('Problem adding data');
                     });
@@ -39,19 +37,12 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAWS'
                 $scope.Change = function (tableName, entity) {
                     // entity is already controlled, we just need to call a commit
                     angularCDCService.commit(function () {
-                        // Things went well, call a sync
-                        $scope.sync();
                     }, function (err) {
                         console.log('Problem updating data: ' + err.message);
                     });
                     $scope.menu = "main";
                     $scope.currentEdit = {};
 
-                };
-
-                //function to sync the data
-                $scope.sync = function () {
-                    angularCDCService.readAll();
                 };
 
                 //intialize the connection to Amazon Web Services, and register provider to AngularCDC

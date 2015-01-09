@@ -39,12 +39,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  
-  <ItemGroup>    
+  <ItemGroup>
     <Content Include="Web.config" />
   </ItemGroup>
-  
   <ItemGroup>
+    <TypeScriptCompile Include="AmazonWebServices\amazonDataService.ts" />
     <TypeScriptCompile Include="AzureMobileServices\azureDataService.ts" />
     <TypeScriptCompile Include="FacebookServices\facebookDataService.ts" />
     <TypeScriptCompile Include="NitrogenServices\nitrogenDataService.ts" />

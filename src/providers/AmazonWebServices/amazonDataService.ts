@@ -24,7 +24,7 @@ module AngularCloudDataConnector {
                 RoleArn: RoleArn
             });
 
-            AWS.config.credentials.get(function (r) {
+            AWS.config.credentials.get(function (credentialsResults) {
             });
 
             this.AWSClient = new AWS.DynamoDB();

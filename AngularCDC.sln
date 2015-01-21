@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngularCDC Providers", "src\providers\AngularCDC Providers.csproj", "{707BC5A3-9504-4AB9-9121-0B9567F55FAC}"
 EndProject
@@ -13,6 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{85FA3755
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngularCDC Samples", "samples\AngularCDC Samples\AngularCDC Samples.csproj", "{CFDCBA5B-8B3E-4E24-A14C-8EE580F66A8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngularCDC REST Service", "samples\AngularCDC REST Service\AngularCDC REST Service.csproj", "{306B3AEB-214C-492F-B27C-0491EBBD3328}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{1F762450-FE34-47CA-B1A4-4BF7F46A20B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,8 +36,16 @@ Global
 		{CFDCBA5B-8B3E-4E24-A14C-8EE580F66A8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFDCBA5B-8B3E-4E24-A14C-8EE580F66A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFDCBA5B-8B3E-4E24-A14C-8EE580F66A8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{306B3AEB-214C-492F-B27C-0491EBBD3328}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{306B3AEB-214C-492F-B27C-0491EBBD3328}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{306B3AEB-214C-492F-B27C-0491EBBD3328}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{306B3AEB-214C-492F-B27C-0491EBBD3328}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CFDCBA5B-8B3E-4E24-A14C-8EE580F66A8F} = {1F762450-FE34-47CA-B1A4-4BF7F46A20B5}
+		{306B3AEB-214C-492F-B27C-0491EBBD3328} = {1F762450-FE34-47CA-B1A4-4BF7F46A20B5}
 	EndGlobalSection
 EndGlobal

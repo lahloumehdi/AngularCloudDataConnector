@@ -20,7 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TypeScriptToolsVersion>1.4</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -86,6 +86,23 @@
     <Content Include="Amazon Web Services\css\angular-cdc-ams-sample.css" />
     <Content Include="Amazon Web Services\index.html" />
     <Content Include="Amazon Web Services\js\angular-cdc-aws-sample.js" />
+    <Content Include="dist\angular-cdc-restfulDataService.js" />
+    <Content Include="Restful Web Services\bootstrapmaterial\css\material-wfont.css" />
+    <Content Include="Restful Web Services\bootstrapmaterial\css\material-wfont.min.css" />
+    <Content Include="Restful Web Services\bootstrapmaterial\css\material.css" />
+    <Content Include="Restful Web Services\bootstrapmaterial\css\material.min.css" />
+    <Content Include="Restful Web Services\bootstrapmaterial\css\ripples.css" />
+    <Content Include="Restful Web Services\bootstrapmaterial\css\ripples.min.css" />
+    <Content Include="Restful Web Services\bootstrapmaterial\fonts\LICENSE.txt" />
+    <Content Include="Restful Web Services\bootstrapmaterial\fonts\Material-Design-Icons.svg" />
+    <Content Include="Restful Web Services\bootstrapmaterial\js\material.js" />
+    <Content Include="Restful Web Services\bootstrapmaterial\js\material.min.js" />
+    <Content Include="Restful Web Services\bootstrapmaterial\js\ripples.js" />
+    <Content Include="Restful Web Services\bootstrapmaterial\js\ripples.min.js" />
+    <Content Include="Restful Web Services\bootstrapmaterial\test.html" />
+    <Content Include="Restful Web Services\css\angular-cdc-ams-sample.css" />
+    <Content Include="Restful Web Services\index.html" />
+    <Content Include="Restful Web Services\js\angular-cdc-rest-sample.js" />
     <Content Include="Azure Mobile Services\bootstrapmaterial\css\material-wfont.css.map" />
     <Content Include="Azure Mobile Services\bootstrapmaterial\css\material-wfont.min.css.map" />
     <Content Include="Azure Mobile Services\bootstrapmaterial\css\material.css.map" />
@@ -97,6 +114,17 @@
     <Content Include="Azure Mobile Services\bootstrapmaterial\fonts\Material-Design-Icons.woff" />
     <Content Include="Azure Mobile Services\bootstrapmaterial\js\material.min.js.map" />
     <Content Include="Azure Mobile Services\bootstrapmaterial\js\ripples.min.js.map" />
+    <Content Include="Restful Web Services\bootstrapmaterial\css\material-wfont.css.map" />
+    <Content Include="Restful Web Services\bootstrapmaterial\css\material-wfont.min.css.map" />
+    <Content Include="Restful Web Services\bootstrapmaterial\css\material.css.map" />
+    <Content Include="Restful Web Services\bootstrapmaterial\css\material.min.css.map" />
+    <Content Include="Restful Web Services\bootstrapmaterial\css\ripples.css.map" />
+    <Content Include="Restful Web Services\bootstrapmaterial\css\ripples.min.css.map" />
+    <Content Include="Restful Web Services\bootstrapmaterial\fonts\Material-Design-Icons.eot" />
+    <Content Include="Restful Web Services\bootstrapmaterial\fonts\Material-Design-Icons.ttf" />
+    <Content Include="Restful Web Services\bootstrapmaterial\fonts\Material-Design-Icons.woff" />
+    <Content Include="Restful Web Services\bootstrapmaterial\js\material.min.js.map" />
+    <Content Include="Restful Web Services\bootstrapmaterial\js\ripples.min.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -143,6 +171,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="dist\angular-cdc-restfulDataService.d.ts" />
     <TypeScriptCompile Include="dist\angular-cdc-amazonDataService.d.ts" />
     <TypeScriptCompile Include="dist\angular-cdc-azuremobileservices.d.ts" />
     <TypeScriptCompile Include="dist\angular-cdc.d.ts" />

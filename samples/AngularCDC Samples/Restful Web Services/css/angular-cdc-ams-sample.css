@@ -1,0 +1,100 @@
+.clickable{
+    cursor: pointer;
+    transition: transform 90ms ease-out;
+}
+
+.clickable:hover{            
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+.card: hover {
+    -webkit-box-shadow: 10px 12px 27px 9px rgba(0, 0, 0, 0.13);
+    -moz-box-shadow: 10px 12px 27px 9px rgba(0, 0, 0, 0.13);
+    box-shadow: 10px 12px 27px 9px rgba(0, 0, 0, 0.13);
+}
+
+.btn {
+    border-radius: 0px;
+}
+
+.navbar-brand {
+    margin-top: -3px;
+}
+
+#bs-example-navbar-collapse-1 .btn-group{
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+}
+
+.person.ng-enter,
+.person.ng-move {
+    -webkit-transition: 0.25s linear all;
+    -moz-transition: 0.25s linear all;
+    -o-transition: 0.25s linear all;
+    transition: 0.25s linear all;
+}
+
+.person.ng-leave {
+    -webkit-transition: 0.1s linear all;
+    -moz-transition: 0.1s linear all;
+    -o-transition: 0.1s linear all;
+    transition: 0.1s linear all;
+}
+
+
+.person.ng-enter-stagger,
+.person.ng-move-stagger {
+    /* 50ms between each item being animated after the other */
+    -webkit-transition-delay: 20ms;
+    -moz-transition-delay: 20ms;
+    -o-transition-delay: 20ms;
+    transition-delay: 20ms;
+    /* this is required here to prevent any CSS inheritance issues */
+    -webkit-transition-duration: 0;
+    -moz-transition-duration: 0;
+    -o-transition-duration: 0;
+    transition-duration: 0;
+}
+/* ending enter and move styling
+this is what the element will animate from */
+.person.ng-enter,
+.person.ng-move {
+    opacity: 0;
+    -moz-transform: translateY(100px);
+    -ms-transform: translateY(100px);
+    -o-transform: translateY(100px);
+    -webkit-transform: translateY(100px);
+    transform: translateY(100px);
+}
+/* ending enter and move styling
+this is what the element will animate towards */
+.person.ng-enter.ng-enter-active,
+.person.ng-move.ng-move-active {
+    opacity: 1;
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+}
+/* starting leave animation */
+.person.ng-leave {
+    opacity: 1;
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+}
+/* ending leave animation */
+.person.ng-leave.ng-leave-active {
+    opacity: 0;
+    -moz-transform: translateY(-50px);
+    -ms-transform: translateY(-50px);
+    -o-transform: translateY(-50px);
+    -webkit-transform: translateY(-50px);
+    transform: translateY(-50px);
+}

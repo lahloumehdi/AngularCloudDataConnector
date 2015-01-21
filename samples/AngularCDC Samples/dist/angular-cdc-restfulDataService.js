@@ -1,37 +1,30 @@
-﻿/// <reference path="../../../lib/angularjs/angular.d.ts" />
+/// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/angular-cdc.d.ts" />
-
-module AngularCloudDataConnector {
-
-    export class RestfulDataService implements IDataService {
-        _dataId: number;
-        servicePath: string;
-        tableNames: Array<string>;
-        keyNames: any;
-        $: JQuery;
-        public initSource(servicePath, accessPaths: any) {
-
+var AngularCloudDataConnector;
+(function (AngularCloudDataConnector) {
+    var RestfulDataService = (function () {
+        function RestfulDataService() {
+        }
+        RestfulDataService.prototype.initSource = function (servicePath, accessPaths) {
             //TODO: Implement OAuth
             //restSvc.config.credentials = undefined;
-
+            var _this = this;
             if (servicePath.substring(servicePath.length - 1) != "/") {
                 servicePath += "/";
             }
             this.servicePath = servicePath;
-            this.tableNames = new Array<string>();
+            this.tableNames = new Array();
             this.keyNames = {};
-            $.each(accessPaths,(i, path) => {
+            $.each(accessPaths, function (i, path) {
                 if (path.objectName.substring(0, 1) == "/") {
                     path.objectName = path.substring(1);
                 }
-                this.tableNames.push(path.objectName);
-                this.keyNames[path.objectName] = path.keyProperyName;
+                _this.tableNames.push(path.objectName);
+                _this.keyNames[path.objectName] = path.keyProperyName;
             });
-        }
-
-        public add(tableName: string, entity: any, onsuccess: (newEntity: any) => void, onerror: (error: string) => void): void {
-
+        };
+        RestfulDataService.prototype.add = function (tableName, entity, onsuccess, onerror) {
             delete entity.$$hashKey;
             $.ajax({
                 type: "POST",
@@ -43,19 +36,17 @@ module AngularCloudDataConnector {
                 dataType: "json",
                 async: true,
                 data: JSON.stringify(entity)
-            }).done(() => {
+            }).done(function () {
                 onsuccess(entity);
-            }).fail(() => {
+            }).fail(function () {
                 onerror("http error");
             });
-        }
-        public update(tableName: string, entity: any, onsuccess: (newEntity: any) => void, onerror: (error: string) => void): void {
-
+        };
+        RestfulDataService.prototype.update = function (tableName, entity, onsuccess, onerror) {
             delete entity.$$hashKey;
             var eid = entity.id;
             if (this.keyNames[tableName] != "id")
                 delete entity.id;
-
             $.ajax({
                 type: "PUT",
                 url: this.servicePath + tableName + "/" + eid,
@@ -66,14 +57,13 @@ module AngularCloudDataConnector {
                 dataType: "json",
                 async: true,
                 data: JSON.stringify(entity)
-            }).done(() => {
+            }).done(function () {
                 onsuccess(entity);
-            }).fail(() => {
+            }).fail(function () {
                 onerror("update data failed");
             });
-        }
-        remove(tableName: string, entity: any, onsuccess: () => void, onerror: (error: string) => void): void {
-
+        };
+        RestfulDataService.prototype.remove = function (tableName, entity, onsuccess, onerror) {
             $.ajax({
                 type: "DELETE",
                 url: this.servicePath + tableName + "/" + entity.id,
@@ -83,23 +73,23 @@ module AngularCloudDataConnector {
                 },
                 dataType: "json",
                 async: true
-            }).done((result) => {
+            }).done(function (result) {
                 onsuccess();
-            }).fail(() => {
+            }).fail(function () {
                 onerror("delete object failed.");
             });
-        }
-        get(updateCallback: (result: any) => void, lastSyncDates: { [tableName: string]: Date; }): void {
-            $.each(this.tableNames,(i, table) => {
+        };
+        RestfulDataService.prototype.get = function (updateCallback, lastSyncDates) {
+            var _this = this;
+            $.each(this.tableNames, function (i, table) {
                 var lastSyncDate = lastSyncDates[table];
-
-                this._getTable(table,(resultElement) => {
+                _this._getTable(table, function (resultElement) {
                     updateCallback([resultElement]);
                 }, lastSyncDate);
             });
-        }
-        private _getTable(tableName: string, callback: (result: any) => void, lastDate: Date): void {
-            
+        };
+        RestfulDataService.prototype._getTable = function (tableName, callback, lastDate) {
+            var _this = this;
             $.ajax({
                 type: "GET",
                 url: this.servicePath + tableName,
@@ -109,21 +99,22 @@ module AngularCloudDataConnector {
                 },
                 dataType: "json",
                 async: true
-            }).done((result) => {
+            }).done(function (result) {
                 for (var i = 0; i < result.length; i++) {
                     // id must needed for Index DB.
                     // most C# cases, id stored as "Id"
                     if (result[i].id == undefined)
-                        result[i].id = result[i][this.keyNames[tableName]];
+                        result[i].id = result[i][_this.keyNames[tableName]];
                 }
                 var rs = { 'tableName': tableName, 'table': result };
                 callback(rs);
-            }).fail(() => {
+            }).fail(function () {
                 console.log("get data failed.");
             });
-        }
-    }
-}
-
+        };
+        return RestfulDataService;
+    })();
+    AngularCloudDataConnector.RestfulDataService = RestfulDataService;
+})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
 var angularCDCRest = new AngularCloudDataConnector.RestfulDataService();
 angular.module('AngularCDC.RestWebServices', []).value('angularCDCRestWebServices', angularCDCRest);

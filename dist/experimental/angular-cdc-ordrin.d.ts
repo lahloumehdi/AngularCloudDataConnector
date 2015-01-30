@@ -18,7 +18,7 @@ declare module AngularCloudDataConnector {
         Address: string;
         add(tableName: string, entity: any, onsuccess: (newEntity: any) => void, onerror: (error: string) => void): void;
         get(callback: (result: any) => void, lastSyncDates: {
-            [x: string]: Date;
+            [tableName: string]: Date;
         }): void;
         update(tableName: string, entity: any, onsuccess: () => void, onerror: (error: string) => void): void;
         remove(tableName: string, entity: any, onsuccess: () => void, onerror: (error: string) => void): void;

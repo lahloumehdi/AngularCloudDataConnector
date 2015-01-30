@@ -1,4 +1,4 @@
-﻿/* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */ 
+﻿/* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
@@ -8,8 +8,8 @@ module AngularCloudDataConnector {
     var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
     if (!indexedDB) {
         console.log("IDB not supported. Offline mode Framework will not be available.");
-    }  
-  
+    }
+
     export class DataService {
         private _dataServices = new Array<IDataService>();
         private _db: IDBDatabase;
@@ -17,9 +17,9 @@ module AngularCloudDataConnector {
         // So _lastSyncDate[0]['tableName']returns date.
         private _lastSyncDates = new Array<{ [tableName: string]: Date; }>();
         private _scope: any; // Currently set scope
- 
+
         public onSync: (results: any) => void;
- 
+
         // Temp space
         private _pendingEntities = {};
 
@@ -41,7 +41,12 @@ module AngularCloudDataConnector {
             this._lastSyncDates.push(lastSyncDates);
         }
 
-        public connect(onsuccess: () => void, scope = null, version: number = 1): void {
+        public connect(callback: (any) => void, scope = null, version: number = 1): void {
+            if (this._dataServices.length === 0) {
+                throw "Initializing DataService is incomplete without first adding a provider via addSource";
+                return;
+            }
+
             if (!indexedDB) {
                 indexedDB = new Internals.InMemoryDatabase();
             }
@@ -51,6 +56,8 @@ module AngularCloudDataConnector {
             this._scope = scope;
 
             request.onerror = event => {
+                if (callback)
+                    callback(false);
                 console.log("IDB request error.", event.target.error.name);
             };
 
@@ -66,16 +73,16 @@ module AngularCloudDataConnector {
 
                 // If online, check for pending orders
                 if (this.angularCDCConnectivityService.isOnline()) {
-                    this.processPendingEntities(onsuccess);
+                    this.processPendingEntities(callback);
                 }
                 else {
-                    this.sync(onsuccess);
+                    this.sync(callback);
                 }
 
                 // Offline support
                 this.angularCDCConnectivityService.addStatusChangeNotify(() => {
                     if (this.angularCDCConnectivityService.isOnline()) {
-                        this.processPendingEntities(onsuccess);
+                        this.processPendingEntities(callback);
                     }
                     else {
                         this.angularCDCOfflineService.reset();
@@ -116,7 +123,7 @@ module AngularCloudDataConnector {
 
         // Sync callback gets an object where the keys on the object will be placed into the $scope of the controller.
         // The values associate the key are arrays that correspond to the "Tables" from various cloud databases.
-        public sync(onsuccess: (result: any) => void): void {
+        public sync(callback: (result: any) => void): void {
             var count = 0;
             for (var i = 0; i < this._dataServices.length; i++) {
                 this.syncDataService(this._dataServices[i], partialResult => {
@@ -137,8 +144,8 @@ module AngularCloudDataConnector {
                     }
 
                     // Calling onSuccess
-                    if (onsuccess) {
-                        onsuccess(results);
+                    if (callback) {
+                        callback(results);
                     }
 
                     // Custom callback
@@ -194,7 +201,7 @@ module AngularCloudDataConnector {
             return result;
         }
 
-        public forAllTables(action: (angularCDCService: IDataService, tableName: string, callback: (result: any) => void) => void, onsuccess: (results: Array<any>) => void): void {
+        public doThisForAllTables(action: (angularCDCService: IDataService, tableName: string, callback: (result: any) => void) => void, onsuccess: (results: Array<any>) => void): void {
             var total = this.tableCount;
             var count = 0;
             var results = [];
@@ -252,7 +259,7 @@ module AngularCloudDataConnector {
         // Note that the arrays returned for the table are in memory copies of what is stored in the local database. 
         public readAll(onsuccess: (result: any) => void): void {
 
-            this.forAllTables(
+            this.doThisForAllTables(
                 // action
                 (angularCDCService, tableName, doNext) => {
                     this.getEntriesForServiceTable(angularCDCService, tableName, doNext);
@@ -272,10 +279,10 @@ module AngularCloudDataConnector {
         // onsuccess is called with an Object where the key is the tableName and the value is the table.
         public getEntriesForServiceTable(angularCDCService: IDataService, tableName: string, onsuccess: (result: any) => void): void {
             var dbName = tableName + "LocalDB" + angularCDCService._dataId;
-            var objectStore = this._db.transaction(dbName).objectStore(dbName);
+            var storeObject = this._db.transaction(dbName).objectStore(dbName);
             var resultTable = [];
 
-            objectStore.openCursor().onsuccess = (event: any) => {
+            storeObject.openCursor().onsuccess = (event: any) => {
                 var cursor = event.target.result;
                 if (cursor) {
                     resultTable.push(cursor.value);

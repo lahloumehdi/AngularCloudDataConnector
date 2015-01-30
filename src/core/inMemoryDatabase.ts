@@ -39,12 +39,12 @@ module AngularCloudDataConnector.Internals {
             }, 0);
         }
 
-        public objectStore(name: string): InMemoryTransactionalObjectStore {
-            return new InMemoryTransactionalObjectStore(<InMemoryObjectStore>this._db._objectStores[name], this);
+        public objectStore(name: string): InMemoryTransactionalStoreObject{
+            return new InMemoryTransactionalStoreObject(<InMemoryStoreObject>this._db._objectStores[name], this);
         }
     }
 
-    export class InMemoryObjectStore {
+    export class InMemoryStoreObject{
         public data = [];
 
         constructor(public keypath: string) {
@@ -52,8 +52,8 @@ module AngularCloudDataConnector.Internals {
         }
     }
 
-    export class InMemoryTransactionalObjectStore {
-        constructor(public objectStore: InMemoryObjectStore, public transaction: InMemoryTransaction) {
+    export class InMemoryTransactionalStoreObject{
+        constructor(public objectStore: InMemoryStoreObject, public transaction: InMemoryTransaction) {
         }
 
         public delete(idToDelete: string) {
@@ -97,7 +97,7 @@ module AngularCloudDataConnector.Internals {
             }, 0);
         }
 
-        constructor(public objectStore: InMemoryObjectStore) {
+        constructor(public objectStore: InMemoryStoreObject) {
             this._keys = [];
 
             // save current keys values to fetch data afterwards
@@ -116,8 +116,8 @@ module AngularCloudDataConnector.Internals {
             return new InMemoryRequest(this);
         }
 
-        public createObjectStore(name: string, def: { keyPath: string }): void {
-            this._objectStores[name] = new InMemoryObjectStore(def.keyPath);
+        public createStoreObject(name: string, def: { keyPath: string }): void {
+            this._objectStores[name] = new InMemoryStoreObject(def.keyPath);
         }
 
         public transaction(name: string): InMemoryTransaction {

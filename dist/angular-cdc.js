@@ -115,16 +115,22 @@ var AngularCloudDataConnector;
             }
             this._lastSyncDates.push(lastSyncDates);
         };
-        DataService.prototype.connect = function (onsuccess, scope, version) {
+        DataService.prototype.connect = function (callback, scope, version) {
             var _this = this;
             if (scope === void 0) { scope = null; }
             if (version === void 0) { version = 1; }
+            if (this._dataServices.length === 0) {
+                throw "Initializing DataService is incomplete without first adding a provider via addSource";
+                return;
+            }
             if (!indexedDB) {
                 indexedDB = new AngularCloudDataConnector.Internals.InMemoryDatabase();
             }
             var request = indexedDB.open("syncbase", version);
             this._scope = scope;
             request.onerror = function (event) {
+                if (callback)
+                    callback(false);
                 console.log("IDB request error.", event.target.error.name);
             };
             // executes when a version change transaction cannot complete due to other active transactions
@@ -137,15 +143,15 @@ var AngularCloudDataConnector;
                 _this._db = request.result;
                 // If online, check for pending orders
                 if (_this.angularCDCConnectivityService.isOnline()) {
-                    _this.processPendingEntities(onsuccess);
+                    _this.processPendingEntities(callback);
                 }
                 else {
-                    _this.sync(onsuccess);
+                    _this.sync(callback);
                 }
                 // Offline support
                 _this.angularCDCConnectivityService.addStatusChangeNotify(function () {
                     if (_this.angularCDCConnectivityService.isOnline()) {
-                        _this.processPendingEntities(onsuccess);
+                        _this.processPendingEntities(callback);
                     }
                     else {
                         _this.angularCDCOfflineService.reset();
@@ -181,7 +187,7 @@ var AngularCloudDataConnector;
         };
         // Sync callback gets an object where the keys on the object will be placed into the $scope of the controller.
         // The values associate the key are arrays that correspond to the "Tables" from various cloud databases.
-        DataService.prototype.sync = function (onsuccess) {
+        DataService.prototype.sync = function (callback) {
             var _this = this;
             var count = 0;
             for (var i = 0; i < this._dataServices.length; i++) {
@@ -200,8 +206,8 @@ var AngularCloudDataConnector;
                         }
                     }
                     // Calling onSuccess
-                    if (onsuccess) {
-                        onsuccess(results);
+                    if (callback) {
+                        callback(results);
                     }
                     // Custom callback
                     if (_this.onSync) {
@@ -251,7 +257,7 @@ var AngularCloudDataConnector;
             enumerable: true,
             configurable: true
         });
-        DataService.prototype.forAllTables = function (action, onsuccess) {
+        DataService.prototype.doThisForAllTables = function (action, onsuccess) {
             var total = this.tableCount;
             var count = 0;
             var results = [];
@@ -303,7 +309,7 @@ var AngularCloudDataConnector;
         // Note that the arrays returned for the table are in memory copies of what is stored in the local database. 
         DataService.prototype.readAll = function (onsuccess) {
             var _this = this;
-            this.forAllTables(
+            this.doThisForAllTables(
             // action
             function (angularCDCService, tableName, doNext) {
                 _this.getEntriesForServiceTable(angularCDCService, tableName, doNext);
@@ -323,9 +329,9 @@ var AngularCloudDataConnector;
         DataService.prototype.getEntriesForServiceTable = function (angularCDCService, tableName, onsuccess) {
             var _this = this;
             var dbName = tableName + "LocalDB" + angularCDCService._dataId;
-            var objectStore = this._db.transaction(dbName).objectStore(dbName);
+            var storeObject = this._db.transaction(dbName).objectStore(dbName);
             var resultTable = [];
-            objectStore.openCursor().onsuccess = function (event) {
+            storeObject.openCursor().onsuccess = function (event) {
                 var cursor = event.target.result;
                 if (cursor) {
                     resultTable.push(cursor.value);
@@ -603,42 +609,42 @@ var AngularCloudDataConnector;
                 }, 0);
             }
             InMemoryTransaction.prototype.objectStore = function (name) {
-                return new InMemoryTransactionalObjectStore(this._db._objectStores[name], this);
+                return new InMemoryTransactionalStoreObject(this._db._objectStores[name], this);
             };
             return InMemoryTransaction;
         })();
         Internals.InMemoryTransaction = InMemoryTransaction;
-        var InMemoryObjectStore = (function () {
-            function InMemoryObjectStore(keypath) {
+        var InMemoryStoreObject = (function () {
+            function InMemoryStoreObject(keypath) {
                 this.keypath = keypath;
                 this.data = [];
             }
-            return InMemoryObjectStore;
+            return InMemoryStoreObject;
         })();
-        Internals.InMemoryObjectStore = InMemoryObjectStore;
-        var InMemoryTransactionalObjectStore = (function () {
-            function InMemoryTransactionalObjectStore(objectStore, transaction) {
+        Internals.InMemoryStoreObject = InMemoryStoreObject;
+        var InMemoryTransactionalStoreObject = (function () {
+            function InMemoryTransactionalStoreObject(objectStore, transaction) {
                 this.objectStore = objectStore;
                 this.transaction = transaction;
             }
-            InMemoryTransactionalObjectStore.prototype.delete = function (idToDelete) {
+            InMemoryTransactionalStoreObject.prototype.delete = function (idToDelete) {
                 if (this.objectStore.data[idToDelete]) {
                     delete this.objectStore.data[idToDelete];
                 }
             };
-            InMemoryTransactionalObjectStore.prototype.put = function (value) {
+            InMemoryTransactionalStoreObject.prototype.put = function (value) {
                 var key = value[this.objectStore.keypath];
                 this.objectStore.data[key] = value; // Add or update
             };
-            InMemoryTransactionalObjectStore.prototype.openCursor = function () {
+            InMemoryTransactionalStoreObject.prototype.openCursor = function () {
                 return new InMemoryCursor(this.objectStore);
             };
-            InMemoryTransactionalObjectStore.prototype.clear = function () {
+            InMemoryTransactionalStoreObject.prototype.clear = function () {
                 this.objectStore.data = [];
             };
-            return InMemoryTransactionalObjectStore;
+            return InMemoryTransactionalStoreObject;
         })();
-        Internals.InMemoryTransactionalObjectStore = InMemoryTransactionalObjectStore;
+        Internals.InMemoryTransactionalStoreObject = InMemoryTransactionalStoreObject;
         var InMemoryCursor = (function () {
             function InMemoryCursor(objectStore) {
                 this.objectStore = objectStore;
@@ -676,8 +682,8 @@ var AngularCloudDataConnector;
             InMemoryDatabase.prototype.open = function (name, version) {
                 return new InMemoryRequest(this);
             };
-            InMemoryDatabase.prototype.createObjectStore = function (name, def) {
-                this._objectStores[name] = new InMemoryObjectStore(def.keyPath);
+            InMemoryDatabase.prototype.createStoreObject = function (name, def) {
+                this._objectStores[name] = new InMemoryStoreObject(def.keyPath);
             };
             InMemoryDatabase.prototype.transaction = function (name) {
                 return new InMemoryTransaction(this);

@@ -86,7 +86,25 @@
     <Content Include="Amazon Web Services\css\angular-cdc-ams-sample.css" />
     <Content Include="Amazon Web Services\index.html" />
     <Content Include="Amazon Web Services\js\angular-cdc-aws-sample.js" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\css\material-wfont.css" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\css\material-wfont.min.css" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\css\material.css" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\css\material.min.css" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\css\ripples.css" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\css\ripples.min.css" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\fonts\LICENSE.txt" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\fonts\Material-Design-Icons.svg" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\js\material.js" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\js\material.min.js" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\js\ripples.js" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\js\ripples.min.js" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\test.html" />
+    <Content Include="Azure Table Storage\css\angular-cdc-ats-sample.css" />
+    <Content Include="Azure Table Storage\index.html" />
+    <Content Include="Azure Table Storage\js\angular-cdc-ats-sample.js" />
+    <Content Include="dist\angular-cdc-azureTableStorageServices.js" />
     <Content Include="dist\angular-cdc-restfulDataService.js" />
+    <Content Include="dist\azureStorageTableApi.js" />
     <Content Include="Restful Web Services\bootstrapmaterial\css\material-wfont.css" />
     <Content Include="Restful Web Services\bootstrapmaterial\css\material-wfont.min.css" />
     <Content Include="Restful Web Services\bootstrapmaterial\css\material.css" />
@@ -125,6 +143,17 @@
     <Content Include="Restful Web Services\bootstrapmaterial\fonts\Material-Design-Icons.woff" />
     <Content Include="Restful Web Services\bootstrapmaterial\js\material.min.js.map" />
     <Content Include="Restful Web Services\bootstrapmaterial\js\ripples.min.js.map" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\css\material-wfont.css.map" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\css\material-wfont.min.css.map" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\css\material.css.map" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\css\material.min.css.map" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\css\ripples.css.map" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\css\ripples.min.css.map" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\fonts\Material-Design-Icons.eot" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\fonts\Material-Design-Icons.ttf" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\fonts\Material-Design-Icons.woff" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\js\material.min.js.map" />
+    <Content Include="Azure Table Storage\bootstrapmaterial\js\ripples.min.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -171,13 +200,24 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="dist\angular-cdc-azureTableStorageServices.d.ts" />
     <TypeScriptCompile Include="dist\angular-cdc-restfulDataService.d.ts" />
     <TypeScriptCompile Include="dist\angular-cdc-amazonDataService.d.ts" />
     <TypeScriptCompile Include="dist\angular-cdc-azuremobileservices.d.ts" />
     <TypeScriptCompile Include="dist\angular-cdc.d.ts" />
+    <TypeScriptCompile Include="dist\azureStorageTableApi.d.ts" />
     <TypeScriptCompile Include="dist\experimental\angular-cdc-facebook.d.ts" />
     <TypeScriptCompile Include="dist\experimental\angular-cdc-ordrin.d.ts" />
     <TypeScriptCompile Include="dist\experimental\angular-cdc-twitter.d.ts" />
+    <TypeScriptCompile Include="lib\angularjs\angular-animate.d.ts" />
+    <TypeScriptCompile Include="lib\angularjs\angular-cookies.d.ts" />
+    <TypeScriptCompile Include="lib\angularjs\angular-mocks.d.ts" />
+    <TypeScriptCompile Include="lib\angularjs\angular-resource.d.ts" />
+    <TypeScriptCompile Include="lib\angularjs\angular-route.d.ts" />
+    <TypeScriptCompile Include="lib\angularjs\angular-sanitize.d.ts" />
+    <TypeScriptCompile Include="lib\angularjs\angular-scenario.d.ts" />
+    <TypeScriptCompile Include="lib\angularjs\angular.d.ts" />
+    <TypeScriptCompile Include="lib\jquery\jquery.d.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -58,7 +58,7 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCRest
         //intialize the connection to Azure Mobile Services, and register provider to AngularCDC
         $scope.initialize = function () {
             angularCDCRestWebService.initSource(
-                'http://acdcrest.azurewebsites.net/api/',  // url
+                'http://localhost:6131//api/',  // url
                  [{ objectName: 'people', keyProperyName: "Id" }]);      // access paths
             angularCDCService.addSource(angularCDCRestWebService);
             angularCDCService.connect(function (results) {

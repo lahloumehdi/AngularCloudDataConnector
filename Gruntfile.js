@@ -36,6 +36,39 @@ module.exports = function (grunt) {
                     
                 },				
             },
+			azuretable: {
+                src: ['src/providers/AzureTableStorageServices/AzureTableStorageServices.ts'],
+                dest: 'dist/angular-cdc-azureTableStorageServices.js',	
+                options: {
+                    declaration: true,
+                    module: 'amd',
+                    sourcemap: true,
+                    target: 'ES5',
+                    
+                },				
+            },
+			azuretableapi: {
+                src: ['src/providers/AzureTableStorageServices/azureStorageTableApi.ts'],
+                dest: 'dist/azureStorageTableApi.js',	
+                options: {
+                    declaration: true,
+                    module: 'amd',
+                    sourcemap: true,
+                    target: 'ES5',
+                    
+                },				
+            },
+			restfull: {
+                src: ['src/providers/ResetfulWebService/restfulDataService.ts'],
+                dest: 'dist/angular-cdc-restfulDataService.js',	
+                options: {
+                    declaration: true,
+                    module: 'amd',
+                    sourcemap: true,
+                    target: 'ES5',
+                    
+                },				
+            },			
 	   amazon: {
                 src: ['src/providers/AmazonWebServices/amazonDataService.ts'],
                 dest: 'dist/angular-cdc-amazonDataService.js',	
@@ -106,6 +139,28 @@ module.exports = function (grunt) {
             azure: {
                 files: ['src/providers/AzureMobileServices/*.ts'],
                 tasks: ['typescript:azure'],
+                options: {
+                    spawn: false,
+                },
+            },
+			            azuretableapi: {
+                files: ['src/providers/AzureTableStorageServices/azureStorageTableApi.ts'],
+                tasks: ['typescript:azuretableapi'],
+                options: {
+                    spawn: false,
+                },
+            },
+
+			            azuretable: {
+                files: ['src/providers/AzureMobileServices/AzureTableStorageServices.ts'],
+                tasks: ['typescript:azuretable'],
+                options: {
+                    spawn: false,
+                },
+            },
+						            restfull: {
+                files: ['src/providers/ResetfulWebService/*.ts'],
+                tasks: ['typescript:restfull'],
                 options: {
                     spawn: false,
                 },

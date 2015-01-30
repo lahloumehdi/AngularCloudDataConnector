@@ -45,6 +45,8 @@
   <ItemGroup>
     <TypeScriptCompile Include="AmazonWebServices\amazonDataService.ts" />
     <TypeScriptCompile Include="AzureMobileServices\azureDataService.ts" />
+    <TypeScriptCompile Include="AzureTableStorageServices\azureStorageTableApi.ts" />
+    <TypeScriptCompile Include="AzureTableStorageServices\AzureTableStorageServices.ts" />
     <TypeScriptCompile Include="FacebookServices\facebookDataService.ts" />
     <TypeScriptCompile Include="NitrogenServices\nitrogenDataService.ts" />
     <TypeScriptCompile Include="OrdrinServices\ordrinDataService.ts" />

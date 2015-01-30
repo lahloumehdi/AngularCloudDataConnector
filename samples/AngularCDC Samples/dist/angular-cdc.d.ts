@@ -56,7 +56,7 @@ declare module AngularCloudDataConnector {
         sync(onsuccess: (result: any) => void): void;
         syncDataService(angularCDCService: IDataService, onsuccess: (result: any) => void): void;
         tableCount: number;
-        forAllTables(action: (angularCDCService: IDataService, tableName: string, callback: (result: any) => void) => void, onsuccess: (results: any[]) => void): void;
+        doThisForAllTables(action: (angularCDCService: IDataService, tableName: string, callback: (result: any) => void) => void, onsuccess: (results: any[]) => void): void;
         updateEntriesForTable(tableName: string, angularCDCService: IDataService, firstCall: boolean, entities: IEntity[], onsuccess: (string: any) => void): void;
         readAll(onsuccess: (result: any) => void): void;
         getEntriesForServiceTable(angularCDCService: IDataService, tableName: string, onsuccess: (result: any) => void): void;
@@ -103,35 +103,35 @@ declare module AngularCloudDataConnector.Internals {
         onabort: () => void;
         private _db;
         constructor(db: InMemoryDatabase);
-        objectStore(name: string): InMemoryTransactionalObjectStore;
+        objectStore(name: string): InMemoryTransactionalStoreObject;
     }
-    class InMemoryObjectStore {
+    class InMemoryStoreObject{
         keypath: string;
         data: any[];
         constructor(keypath: string);
     }
-    class InMemoryTransactionalObjectStore {
-        objectStore: InMemoryObjectStore;
+    class InMemoryTransactionalStoreObject{
+        objectStore: InMemoryStoreObject;
         transaction: InMemoryTransaction;
-        constructor(objectStore: InMemoryObjectStore, transaction: InMemoryTransaction);
+        constructor(objectStore: InMemoryStoreObject, transaction: InMemoryTransaction);
         delete(idToDelete: string): void;
         put(value: any): void;
         openCursor(): InMemoryCursor;
         clear(): void;
     }
     class InMemoryCursor {
-        objectStore: InMemoryObjectStore;
+        objectStore: InMemoryStoreObject;
         onsuccess: any;
         private _position;
         private _keys;
         value: any;
         continue(): void;
-        constructor(objectStore: InMemoryObjectStore);
+        constructor(objectStore: InMemoryStoreObject);
     }
     class InMemoryDatabase {
         _objectStores: {};
         open(name: string, version: number): InMemoryRequest;
-        createObjectStore(name: string, def: {
+        createStoreObject(name: string, def: {
             keyPath: string;
         }): void;
         transaction(name: string): InMemoryTransaction;

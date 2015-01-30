@@ -65,15 +65,14 @@ class AzureStorageTableApi {
         jQuery.ajax({
             url: urlPath + encodeURI("?$filter=PartitionKey eq '" + partitionKey + "'"),
             type: 'GET',
-
-            success: function (data) {
+            success(data) {
                 callback(data.value);
                 //do something to data
             },
-            beforeSend: function (xhr) {
+            beforeSend(xhr) {
                 xhr = that.xhrParams(xhr, path);
             },
-            error: function (rcvData) {
+            error(rcvData) {
                 callback([]);
                 console.log(rcvData);
             }
@@ -92,15 +91,15 @@ class AzureStorageTableApi {
             url: urlPath ,
             type: 'POST',
             data: jsondata,
-            success: function (data) {
+            success(data) {
                 callback(data);
             },
-            beforeSend: function (xhr) {
+            beforeSend(xhr) {
                 xhr = that.xhrParams(xhr, path);
                 xhr.setRequestHeader('Content-Length', jsondata.length + "");
                 xhr.setRequestHeader('Content-Type', "application/json");
             },
-            error: function (rcvData) {
+            error(rcvData) {
                 console.log(rcvData);
                 errorCallback(rcvData);
             }
@@ -118,29 +117,29 @@ class AzureStorageTableApi {
             url: urlPath,
             type: 'GET',
             data: jsondata,
-            success: function (d) {
+            success(d) {
                 jQuery.ajax({
                     url: urlPath,
                     type: 'PUT',
                     data: jsondata,
-                    success: function (data) {
+                    success(data) {
                         callback(data);
                     },
-                    beforeSend: function (xhr) {
+                    beforeSend(xhr) {
                         xhr = that.xhrParams(xhr, path);
                         xhr.setRequestHeader('If-Match', "W/\"datetime'" + encodeURIComponent(d.Timestamp) + "'\"");
                         xhr.setRequestHeader('Content-Type', "application/json");
                     },
-                    error: function (rcvData) {
+                    error(rcvData) {
                         console.log(rcvData);
                         errorCallback(rcvData);
                     }
                 });
             },
-            beforeSend: function (xhr) {
+            beforeSend(xhr) {
                 xhr = that.xhrParams(xhr, path);
             },
-            error: function (rcvData) {
+            error(rcvData) {
                 console.log(rcvData);
                 errorCallback(rcvData);
             }
@@ -155,27 +154,27 @@ class AzureStorageTableApi {
         jQuery.ajax({
             url: urlPath,
             type: 'GET',
-            success: function (d) {
+            success(d) {
                 jQuery.ajax({
                     url: urlPath,
                     type: 'DELETE',
-                    success: function (data) {
+                    success(data) {
                         callback(data);
                     },
-                    beforeSend: function (xhr) {
+                    beforeSend(xhr) {
                         xhr = that.xhrParams(xhr, path);
                         xhr.setRequestHeader('If-Match', "W/\"datetime'" + encodeURIComponent(d.Timestamp) + "'\"");
                     },
-                    error: function (rcvData) {
+                    error(rcvData) {
                         console.log(rcvData);
                         errorCallback(rcvData);
                     }
                 });
             },
-            beforeSend: function (xhr) {
+            beforeSend(xhr) {
                 xhr = that.xhrParams(xhr, path);
             },
-            error: function (rcvData) {
+            error(rcvData) {
                 errorCallback(rcvData);
                 console.log(rcvData);
             }

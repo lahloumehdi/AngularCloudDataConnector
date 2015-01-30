@@ -15,14 +15,14 @@ module AngularCloudDataConnector {
             //TODO: Implement OAuth
             //restSvc.config.credentials = undefined;
 
-            if (servicePath.substring(servicePath.length - 1) != "/") {
+            if (servicePath.substring(servicePath.length - 1) !== "/") {
                 servicePath += "/";
             }
             this.servicePath = servicePath;
             this.tableNames = new Array<string>();
             this.keyNames = {};
             $.each(accessPaths,(i, path) => {
-                if (path.objectName.substring(0, 1) == "/") {
+                if (path.objectName.substring(0, 1) === "/") {
                     path.objectName = path.substring(1);
                 }
                 this.tableNames.push(path.objectName);
@@ -53,7 +53,7 @@ module AngularCloudDataConnector {
 
             delete entity.$$hashKey;
             var eid = entity.id;
-            if (this.keyNames[tableName] != "id")
+            if (this.keyNames[tableName] !== "id")
                 delete entity.id;
 
             $.ajax({

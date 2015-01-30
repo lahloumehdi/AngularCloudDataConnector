@@ -29,7 +29,6 @@ module AngularCloudDataConnector {
 
             var count = 0;
             var total = this.tableNames.length;
-            var result = [];
 
             var tableName;
             for (var x = 0; x < total; x++) {
@@ -38,20 +37,20 @@ module AngularCloudDataConnector {
                 this._getTable(tableName, (resultElement) => {
                     count++;
                     updateCallback([resultElement]);
-                    if (count == total) { } //!+ request is finished.  Might be interesting to have a callback to top level code called at this point.
+                    if (count === total) { } //!+ request is finished.  Might be interesting to have a callback to top level code called at this point.
                 }, lastSyncDate);
             }
         }
 
         private _getTable(tableName: string, callback: (result: any) => void, lastDate: Date): void {
-            this.azureClient.getTable(tableName, function (table) {
+            this.azureClient.getTable(tableName, table => {
                 var result = { 'tableName': tableName, 'table': table };
                 callback(result);
             });
         }
 
         remove(tableName: string, entity: any, onsuccess: () => void, onerror: (error: string) => void): void {
-            var Table = this.azureClient.deleteEntity(tableName, entity, onsuccess, onerror);
+            this.azureClient.deleteEntity(tableName, entity, onsuccess, onerror);
         }
 
         public update(tableName: string,  entity: any, onsuccess: (newEntity: any) => void, onerror: (error: string) => void): void {
@@ -61,7 +60,7 @@ module AngularCloudDataConnector {
 
         public add(tableName: string, entity: any, onsuccess: (newEntity: any) => void, onerror: (error: string) => void): void {
             delete entity.$$hashKey;
-            var Table = this.azureClient.insertEntity(tableName, entity, onsuccess, onerror);
+            this.azureClient.insertEntity(tableName, entity, onsuccess, onerror);
         }
     }
 }

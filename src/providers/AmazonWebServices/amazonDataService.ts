@@ -24,7 +24,7 @@ module AngularCloudDataConnector {
                 RoleArn: RoleArn
             });
 
-            AWS.config.credentials.get(function (credentialsResults) {
+            AWS.config.credentials.get(credentialsResults => {
             });
 
             this.AWSClient = new AWS.DynamoDB();
@@ -37,16 +37,15 @@ module AngularCloudDataConnector {
 
             var count = 0;
             var total = this.tableNames.length;
-            var result = [];
 
             var tableName;
             for (var x = 0; x < total; x++) {
                 tableName = this.tableNames[x];
                 var lastSyncDate = lastSyncDates[tableName];
-                this._getTable(tableName, function (resultElement) {
+                this._getTable(tableName, resultElement => {
                     count++;
                     updateCallback([resultElement]);
-                    if (count == total) {
+                    if (count === total) {
                     }
                 }, lastSyncDate);
             }
@@ -59,10 +58,8 @@ module AngularCloudDataConnector {
             if (!lastDate) {
                 lastDate = new Date(null);
                 firstCall = true;
-            }
-            var that = this;
-            // Since the server sets the updateData and we are doing a sort on date we assume we will never miss an item as long as we query from our latest update date.
-            this.AWSClient.scan({ TableName: tableName }, function (err, table) {
+            } // Since the server sets the updateData and we are doing a sort on date we assume we will never miss an item as long as we query from our latest update date.
+            this.AWSClient.scan({ TableName: tableName }, (err, table) => {
                 if (err) {
                     console.log(err);
                     callback(null);
@@ -76,12 +73,12 @@ module AngularCloudDataConnector {
                         }
                         items.push(item);
                     }
-                    if (that.deletedItem)
-                        items.push(that.deletedItem);
+                    if (this.deletedItem)
+                        items.push(this.deletedItem);
                     var result = { 'tableName': tableName, 'table': items };
 
                     callback(result);
-                    that.deletedItem = null;
+                    this.deletedItem = null;
                 }
             });
         }
@@ -104,7 +101,7 @@ module AngularCloudDataConnector {
             var item = {};
             // create the item with the correct mapping for DynamoDB
             for (var i in entity) {
-                if (typeof (entity[i]) != 'function' && i != 'id')
+                if (typeof (entity[i]) != 'function' && i !== 'id')
                     item[i] = { "Value": { "S": entity[i] }, "Action": "PUT" };
             }
 
@@ -112,8 +109,8 @@ module AngularCloudDataConnector {
                 'TableName': tableName,
                 "Key": { "id": { "S": entity.id } },
                 "AttributeUpdates": item,
-                "Expected": {},
-            }, function (e) { }, onerror);
+                "Expected": {}
+            }, e => { }, onerror);
 
         }
 
@@ -131,7 +128,7 @@ module AngularCloudDataConnector {
             dynDB.putItem({
                 'TableName': tableName,
                 "Item": item,
-                "Expected": {},
+                "Expected": {}
             }, onsuccess, onerror);
         }
     }

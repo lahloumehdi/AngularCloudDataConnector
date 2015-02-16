@@ -25,7 +25,6 @@ var AngularCloudDataConnector;
             this.dataAvailableCallback = updateCallback;
             var count = 0;
             var total = this.tableNames.length;
-            var result = [];
             var tableName;
             for (var x = 0; x < total; x++) {
                 tableName = this.tableNames[x];
@@ -33,20 +32,19 @@ var AngularCloudDataConnector;
                 this._getTable(tableName, function (resultElement) {
                     count++;
                     updateCallback([resultElement]);
-                    if (count == total) {
+                    if (count === total) {
                     }
                 }, lastSyncDate);
             }
         };
         AWSDataService.prototype._getTable = function (tableName, callback, lastDate) {
+            var _this = this;
             var Table = new AWS.DynamoDB({ params: { TableName: tableName } });
             var firstCall = false;
             if (!lastDate) {
                 lastDate = new Date(null);
                 firstCall = true;
-            }
-            var that = this;
-            // Since the server sets the updateData and we are doing a sort on date we assume we will never miss an item as long as we query from our latest update date.
+            } // Since the server sets the updateData and we are doing a sort on date we assume we will never miss an item as long as we query from our latest update date.
             this.AWSClient.scan({ TableName: tableName }, function (err, table) {
                 if (err) {
                     console.log(err);
@@ -62,11 +60,11 @@ var AngularCloudDataConnector;
                         }
                         items.push(item);
                     }
-                    if (that.deletedItem)
-                        items.push(that.deletedItem);
+                    if (_this.deletedItem)
+                        items.push(_this.deletedItem);
                     var result = { 'tableName': tableName, 'table': items };
                     callback(result);
-                    that.deletedItem = null;
+                    _this.deletedItem = null;
                 }
             });
         };
@@ -86,14 +84,14 @@ var AngularCloudDataConnector;
             var dynDB = new AWS.DynamoDB();
             var item = {};
             for (var i in entity) {
-                if (typeof (entity[i]) != 'function' && i != 'id')
+                if (typeof (entity[i]) != 'function' && i !== 'id')
                     item[i] = { "Value": { "S": entity[i] }, "Action": "PUT" };
             }
             dynDB.updateItem({
                 'TableName': tableName,
                 "Key": { "id": { "S": entity.id } },
                 "AttributeUpdates": item,
-                "Expected": {},
+                "Expected": {}
             }, function (e) {
             }, onerror);
         };
@@ -111,7 +109,7 @@ var AngularCloudDataConnector;
             dynDB.putItem({
                 'TableName': tableName,
                 "Item": item,
-                "Expected": {},
+                "Expected": {}
             }, onsuccess, onerror);
         };
         return AWSDataService;

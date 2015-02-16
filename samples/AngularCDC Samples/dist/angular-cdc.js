@@ -313,7 +313,7 @@ var AngularCloudDataConnector;
             // action
             function (angularCDCService, tableName, doNext) {
                 _this.getEntriesForServiceTable(angularCDCService, tableName, doNext);
-            },
+            }, 
             // Below is called with an array that this result passed to the onsuccess function for each table
             function (partialResultArray) {
                 var result = {};

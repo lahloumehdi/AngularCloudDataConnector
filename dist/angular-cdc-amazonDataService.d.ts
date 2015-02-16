@@ -5,7 +5,7 @@ declare var AWS: any;
 declare module AngularCloudDataConnector {
     class AWSDataService implements IDataService {
         AWSClient: any;
-        dataAvailableCallback: (any) => void;
+        dataAvailableCallback: (any: any) => void;
         private deletedItem;
         tableNames: string[];
         _dataId: number;

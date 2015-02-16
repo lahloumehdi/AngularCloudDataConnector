@@ -10,7 +10,7 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
     grunt.loadNpmTasks('grunt-typescript');
     grunt.loadNpmTasks('grunt-contrib-watch');
-
+	grunt.loadNpmTasks('grunt-contrib-copy');
     // Project configuration.
     grunt.initConfig({
          typescript: {
@@ -36,8 +36,19 @@ module.exports = function (grunt) {
                     
                 },				
             },
+				azuretableapi: {
+                 src: ['src/providers/AzureTableStorageServices/azureStorageTableApi.ts'],
+                 dest: 'dist/azureStorageTableApi.js',	
+                 options: {
+                     declaration: true,
+                     module: 'amd',
+                     sourcemap: true,
+                     target: 'ES5',
+                    
+                 },				
+            },
 			azuretable: {
-                src: ['src/providers/AzureTableStorageServices/AzureTableStorageServices.ts'],
+                src: ['src/providers/AzureTableStorageServices/azureTableStorageServices.ts'],
                 dest: 'dist/angular-cdc-azureTableStorageServices.js',	
                 options: {
                     declaration: true,
@@ -47,9 +58,20 @@ module.exports = function (grunt) {
                     
                 },				
             },
-			azuretableapi: {
-                src: ['src/providers/AzureTableStorageServices/azureStorageTableApi.ts'],
-                dest: 'dist/azureStorageTableApi.js',	
+		azurequeueapi: {
+                src: ['src/providers/AzureQueueStorageServices/azureStorageQueueApi.ts'],
+                dest: 'dist/azureStorageQueueApi.js',	
+                options: {
+                    declaration: true,
+                    module: 'amd',
+                    sourcemap: true,
+                    target: 'ES5',
+                    
+                },				
+            },	
+			azurequeue: {
+                src: ['src/providers/AzureQueueStorageServices/AzureQueueStorageServices.ts'],
+                dest: 'dist/angular-cdc-azureQueueStorageServices.js',	
                 options: {
                     declaration: true,
                     module: 'amd',
@@ -58,6 +80,18 @@ module.exports = function (grunt) {
                     
                 },				
             },
+				
+			couchdb: {
+                src: ['src/providers/CouchDB/CouchDB.ts'],
+                dest: 'dist/angular-cdc-couchDB.js',	
+                options: {
+                    declaration: true,
+                    module: 'amd',
+                    sourcemap: true,
+                    target: 'ES5',
+                    
+                },				
+            },		
 			restfull: {
                 src: ['src/providers/ResetfulWebService/restfulDataService.ts'],
                 dest: 'dist/angular-cdc-restfulDataService.js',	
@@ -69,7 +103,7 @@ module.exports = function (grunt) {
                     
                 },				
             },			
-	   amazon: {
+			amazon: {
                 src: ['src/providers/AmazonWebServices/amazonDataService.ts'],
                 dest: 'dist/angular-cdc-amazonDataService.js',	
                 options: {
@@ -127,7 +161,14 @@ module.exports = function (grunt) {
                 },				
             },			
     
-        },		
+        },
+	
+		copy: {
+			main: {
+			src: 'src/providers/CouchDB/jquery.couch.js',
+			dest: 'dist/jquery.couch.js',
+			},
+			},		
         watch: {
             core: {
                 files: ['src/core/*.ts'],
@@ -143,22 +184,42 @@ module.exports = function (grunt) {
                     spawn: false,
                 },
             },
-			            azuretableapi: {
+			azuretableapi: {
                 files: ['src/providers/AzureTableStorageServices/azureStorageTableApi.ts'],
                 tasks: ['typescript:azuretableapi'],
                 options: {
                     spawn: false,
                 },
             },
-
-			            azuretable: {
+			azuretable: {
                 files: ['src/providers/AzureMobileServices/AzureTableStorageServices.ts'],
                 tasks: ['typescript:azuretable'],
                 options: {
                     spawn: false,
                 },
             },
-						            restfull: {
+			azurequeue: {
+                files: ['src/providers/AzureQueueStorageServices/AzureQueueStorageServices.ts'],
+                tasks: ['typescript:azurequeue'],
+                options: {
+                    spawn: false,
+                },
+            },
+			azurequeueapi: {
+                src: ['src/providers/AzureQueueStorageServices/azureStorageQueueApi.ts'],
+                tasks: ['typescript:azurequeueapi'],
+                options: {
+                    spawn: false,
+                },
+            },
+			couchdb: {
+                files: ['src/providers/CouchDB/CouchDB.ts'],
+                tasks: ['typescript:couchdb'],
+                options: {
+                    spawn: false,
+                },
+            },
+			restfull: {
                 files: ['src/providers/ResetfulWebService/*.ts'],
                 tasks: ['typescript:restfull'],
                 options: {
@@ -202,5 +263,5 @@ module.exports = function (grunt) {
             },
         }
     });
-    grunt.registerTask('default', ['typescript']);
+    grunt.registerTask('default', ['typescript','copy']);
 }

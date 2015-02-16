@@ -1,0 +1,291 @@
+﻿declare var CryptoJS;
+interface JQueryStatic {
+    ajax(settings: any);
+}
+declare var jQuery: JQueryStatic;
+
+module AzureStorageAPI {
+    export class AzureStorageQueueApi {
+
+        private secretKey: string;
+        private accountName: string;
+
+        constructor(secretKey: string, accountName: string) {
+            this.secretKey = secretKey;
+            this.accountName = accountName;
+            if (!jQuery || !jQuery.ajax) {
+                throw "JQuery is required";
+            }
+            if (!CryptoJS || !CryptoJS.enc || !CryptoJS.HmacSHA256 || !CryptoJS.enc.Base64 || !CryptoJS.enc.Utf8) {
+                throw "CryptoJS is required";
+            }
+        }
+        private getSignature(stringToSign: string) {
+            return CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(CryptoJS.enc.Utf8.parse(stringToSign), CryptoJS.enc.Base64.parse(this.secretKey)));
+        }
+        private xmlToJson(xml: any) {
+
+            // Create the return object
+            var obj = {};
+
+            if (xml.nodeType == 1) { // element
+                // do attributes
+                if (xml.attributes.length > 0) {
+                    obj["@attributes"] = {};
+                    for (var j = 0; j < xml.attributes.length; j++) {
+                        var attribute = xml.attributes.item(j);
+                        obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+                    }
+                }
+            } else if (xml.nodeType == 3) { // text
+                obj = xml.nodeValue;
+            }
+
+            // do children
+            if (xml.hasChildNodes()) {
+                for (var i = 0; i < xml.childNodes.length; i++) {
+                    var item = xml.childNodes.item(i);
+                    var nodeName = item.nodeName;
+                    if (typeof (obj[nodeName]) == "undefined") {
+                        obj[nodeName] = this.xmlToJson(item);
+                    } else {
+                        if (typeof (obj[nodeName].push) == "undefined") {
+                            var old = obj[nodeName];
+                            obj[nodeName] = [];
+                            obj[nodeName].push(old);
+                        }
+                        obj[nodeName].push(this.xmlToJson(item));
+                    }
+                }
+            }
+            return obj;
+        }
+        private guid() {
+            var d = new Date().getTime();
+            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = (d + Math.random() * 16) % 16 | 0;
+                d = Math.floor(d / 16);
+                return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16);
+            });
+            return uuid;
+        }
+        private buildCanonicalizedResource(ressources: string) {
+            if (!ressources)
+                return "";
+            var splitRessources = ressources.split('&');
+            var objRessource = {};
+            var tabRessoruces = [];
+            for (var i = 0; i < splitRessources.length; i++) {
+                var s = splitRessources[i].split('=');
+                objRessource[s[0]] = s[1];
+                tabRessoruces.push(s[0]);
+            }
+            var canRessources = "";
+            tabRessoruces.sort();
+            for (var i = 0; i < tabRessoruces.length; i++) {
+                var name = tabRessoruces[i];
+                canRessources = canRessources + name.toLowerCase().trim() + ':' + decodeURIComponent(objRessource[name]);
+                if (i < tabRessoruces.length - 1)
+                    canRessources = canRessources + '\n';
+            }
+            return canRessources;
+        }
+
+        private xhrParams(xhr: any, path: string, VERB: string, ressources: string, ContentLength: any): any {
+            var date = (<any>new Date()).toGMTString();
+            if (ContentLength) {
+                xhr.setRequestHeader('Content-Length', ContentLength + "");
+            }
+            else {
+                ContentLength = 0;
+                if (VERB == 'GET')
+                    ContentLength = '';
+            }
+            var clientid = this.guid();
+            var buildCR = this.buildCanonicalizedResource(ressources);
+            var stosign = VERB + "\n\n\n" + ContentLength + "\n\n\n\n\n\n\n\n\nx-ms-client-request-id:" + clientid + "\nx-ms-date:" + date + "\nx-ms-version:2014-02-14\n/" + this.accountName + "/" + path;
+            if (buildCR)
+                stosign = stosign + "\n" + buildCR;
+            xhr.setRequestHeader('x-ms-date', date);
+            xhr.setRequestHeader('x-ms-version', '2014-02-14');
+            xhr.setRequestHeader('x-ms-client-request-id', clientid);
+            xhr.setRequestHeader('Authorization', "SharedKey " + this.accountName + ":" + this.getSignature(stosign));
+            return xhr;
+        }
+        private newQueue(queueName: string, callback: any) {
+            var that = this;
+            var path = queueName;
+            var urlPath = "https://" + this.accountName + ".queue.core.windows.net/" + path;
+            var type = "PUT";
+            var ressource = ""
+        jQuery.ajax({
+                url: urlPath + "?" + ressource,
+                type: type,
+                contentType: "text/xml",
+                dataType: "xml",
+                success: function (data) {
+                    that.getListItemsInQueue(queueName, callback);
+                    //do something to data
+                },
+                beforeSend: function (xhr) {
+                    xhr = that.xhrParams(xhr, path, type, ressource, null);
+                },
+                error: function (rcvData) {
+
+                    alert(rcvData.statusText);
+                    console.log(rcvData);
+                }
+            });
+        }
+        getQueue(queueName: string, callback: (result: any) => void) {
+            var that = this;
+            var path = queueName;
+            var type = "HEAD";
+            var ressource = "comp=metadata"
+        var urlPath = "https://" + this.accountName + ".queue.core.windows.net/" + path;
+            jQuery.ajax({
+                url: urlPath + "?" + ressource,
+                type: type,
+
+                success: function (data) {
+                    that.getListItemsInQueue(queueName, callback);
+                    //do something to data
+                },
+                beforeSend: function (xhr) {
+                    xhr = that.xhrParams(xhr, path, type, ressource, null);
+                },
+                error: function (rcvData) {
+                    if (rcvData.status == 404) {
+                        that.newQueue(queueName, callback);
+                    }
+                    else {
+                        alert(rcvData.statusText);
+                    }
+                    console.log(rcvData);
+                }
+            });
+        }
+
+        getListItemsInQueue(queueName: string, callback: (result: any) => void) {
+            var that = this;
+            var path = queueName + "/messages";
+            var urlPath = "https://" + this.accountName + ".queue.core.windows.net/" + path;
+            var type = "GET";
+            var ressource = "numofmessages=32&visibilitytimeout=1"
+        jQuery.ajax({
+                url: urlPath + "?" + ressource,
+                type: type,
+                success: function (data) {
+                    var res = <any> that.xmlToJson(data);
+                    if (res.QueueMessagesList && res.QueueMessagesList.QueueMessage) {
+                        var dataList = [];
+                        if (res.QueueMessagesList.QueueMessage.length) {
+                            for (var i = 0; i < res.QueueMessagesList.QueueMessage.length; i++) {
+                                var text = atob(res.QueueMessagesList.QueueMessage[i].MessageText['#text']);
+                                var item = JSON.parse(text);
+                                item.PopReceipt = res.QueueMessagesList.QueueMessage[i].PopReceipt['#text'];
+                                item.MessageId = res.QueueMessagesList.QueueMessage[0].MessageId['#text']
+                            dataList.push(item);
+                            }
+                        }
+                        else {
+                            var item = JSON.parse(atob(res.QueueMessagesList.QueueMessage.MessageText['#text']));
+                            item.PopReceipt = res.QueueMessagesList.QueueMessage.PopReceipt['#text']
+                        item.MessageId = res.QueueMessagesList.QueueMessage.MessageId['#text']
+                        dataList.push(item);
+                        }
+                        callback(dataList);
+                    }
+                    else
+                        callback([]);
+                },
+                beforeSend: function (xhr) {
+                    xhr = that.xhrParams(xhr, path, type, ressource, null);
+                },
+                error: function (rcvData) {
+                    callback([]);
+                    console.log(rcvData);
+                }
+            });
+        }
+
+        insertEntity(queueName: string, data: any, callback: (result: any) => void, errorCallback: (result: any) => void) {
+            var that = this;
+            var path = queueName + '/messages';
+            var sringdata = '<?xml version="1.0" encoding="utf-8"?><QueueMessage><MessageText>' + btoa(JSON.stringify(data)) + '</MessageText></QueueMessage>';
+            var urlPath = "https://" + this.accountName + ".queue.core.windows.net/" + path;
+            var type = 'POST';
+            jQuery.ajax({
+                url: urlPath,
+                type: type,
+                data: sringdata,
+                success: function (data) {
+                    callback(data);
+                },
+                beforeSend: function (xhr) {
+                    xhr = that.xhrParams(xhr, path, type, '', sringdata.length);
+                    xhr.setRequestHeader('Content-Type', '');
+                },
+                error: function (rcvData) {
+                    console.log(rcvData);
+                    errorCallback(rcvData);
+                }
+            });
+        }
+
+        updateEntity(queueName: string, data: any, callback: (result: any) => void, errorCallback: (result: any) => void) {
+            var that = this;
+            if (!data.MessageId) {
+                errorCallback(null);
+                return;
+            }
+            var path = queueName + "/messages/" + data.MessageId;
+            var urlPath = "https://" + this.accountName + ".queue.core.windows.net/" + path;
+            var ressources = "popreceipt=" + encodeURIComponent(data.PopReceipt) + "&visibilitytimeout=0";
+            var type = 'PUT';
+            delete data.MessageId;
+            delete data.PopReceipt;
+            var sringdata = '<?xml version="1.0" encoding="utf-8"?><QueueMessage><MessageText>' + btoa(JSON.stringify(data)) + '</MessageText></QueueMessage>';
+            jQuery.ajax({
+                url: urlPath + "?" + ressources,
+                type: type,
+                data: sringdata,
+                success: function (d) {
+                    callback(d);
+                },
+                beforeSend: function (xhr) {
+                    xhr = that.xhrParams(xhr, path, type, ressources, sringdata.length);
+                    xhr.setRequestHeader('Content-Type', '');
+                },
+                error: function (rcvData) {
+                    console.log(rcvData);
+                    errorCallback(rcvData);
+                }
+            });
+        }
+
+
+        deleteEntity(queueName: string, entity: any, callback: (result: any) => void, errorCallback: (result: any) => void) {
+            var that = this;
+            var path = queueName + "/messages/" + entity.MessageId;
+            var urlPath = "https://" + this.accountName + ".queue.core.windows.net/" + path;
+            var type = 'DELETE';
+            var ressources = "popreceipt=" + encodeURIComponent(entity.PopReceipt);
+            jQuery.ajax({
+                url: urlPath + "?" + ressources,
+                type: type,
+                success: function (d) {
+                    callback(null);
+                },
+                beforeSend: function (xhr) {
+                    xhr = that.xhrParams(xhr, path, type, ressources, null);
+                },
+                error: function (rcvData) {
+                    errorCallback(rcvData);
+                    console.log(rcvData);
+                }
+            });
+        }
+
+    };
+}

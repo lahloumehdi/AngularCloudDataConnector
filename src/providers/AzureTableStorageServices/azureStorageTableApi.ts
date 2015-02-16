@@ -44,7 +44,6 @@ class AzureStorageTableApi {
         jQuery.ajax({
             url: urlPath,
             type: 'GET',
-
             success: function (data) {
                 that.getListItemsInTable(tableName, tableName, callback)
                 //do something to data

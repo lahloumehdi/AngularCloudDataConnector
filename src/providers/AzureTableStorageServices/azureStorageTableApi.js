@@ -1,4 +1,4 @@
-var AzureStorageTableApi = (function () {
+﻿var AzureStorageTableApi = (function () {
     function AzureStorageTableApi(secretKey, accountName) {
         this.secretKey = secretKey;
         this.accountName = accountName;
@@ -12,6 +12,7 @@ var AzureStorageTableApi = (function () {
     AzureStorageTableApi.prototype.getSignature = function (stringToSign) {
         return CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(CryptoJS.enc.Utf8.parse(stringToSign), CryptoJS.enc.Base64.parse(this.secretKey)));
     };
+
     AzureStorageTableApi.prototype.xhrParams = function (xhr, path) {
         var date = (new Date()).toUTCString();
         var stringToSign = date + "\n" + "/" + this.accountName + "/" + path;
@@ -23,6 +24,7 @@ var AzureStorageTableApi = (function () {
         xhr.setRequestHeader('MaxDataServiceVersion', '3.0;NetFx');
         return xhr;
     };
+
     AzureStorageTableApi.prototype.getTable = function (tableName, callback) {
         var that = this;
         var path = "Tables('" + tableName + "')";
@@ -42,6 +44,7 @@ var AzureStorageTableApi = (function () {
             }
         });
     };
+
     AzureStorageTableApi.prototype.getListItemsInTable = function (tableName, partitionKey, callback) {
         var that = this;
         var path = tableName;
@@ -62,6 +65,7 @@ var AzureStorageTableApi = (function () {
             }
         });
     };
+
     AzureStorageTableApi.prototype.insertEntity = function (tableName, data, callback, errorCallback) {
         var that = this;
         var path = tableName + '()';
@@ -88,6 +92,7 @@ var AzureStorageTableApi = (function () {
             }
         });
     };
+
     AzureStorageTableApi.prototype.updateEntity = function (tableName, data, callback, errorCallback) {
         var that = this;
         var path = tableName + "(PartitionKey='" + data.partitionKey + "',RowKey='" + data.rowKey + "')";
@@ -127,6 +132,7 @@ var AzureStorageTableApi = (function () {
             }
         });
     };
+
     AzureStorageTableApi.prototype.deleteEntity = function (tableName, entity, callback, errorCallback) {
         var that = this;
         var path = tableName + "(PartitionKey='" + entity.PartitionKey + "',RowKey='" + entity.RowKey + "')";

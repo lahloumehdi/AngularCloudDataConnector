@@ -80,19 +80,25 @@ var AzureStorageAPI;
             }
             return canRessources;
         };
-        AzureStorageQueueApi.prototype.xhrParams = function (xhr, path, VERB, ressources, ContentLength) {
+        AzureStorageQueueApi.prototype.xhrParams = function (xhr, path, VERB, ressources, contentLength, contentType) {
             var date = (new Date()).toGMTString();
-            if (ContentLength) {
-                xhr.setRequestHeader('Content-Length', ContentLength + "");
+            if (contentLength !== null) {
+                xhr.setRequestHeader('Content-Length', contentLength);
             }
             else {
-                ContentLength = 0;
+                contentLength = 0;
                 if (VERB == 'GET')
-                    ContentLength = '';
+                    contentLength = '';
+                if (VERB == 'DELETE') {
+                    xhr.setRequestHeader('Content-Length', "");
+                    contentLength = '';
+                }
             }
+            if (!contentType)
+                contentType = "";
             var clientid = this.guid();
             var buildCR = this.buildCanonicalizedResource(ressources);
-            var stosign = VERB + "\n\n\n" + ContentLength + "\n\n\n\n\n\n\n\n\nx-ms-client-request-id:" + clientid + "\nx-ms-date:" + date + "\nx-ms-version:2014-02-14\n/" + this.accountName + "/" + path;
+            var stosign = VERB + "\n\n\n" + contentLength + "\n\n" + contentType + "\n\n\n\n\n\n\nx-ms-client-request-id:" + clientid + "\nx-ms-date:" + date + "\nx-ms-version:2014-02-14\n/" + this.accountName + "/" + path;
             if (buildCR)
                 stosign = stosign + "\n" + buildCR;
             xhr.setRequestHeader('x-ms-date', date);
@@ -117,7 +123,7 @@ var AzureStorageAPI;
                     //do something to data
                 },
                 beforeSend: function (xhr) {
-                    xhr = that.xhrParams(xhr, path, type, ressource, null);
+                    xhr = that.xhrParams(xhr, path, type, ressource, null, null);
                 },
                 error: function (rcvData) {
                     alert(rcvData.statusText);
@@ -139,7 +145,7 @@ var AzureStorageAPI;
                     //do something to data
                 },
                 beforeSend: function (xhr) {
-                    xhr = that.xhrParams(xhr, path, type, ressource, null);
+                    xhr = that.xhrParams(xhr, path, type, ressource, null, null);
                 },
                 error: function (rcvData) {
                     if (rcvData.status == 404) {
@@ -186,7 +192,7 @@ var AzureStorageAPI;
                         callback([]);
                 },
                 beforeSend: function (xhr) {
-                    xhr = that.xhrParams(xhr, path, type, ressource, null);
+                    xhr = that.xhrParams(xhr, path, type, ressource, null, null);
                 },
                 error: function (rcvData) {
                     callback([]);
@@ -202,14 +208,15 @@ var AzureStorageAPI;
             var type = 'POST';
             jQuery.ajax({
                 url: urlPath,
+                contentType: "application/xml",
                 type: type,
                 data: sringdata,
                 success: function (data) {
                     callback(data);
                 },
                 beforeSend: function (xhr) {
-                    xhr = that.xhrParams(xhr, path, type, '', sringdata.length);
-                    xhr.setRequestHeader('Content-Type', '');
+                    xhr = that.xhrParams(xhr, path, type, '', sringdata.length, "application/xml");
+                    //xhr.setRequestHeader('Content-Type', '');
                 },
                 error: function (rcvData) {
                     console.log(rcvData);
@@ -233,13 +240,13 @@ var AzureStorageAPI;
             jQuery.ajax({
                 url: urlPath + "?" + ressources,
                 type: type,
+                contentType: "application/xml",
                 data: sringdata,
                 success: function (d) {
                     callback(d);
                 },
                 beforeSend: function (xhr) {
-                    xhr = that.xhrParams(xhr, path, type, ressources, sringdata.length);
-                    xhr.setRequestHeader('Content-Type', '');
+                    xhr = that.xhrParams(xhr, path, type, ressources, sringdata.length, 'application/xml');
                 },
                 error: function (rcvData) {
                     console.log(rcvData);
@@ -260,10 +267,23 @@ var AzureStorageAPI;
                     callback(null);
                 },
                 beforeSend: function (xhr) {
-                    xhr = that.xhrParams(xhr, path, type, ressources, null);
+                    xhr = that.xhrParams(xhr, path, type, ressources, null, null);
                 },
                 error: function (rcvData) {
-                    errorCallback(rcvData);
+                    jQuery.ajax({
+                        url: urlPath + "?" + ressources,
+                        type: type,
+                        success: function (d) {
+                            callback(null);
+                        },
+                        beforeSend: function (xhr) {
+                            xhr = that.xhrParams(xhr, path, type, ressources, 0, null);
+                        },
+                        error: function (rcvData) {
+                            errorCallback(rcvData);
+                            console.log(rcvData);
+                        }
+                    });
                     console.log(rcvData);
                 }
             });

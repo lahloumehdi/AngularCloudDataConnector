@@ -95,10 +95,10 @@
 
     AzureStorageTableApi.prototype.updateEntity = function (tableName, data, callback, errorCallback) {
         var that = this;
-        var path = tableName + "(PartitionKey='" + data.partitionKey + "',RowKey='" + data.rowKey + "')";
+        var path = tableName + "(PartitionKey='" + data.PartitionKey + "',RowKey='" + data.RowKey + "')";
         var urlPath = "https://" + this.accountName + ".table.core.windows.net/" + path;
-        delete data.rowKey;
-        delete data.partitionKey;
+        delete data.RowKey;
+        delete data.PartitionKey;
         var jsondata = JSON.stringify(data);
         jQuery.ajax({
             url: urlPath,

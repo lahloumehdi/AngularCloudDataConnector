@@ -12,7 +12,7 @@ declare module AzureStorageAPI {
         private xmlToJson(xml);
         private guid();
         private buildCanonicalizedResource(ressources);
-        private xhrParams(xhr, path, VERB, ressources, ContentLength);
+        private xhrParams(xhr, path, VERB, ressources, contentLength, contentType);
         private newQueue(queueName, callback);
         getQueue(queueName: string, callback: (result: any) => void): void;
         getListItemsInQueue(queueName: string, callback: (result: any) => void): void;

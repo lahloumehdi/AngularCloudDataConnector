@@ -1,4 +1,4 @@
-var AzureStorageAPI;
+﻿var AzureStorageAPI;
 (function (AzureStorageAPI) {
     var AzureStorageQueueApi = (function () {
         function AzureStorageQueueApi(secretKey, accountName) {
@@ -17,6 +17,7 @@ var AzureStorageAPI;
         AzureStorageQueueApi.prototype.xmlToJson = function (xml) {
             // Create the return object
             var obj = {};
+
             if (xml.nodeType == 1) {
                 // do attributes
                 if (xml.attributes.length > 0) {
@@ -26,10 +27,10 @@ var AzureStorageAPI;
                         obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
                     }
                 }
-            }
-            else if (xml.nodeType == 3) {
+            } else if (xml.nodeType == 3) {
                 obj = xml.nodeValue;
             }
+
             // do children
             if (xml.hasChildNodes()) {
                 for (var i = 0; i < xml.childNodes.length; i++) {
@@ -37,8 +38,7 @@ var AzureStorageAPI;
                     var nodeName = item.nodeName;
                     if (typeof (obj[nodeName]) == "undefined") {
                         obj[nodeName] = this.xmlToJson(item);
-                    }
-                    else {
+                    } else {
                         if (typeof (obj[nodeName].push) == "undefined") {
                             var old = obj[nodeName];
                             obj[nodeName] = [];
@@ -80,12 +80,12 @@ var AzureStorageAPI;
             }
             return canRessources;
         };
+
         AzureStorageQueueApi.prototype.xhrParams = function (xhr, path, VERB, ressources, contentLength, contentType) {
             var date = (new Date()).toGMTString();
             if (contentLength !== null) {
                 xhr.setRequestHeader('Content-Length', contentLength);
-            }
-            else {
+            } else {
                 contentLength = 0;
                 if (VERB == 'GET')
                     contentLength = '';
@@ -150,14 +150,14 @@ var AzureStorageAPI;
                 error: function (rcvData) {
                     if (rcvData.status == 404) {
                         that.newQueue(queueName, callback);
-                    }
-                    else {
+                    } else {
                         alert(rcvData.statusText);
                     }
                     console.log(rcvData);
                 }
             });
         };
+
         AzureStorageQueueApi.prototype.getListItemsInQueue = function (queueName, callback) {
             var that = this;
             var path = queueName + "/messages";
@@ -179,16 +179,14 @@ var AzureStorageAPI;
                                 item.MessageId = res.QueueMessagesList.QueueMessage[0].MessageId['#text'];
                                 dataList.push(item);
                             }
-                        }
-                        else {
+                        } else {
                             var item = JSON.parse(atob(res.QueueMessagesList.QueueMessage.MessageText['#text']));
                             item.PopReceipt = res.QueueMessagesList.QueueMessage.PopReceipt['#text'];
                             item.MessageId = res.QueueMessagesList.QueueMessage.MessageId['#text'];
                             dataList.push(item);
                         }
                         callback(dataList);
-                    }
-                    else
+                    } else
                         callback([]);
                 },
                 beforeSend: function (xhr) {
@@ -200,6 +198,7 @@ var AzureStorageAPI;
                 }
             });
         };
+
         AzureStorageQueueApi.prototype.insertEntity = function (queueName, data, callback, errorCallback) {
             var that = this;
             var path = queueName + '/messages';
@@ -224,6 +223,7 @@ var AzureStorageAPI;
                 }
             });
         };
+
         AzureStorageQueueApi.prototype.updateEntity = function (queueName, data, callback, errorCallback) {
             var that = this;
             if (!data.MessageId) {
@@ -254,6 +254,7 @@ var AzureStorageAPI;
                 }
             });
         };
+
         AzureStorageQueueApi.prototype.deleteEntity = function (queueName, entity, callback, errorCallback) {
             var that = this;
             var path = queueName + "/messages/" + entity.MessageId;
@@ -293,3 +294,4 @@ var AzureStorageAPI;
     AzureStorageAPI.AzureStorageQueueApi = AzureStorageQueueApi;
     ;
 })(AzureStorageAPI || (AzureStorageAPI = {}));
+//# sourceMappingURL=azurestoragequeueapi.js.map

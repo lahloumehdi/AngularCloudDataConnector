@@ -3,11 +3,11 @@
 declare module AngularCloudDataConnector {
     interface IDataService {
         _dataId: number;
-        tableNames: Array<string>;
+        tableNames: string[];
         add(tableName: string, entity: any, onsuccess: (newEntity: any) => void, onerror: (error: string) => void): void;
         update(tableName: string, entity: any, onsuccess: (newEntity: any) => void, onerror: (error: string) => void): void;
         get(updateCallback: (result: any) => void, lastSyncDates: {
-            [tableName: string]: Date;
+            [x: string]: Date;
         }): void;
         remove(tableName: string, entity: any, onsuccess: () => void, onerror: (error: string) => void): void;
     }
@@ -28,7 +28,9 @@ declare module AngularCloudDataConnector {
         static LocalStatus: string;
         static NotDefinedStatus: string;
         onlineStatus: string;
-        statusChangeFns: (() => void)[];
+        statusChangeFns: {
+            (): void;
+        }[];
         addStatusChangeNotify(notifyFn: () => void): void;
         getStatus(): string;
         private setStatus(value);
@@ -49,13 +51,13 @@ declare module AngularCloudDataConnector {
         private _pendingEntities;
         constructor(angularCDCOfflineService: OfflineService, angularCDCConnectivityService: ConnectivityService);
         addSource(angularCDCService: IDataService): void;
-        connect(callback: (any) => void, scope?: any, version?: number): void;
+        connect(callback: (any: any) => void, scope?: any, version?: number): void;
         private _prepareAndClone(objectToClone, tableName, angularCDCService);
         sync(callback: (result: any) => void): void;
         syncDataService(angularCDCService: IDataService, onsuccess: (result: any) => void): void;
         tableCount: number;
-        doThisForAllTables(action: (angularCDCService: IDataService, tableName: string, callback: (result: any) => void) => void, onsuccess: (results: Array<any>) => void): void;
-        updateEntriesForTable(tableName: string, angularCDCService: IDataService, firstCall: boolean, entities: Array<IEntity>, onsuccess: (string) => void): void;
+        doThisForAllTables(action: (angularCDCService: IDataService, tableName: string, callback: (result: any) => void) => void, onsuccess: (results: any[]) => void): void;
+        updateEntriesForTable(tableName: string, angularCDCService: IDataService, firstCall: boolean, entities: IEntity[], onsuccess: (string: any) => void): void;
         readAll(onsuccess: (result: any) => void): void;
         getEntriesForServiceTable(angularCDCService: IDataService, tableName: string, onsuccess: (result: any) => void): void;
         processPendingEntities(onsuccess: (result: any) => void): void;

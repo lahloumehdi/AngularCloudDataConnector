@@ -5,7 +5,7 @@ declare var WindowsAzure: any;
 declare module AngularCloudDataConnector {
     class AzureDataService implements IDataService {
         azureClient: any;
-        dataAvailableCallback: (any) => void;
+        dataAvailableCallback: (any: any) => void;
         tableNames: string[];
         _dataId: number;
         _lastSyncDate: Date;

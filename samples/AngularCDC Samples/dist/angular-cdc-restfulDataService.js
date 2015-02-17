@@ -10,14 +10,14 @@ var AngularCloudDataConnector;
             //TODO: Implement OAuth
             //restSvc.config.credentials = undefined;
             var _this = this;
-            if (servicePath.substring(servicePath.length - 1) != "/") {
+            if (servicePath.substring(servicePath.length - 1) !== "/") {
                 servicePath += "/";
             }
             this.servicePath = servicePath;
             this.tableNames = new Array();
             this.keyNames = {};
             $.each(accessPaths, function (i, path) {
-                if (path.objectName.substring(0, 1) == "/") {
+                if (path.objectName.substring(0, 1) === "/") {
                     path.objectName = path.substring(1);
                 }
                 _this.tableNames.push(path.objectName);
@@ -45,7 +45,7 @@ var AngularCloudDataConnector;
         RestfulDataService.prototype.update = function (tableName, entity, onsuccess, onerror) {
             delete entity.$$hashKey;
             var eid = entity.id;
-            if (this.keyNames[tableName] != "id")
+            if (this.keyNames[tableName] !== "id")
                 delete entity.id;
             $.ajax({
                 type: "PUT",

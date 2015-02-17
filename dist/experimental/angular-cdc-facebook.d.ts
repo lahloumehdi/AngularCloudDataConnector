@@ -22,7 +22,7 @@ declare module AngularCloudDataConnector {
         api(path: string, callback: (response: Object) => void): void;
         addSource(tableNamesAndPaths: TableNameAndPath[]): void;
         get(callback: (result: any) => void, lastSyncDates: {
-            [tableName: string]: Date;
+            [x: string]: Date;
         }): void;
         private _getTable(tableName, callback, lastDate);
         remove(tableName: string, entity: any, onsuccess: () => void, onerror: (error: string) => void): void;

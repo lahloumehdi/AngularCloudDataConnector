@@ -184,7 +184,6 @@ var AngularCloudDataConnector;
             this.dataAvailableCallback = updateCallback;
             var count = 0;
             var total = this.tableNames.length;
-            var result = [];
             var tableName;
             for (var x = 0; x < total; x++) {
                 tableName = this.tableNames[x];
@@ -192,7 +191,7 @@ var AngularCloudDataConnector;
                 this._getTable(tableName, function (resultElement) {
                     count++;
                     updateCallback([resultElement]);
-                    if (count == total) {
+                    if (count === total) {
                     } //!+ request is finished.  Might be interesting to have a callback to top level code called at this point.
                 }, lastSyncDate);
             }
@@ -204,7 +203,7 @@ var AngularCloudDataConnector;
             });
         };
         AzureTableStorageService.prototype.remove = function (tableName, entity, onsuccess, onerror) {
-            var Table = this.azureClient.deleteEntity(tableName, entity, onsuccess, onerror);
+            this.azureClient.deleteEntity(tableName, entity, onsuccess, onerror);
         };
         AzureTableStorageService.prototype.update = function (tableName, entity, onsuccess, onerror) {
             delete entity.$$hashKey;
@@ -212,7 +211,7 @@ var AngularCloudDataConnector;
         };
         AzureTableStorageService.prototype.add = function (tableName, entity, onsuccess, onerror) {
             delete entity.$$hashKey;
-            var Table = this.azureClient.insertEntity(tableName, entity, onsuccess, onerror);
+            this.azureClient.insertEntity(tableName, entity, onsuccess, onerror);
         };
         return AzureTableStorageService;
     })();

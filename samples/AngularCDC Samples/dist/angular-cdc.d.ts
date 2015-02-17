@@ -51,9 +51,9 @@ declare module AngularCloudDataConnector {
         private _pendingEntities;
         constructor(angularCDCOfflineService: OfflineService, angularCDCConnectivityService: ConnectivityService);
         addSource(angularCDCService: IDataService): void;
-        connect(onsuccess: () => void, scope?: any, version?: number): void;
+        connect(callback: (any: any) => void, scope?: any, version?: number): void;
         private _prepareAndClone(objectToClone, tableName, angularCDCService);
-        sync(onsuccess: (result: any) => void): void;
+        sync(callback: (result: any) => void): void;
         syncDataService(angularCDCService: IDataService, onsuccess: (result: any) => void): void;
         tableCount: number;
         doThisForAllTables(action: (angularCDCService: IDataService, tableName: string, callback: (result: any) => void) => void, onsuccess: (results: any[]) => void): void;
@@ -105,12 +105,12 @@ declare module AngularCloudDataConnector.Internals {
         constructor(db: InMemoryDatabase);
         objectStore(name: string): InMemoryTransactionalStoreObject;
     }
-    class InMemoryStoreObject{
+    class InMemoryStoreObject {
         keypath: string;
         data: any[];
         constructor(keypath: string);
     }
-    class InMemoryTransactionalStoreObject{
+    class InMemoryTransactionalStoreObject {
         objectStore: InMemoryStoreObject;
         transaction: InMemoryTransaction;
         constructor(objectStore: InMemoryStoreObject, transaction: InMemoryTransaction);

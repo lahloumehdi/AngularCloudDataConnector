@@ -21,7 +21,7 @@ declare class AzureStorageTableApi {
 declare module AngularCloudDataConnector {
     class AzureTableStorageService implements IDataService {
         azureClient: AzureStorageTableApi;
-        dataAvailableCallback: (any) => void;
+        dataAvailableCallback: (any: any) => void;
         tableNames: string[];
         _dataId: number;
         _lastSyncDate: Date;

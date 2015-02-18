@@ -52,6 +52,28 @@ class AzureStorageTableApi {
                 xhr = that.xhrParams(xhr, path);
             },
             error: function (rcvData) {
+                if (rcvData && rcvData.status === 404) {
+                    var path = "Tables()";
+                    var urlPath = "https://" + that.accountName + ".table.core.windows.net/" + path;
+                    var jsondata = '{"TableName":"' + tableName + '"}';
+                    jQuery.ajax({
+                        url: urlPath,
+                        data: jsondata,
+                        type: 'POST',
+                        success: function (data) {
+                            that.getListItemsInTable(tableName, tableName, callback);
+                            //do something to data
+                        },
+                        beforeSend: function (xhr) {
+                            xhr = that.xhrParams(xhr, path);
+                            xhr.setRequestHeader('Content-Length', jsondata.length + "");
+                            xhr.setRequestHeader('Content-Type', "application/json");
+                        },
+                        error: function (rcvData) {
+                            console.log(rcvData);
+                        }
+                    });
+                }
                 console.log(rcvData);
             }
         });

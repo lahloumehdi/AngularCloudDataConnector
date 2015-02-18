@@ -116,14 +116,13 @@ var AzureStorageAPI;
             jQuery.ajax({
                 url: urlPath + "?" + ressource,
                 type: type,
-                contentType: "text/xml",
                 dataType: "xml",
                 success: function (data) {
                     that.getListItemsInQueue(queueName, callback);
                     //do something to data
                 },
                 beforeSend: function (xhr) {
-                    xhr = that.xhrParams(xhr, path, type, ressource, null, null);
+                    xhr = that.xhrParams(xhr, path, type, ressource, 0, null);
                 },
                 error: function (rcvData) {
                     alert(rcvData.statusText);

@@ -38,7 +38,6 @@ declare module AngularCloudDataConnector {
         isOnline(): boolean;
     }
 }
-declare var connectivityModule: ng.IModule;
 declare module AngularCloudDataConnector {
     class DataService {
         angularCDCOfflineService: OfflineService;
@@ -72,7 +71,6 @@ declare module AngularCloudDataConnector {
         remove(tableName: string, entityOrArray: any): void;
     }
 }
-declare var dataModule: ng.IModule;
 declare module AngularCloudDataConnector {
     interface IEntity {
         id: string;
@@ -149,4 +147,3 @@ declare module AngularCloudDataConnector {
         processOfflineEntity(db: IDBDatabase, tableName: string, angularCDCService: IDataService, order: string, entity: IEntity, onsuccess: () => void, onerror: (evt: any) => void): void;
     }
 }
-declare var dataModule: ng.IModule;

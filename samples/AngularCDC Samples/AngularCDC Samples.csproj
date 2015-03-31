@@ -138,8 +138,10 @@
     <Content Include="dist\angular-cdc-azureTableStorageServices.js" />
     <Content Include="dist\angular-cdc-couchDB.js" />
     <Content Include="dist\angular-cdc-restfulDataService.js" />
+    <Content Include="dist\angularModule.js" />
     <Content Include="dist\azureStorageQueueApi.js" />
     <Content Include="dist\azureStorageTableApi.js" />
+    <Content Include="dist\cdc.js" />
     <Content Include="dist\jquery.couch.js" />
     <Content Include="Restful Web Services\bootstrapmaterial\css\material-wfont.css" />
     <Content Include="Restful Web Services\bootstrapmaterial\css\material-wfont.min.css" />
@@ -238,7 +240,6 @@
     <Content Include="Azure Mobile Services\js\angular-cdc-ams-sample.js" />
     <Content Include="dist\angular-cdc-amazonDataService.js" />
     <Content Include="dist\angular-cdc-azuremobileservices.js" />
-    <Content Include="dist\angular-cdc.js" />
     <Content Include="dist\experimental\angular-cdc-facebook.js" />
     <Content Include="dist\experimental\angular-cdc-ordrin.js" />
     <Content Include="dist\experimental\angular-cdc-twitter.js" />
@@ -264,9 +265,9 @@
     <TypeScriptCompile Include="dist\angular-cdc-restfulDataService.d.ts" />
     <TypeScriptCompile Include="dist\angular-cdc-amazonDataService.d.ts" />
     <TypeScriptCompile Include="dist\angular-cdc-azuremobileservices.d.ts" />
-    <TypeScriptCompile Include="dist\angular-cdc.d.ts" />
     <TypeScriptCompile Include="dist\azureStorageQueueApi.d.ts" />
     <TypeScriptCompile Include="dist\azureStorageTableApi.d.ts" />
+    <TypeScriptCompile Include="dist\cdc.d.ts" />
     <TypeScriptCompile Include="dist\experimental\angular-cdc-facebook.d.ts" />
     <TypeScriptCompile Include="dist\experimental\angular-cdc-ordrin.d.ts" />
     <TypeScriptCompile Include="dist\experimental\angular-cdc-twitter.d.ts" />

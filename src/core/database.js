@@ -546,12 +546,4 @@ var AngularCloudDataConnector;
     })();
     AngularCloudDataConnector.DataService = DataService;
 })(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
-
-// Angular
-var dataModule = angular.module('AngularCDC', ['AngularCDC.OfflineModule', 'AngularCDC.ConnectivityModule']);
-
-dataModule.factory('angularCDCService', [
-    'angularCDCOfflineService', 'angularCDCConnectivityService', function (angularCDCOfflineService, angularCDCConnectivityService) {
-        return new AngularCloudDataConnector.DataService(angularCDCOfflineService, angularCDCConnectivityService);
-    }]);
 //# sourceMappingURL=database.js.map

@@ -40,6 +40,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="angular\angularModule.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

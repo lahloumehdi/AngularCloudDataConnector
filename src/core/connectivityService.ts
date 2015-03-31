@@ -67,9 +67,3 @@ module AngularCloudDataConnector {
     }
 }
 
-// Angular
-var connectivityModule = angular.module('AngularCDC.ConnectivityModule', []);
-
-connectivityModule.service('angularCDCConnectivityService', () => {
-    return new AngularCloudDataConnector.ConnectivityService();
-});

@@ -78,11 +78,6 @@ var AngularCloudDataConnector;
     })();
     AngularCloudDataConnector.ConnectivityService = ConnectivityService;
 })(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
-// Angular
-var connectivityModule = angular.module('AngularCDC.ConnectivityModule', []);
-connectivityModule.service('angularCDCConnectivityService', function () {
-    return new AngularCloudDataConnector.ConnectivityService();
-});
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
@@ -562,11 +557,6 @@ var AngularCloudDataConnector;
     })();
     AngularCloudDataConnector.DataService = DataService;
 })(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
-// Angular
-var dataModule = angular.module('AngularCDC', ['AngularCDC.OfflineModule', 'AngularCDC.ConnectivityModule']);
-dataModule.factory('angularCDCService', ['angularCDCOfflineService', 'angularCDCConnectivityService', function (angularCDCOfflineService, angularCDCConnectivityService) {
-    return new AngularCloudDataConnector.DataService(angularCDCOfflineService, angularCDCConnectivityService);
-}]);
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
@@ -817,8 +807,3 @@ var AngularCloudDataConnector;
     })();
     AngularCloudDataConnector.OfflineService = OfflineService;
 })(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
-// Angular
-var dataModule = angular.module('AngularCDC.OfflineModule', []);
-dataModule.factory('angularCDCOfflineService', function () {
-    return new AngularCloudDataConnector.OfflineService();
-});

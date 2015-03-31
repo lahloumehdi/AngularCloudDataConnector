@@ -78,11 +78,4 @@ var AngularCloudDataConnector;
     })();
     AngularCloudDataConnector.ConnectivityService = ConnectivityService;
 })(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
-
-// Angular
-var connectivityModule = angular.module('AngularCDC.ConnectivityModule', []);
-
-connectivityModule.service('angularCDCConnectivityService', function () {
-    return new AngularCloudDataConnector.ConnectivityService();
-});
 //# sourceMappingURL=connectivityService.js.map

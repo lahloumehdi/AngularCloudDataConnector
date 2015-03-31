@@ -2,7 +2,7 @@
 
 /// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
-/// <reference path="../../../dist/angular-cdc.d.ts" />
+/// <reference path="../../../dist/cdc.d.ts" />
 
 module AngularCloudDataConnector {
     export class TwitterService implements IDataService {

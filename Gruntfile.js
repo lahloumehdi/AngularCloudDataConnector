@@ -13,10 +13,10 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
     // Project configuration.
     grunt.initConfig({
-         typescript: {
+		typescript: {
             core: {
                 src: ['lib/angularjs/*.d.ts', 'lib/jquery/*.d.ts','src/core/*.ts'],
-                dest :'dist/angular-cdc.js',
+                dest :'dist/cdc.js',
                 options: {
                     declaration: true,
                     module: 'amd',
@@ -24,7 +24,7 @@ module.exports = function (grunt) {
                     sourcemap: true,
                     target: 'ES5',				
                 },				
-            },		 
+            },
             azure: {
                 src: ['src/providers/AzureMobileServices/azureDataService.ts'],
                 dest: 'dist/angular-cdc-azuremobileservices.js',	
@@ -165,10 +165,17 @@ module.exports = function (grunt) {
 	
 		copy: {
 			main: {
+					src: 'src/core/angular/angularModule.js',
+					dest: 'dist/angularModule.js',
+					},
+		angular: {
 			src: 'src/providers/CouchDB/jquery.couch.js',
 			dest: 'dist/jquery.couch.js',
 			},
-			},		
+			},	
+
+		
+	
         watch: {
             core: {
                 files: ['src/core/*.ts'],

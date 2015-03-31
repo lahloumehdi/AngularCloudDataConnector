@@ -296,7 +296,7 @@ var AzureStorageAPI;
 /// <reference path="azurestoragequeueapi.ts" />
 /// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
-/// <reference path="../../../dist/angular-cdc.d.ts" />
+/// <reference path="../../../dist/cdc.d.ts" />
 var AngularCloudDataConnector;
 (function (AngularCloudDataConnector) {
     var AzureQueueStorageService = (function () {

@@ -549,9 +549,3 @@ module AngularCloudDataConnector {
     }
 }
 
-// Angular
-var dataModule = angular.module('AngularCDC', ['AngularCDC.OfflineModule', 'AngularCDC.ConnectivityModule']);
-
-dataModule.factory('angularCDCService', ['angularCDCOfflineService', 'angularCDCConnectivityService', (angularCDCOfflineService, angularCDCConnectivityService) => {
-    return new AngularCloudDataConnector.DataService(angularCDCOfflineService, angularCDCConnectivityService);
-}]);

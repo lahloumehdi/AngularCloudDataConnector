@@ -138,8 +138,6 @@ app.controller('modalController', ['$scope', 'mode', 'person', '$modalInstance',
 
 $(window).bind('beforeunload', function () {
     if (indexedDB) {
-        alert("suppression bdd");
         indexedDB.deleteDatabase("syncbase");
-        alert("bdd supprimé");
     }
 });

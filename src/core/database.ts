@@ -16,8 +16,8 @@ module AngularCloudDataConnector {
         // On a per table basis we keep track of the latest date we got data.  Ideally the data set contains the ability to query from a given time
         // So _lastSyncDate[0]['tableName']returns date.
         private _lastSyncDates = new Array<{ [tableName: string]: Date; }>();
-        private _scope: any; // Currently set scope
-
+        private _objectStorage: any; // Currently set scope
+        private _objectStorageCallback: any;
         public onSync: (results: any) => void;
 
         // Temp space
@@ -41,7 +41,7 @@ module AngularCloudDataConnector {
             this._lastSyncDates.push(lastSyncDates);
         }
 
-        public connect(callback: (any) => void, scope = null, version: number = 1): void {
+        public connect(callback: (any) => void, objectStorage, objectStorageCallback: (result: any) => void, version: number = 1): void {
             if (this._dataServices.length === 0) {
                 throw "Initializing DataService is incomplete without first adding a provider via addSource";
                 return;
@@ -53,8 +53,8 @@ module AngularCloudDataConnector {
 
             var request = indexedDB.open("syncbase", version);
 
-            this._scope = scope;
-
+            this._objectStorage = objectStorage;
+            this._objectStorageCallback = objectStorageCallback;
             request.onerror = event => {
                 if (callback)
                     callback(false);
@@ -121,7 +121,7 @@ module AngularCloudDataConnector {
             return result;
         }
 
-        // Sync callback gets an object where the keys on the object will be placed into the $scope of the controller.
+        // Sync callback gets an object where the keys on the object will be placed into the objectStorage of the controller.
         // The values associate the key are arrays that correspond to the "Tables" from various cloud databases.
         public sync(callback: (result: any) => void): void {
             var count = 0;
@@ -134,13 +134,17 @@ module AngularCloudDataConnector {
                     }
 
 
-                    if (this._scope) {
+                    if (this._objectStorage) {
                         // Syncing the scope
-                        if (this._scope.$apply) { // This is an angular scope
-                            this._scope.$apply(this._scope[results.tableName] = results.table);
-                        } else {
-                            this._scope[results.tableName] = results.table;
+                        //if (this._scope.$apply) { // This is an angular scope
+                        //    this._scope.$apply(this._scope[results.tableName] = results.table);
+                        //} else {
+                        if (this._objectStorageCallback)
+                            this._objectStorageCallback(this._objectStorage[results.tableName] = results.table);
+                        else {
+                            this._objectStorage[results.tableName] = results.table;
                         }
+                        //}
                     }
 
                     // Calling onSuccess
@@ -509,28 +513,31 @@ module AngularCloudDataConnector {
                 itemFunc(controlledItem);
 
 
-                if (this._scope) {
+                if (this._objectStorage) {
                     // Syncing the scope
                     if (controlledItem.isDeleted) {
-                        var position = this._scope[tableName].indexOf(entity);
+                        var position = this._objectStorage[tableName].indexOf(entity);
 
                         if (position > -1) {
-                            this._scope[tableName].splice(position, 1);
+                            this._objectStorage[tableName].splice(position, 1);
                         }
                         continue;
                     }
 
                     if (controlledItem.isNew) {
-                        this._scope[tableName].push(entity);
+                        this._objectStorage[tableName].push(entity);
                         continue;
                     }
                 }
 
             }
-
-            if (this._scope && this._scope.$apply && !this._scope.$$phase) {
-                this._scope.$apply();
+            if (this._objectStorage && this._objectStorageCallback) {
+                this._objectStorageCallback();
             }
+
+            //if (this._scope && this._scope.$apply && !this._scope.$$phase) {
+            //    this._scope.$apply();
+            //}
         }
 
         public add(tableName: string, entityOrArray: any): void {

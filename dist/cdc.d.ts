@@ -45,12 +45,13 @@ declare module AngularCloudDataConnector {
         private _dataServices;
         private _db;
         private _lastSyncDates;
-        private _scope;
+        private _objectStorage;
+        private _objectStorageCallback;
         onSync: (results: any) => void;
         private _pendingEntities;
         constructor(angularCDCOfflineService: OfflineService, angularCDCConnectivityService: ConnectivityService);
         addSource(angularCDCService: IDataService): void;
-        connect(callback: (any: any) => void, scope?: any, version?: number): void;
+        connect(callback: (any: any) => void, objectStorage: any, objectStorageCallback: (result: any) => void, version?: number): void;
         private _prepareAndClone(objectToClone, tableName, angularCDCService);
         sync(callback: (result: any) => void): void;
         syncDataService(angularCDCService: IDataService, onsuccess: (result: any) => void): void;

@@ -141,6 +141,10 @@
     <Content Include="dist\angularModule.js" />
     <Content Include="dist\azureStorageQueueApi.js" />
     <Content Include="dist\azureStorageTableApi.js" />
+    <Content Include="dist\cdc-azuremobileservices.js" />
+    <Content Include="dist\cdc-azureQueueStorageServices.js" />
+    <Content Include="dist\cdc-azureTableStorageServices.js" />
+    <Content Include="dist\cdc-couchDB.js" />
     <Content Include="dist\cdc.js" />
     <Content Include="dist\jquery.couch.js" />
     <Content Include="Restful Web Services\bootstrapmaterial\css\material-wfont.css" />

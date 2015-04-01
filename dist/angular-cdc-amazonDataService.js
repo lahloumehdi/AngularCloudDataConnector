@@ -1,9 +1,8 @@
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
-/// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var AWSDataService = (function () {
         function AWSDataService() {
             this.tableNames = new Array();
@@ -114,8 +113,10 @@ var AngularCloudDataConnector;
         };
         return AWSDataService;
     })();
-    AngularCloudDataConnector.AWSDataService = AWSDataService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.AWSDataService = AWSDataService;
+})(CloudDataConnector || (CloudDataConnector = {}));
+/// <reference path="amazondataservice.ts" />
+/// <reference path="../../../lib/angularjs/angular.d.ts" />
 // Angular
-var angularCDCAWS = new AngularCloudDataConnector.AWSDataService();
+var angularCDCAWS = new CloudDataConnector.AWSDataService();
 angular.module('AngularCDC.AWS', []).value('angularCDCAWS', angularCDCAWS);

@@ -1,6 +1,6 @@
 /// <reference path="../lib/angularjs/angular.d.ts" />
 /// <reference path="../lib/jquery/jquery.d.ts" />
-declare module AngularCloudDataConnector {
+declare module CloudDataConnector {
     interface IDataService {
         _dataId: number;
         tableNames: string[];
@@ -12,14 +12,14 @@ declare module AngularCloudDataConnector {
         remove(tableName: string, entity: any, onsuccess: () => void, onerror: (error: string) => void): void;
     }
 }
-declare module AngularCloudDataConnector {
+declare module CloudDataConnector {
     interface ICommand {
         entity: IEntity;
         tableName: string;
         order: string;
     }
 }
-declare module AngularCloudDataConnector {
+declare module CloudDataConnector {
     class ConnectivityService {
         private static _NotDefinedStatus;
         private static _OnlineStatus;
@@ -38,7 +38,7 @@ declare module AngularCloudDataConnector {
         isOnline(): boolean;
     }
 }
-declare module AngularCloudDataConnector {
+declare module CloudDataConnector {
     class DataService {
         angularCDCOfflineService: OfflineService;
         angularCDCConnectivityService: ConnectivityService;
@@ -71,7 +71,7 @@ declare module AngularCloudDataConnector {
         remove(tableName: string, entityOrArray: any): void;
     }
 }
-declare module AngularCloudDataConnector {
+declare module CloudDataConnector {
     interface IEntity {
         id: string;
         sync_deleted: boolean;
@@ -87,7 +87,7 @@ declare module AngularCloudDataConnector {
         enumerablePropertyCount: number;
     }
 }
-declare module AngularCloudDataConnector.Internals {
+declare module CloudDataConnector.Internals {
     class InMemoryRequest {
         result: InMemoryDatabase;
         onerror: any;
@@ -139,7 +139,7 @@ interface Window {
     webkitIndexedDB: any;
     mozIndexedDB: any;
 }
-declare module AngularCloudDataConnector {
+declare module CloudDataConnector {
     class OfflineService {
         _offlineIndex: number;
         checkForPendingEntities(db: IDBDatabase, tableName: string, angularCDCService: IDataService, onsuccess: () => void): void;

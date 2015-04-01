@@ -45,16 +45,22 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="AmazonWebServices\amazonDataService.ts" />
+    <TypeScriptCompile Include="AmazonWebServices\amazonDataServiceForAngular.ts" />
     <TypeScriptCompile Include="AzureMobileServices\azureDataService.ts" />
+    <TypeScriptCompile Include="AzureMobileServices\azureDataServiceForAngular.ts" />
     <TypeScriptCompile Include="AzureQueueStorageServices\azureQueueStorageServices.ts" />
+    <TypeScriptCompile Include="AzureQueueStorageServices\azureQueueStorageServicesForAngular.ts" />
     <TypeScriptCompile Include="AzureQueueStorageServices\azureStorageQueueApi.ts" />
     <TypeScriptCompile Include="AzureTableStorageServices\azureStorageTableApi.ts" />
     <TypeScriptCompile Include="AzureTableStorageServices\AzureTableStorageServices.ts" />
+    <TypeScriptCompile Include="AzureTableStorageServices\AzureTableStorageServicesForAngular.ts" />
     <TypeScriptCompile Include="CouchDB\couchDb.ts" />
+    <TypeScriptCompile Include="CouchDB\couchDbForAngular.ts" />
     <TypeScriptCompile Include="FacebookServices\facebookDataService.ts" />
     <TypeScriptCompile Include="NitrogenServices\nitrogenDataService.ts" />
     <TypeScriptCompile Include="OrdrinServices\ordrinDataService.ts" />
     <TypeScriptCompile Include="ResetfulWebService\restfulDataService.ts" />
+    <TypeScriptCompile Include="ResetfulWebService\restfulDataServiceForAngular.ts" />
     <TypeScriptCompile Include="TwitterServices\twitterDataService.ts" />
   </ItemGroup>
   <PropertyGroup>

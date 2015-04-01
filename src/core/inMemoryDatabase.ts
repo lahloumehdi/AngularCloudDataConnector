@@ -3,7 +3,7 @@
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
 
-module AngularCloudDataConnector.Internals {
+module CloudDataConnector.Internals {
     // The goal of this class is to provide a IDB API using only in-memory storage
 
     export class InMemoryRequest {

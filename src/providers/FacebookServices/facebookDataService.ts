@@ -9,7 +9,7 @@
 declare var WindowsAzure;
 //! Get rid of the above.
 
-module AngularCloudDataConnector {
+module CloudDataConnector {
 
     export interface TableNameAndPath {
         tableName: string;
@@ -138,4 +138,4 @@ facebookDataModule.config(['FacebookProvider', (FacebookProvider) => {
     FacebookProvider.init('704100033000816');
 }]);
 
-facebookDataModule.service('facebookDataService', (Facebook) => { return new AngularCloudDataConnector.FacebookDataService(Facebook); });
+facebookDataModule.service('facebookDataService', (Facebook) => { return new CloudDataConnector.FacebookDataService(Facebook); });

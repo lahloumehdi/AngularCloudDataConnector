@@ -1,8 +1,8 @@
-/// <reference path="../lib/angularjs/angular.d.ts" />
 /// <reference path="../lib/jquery/jquery.d.ts" />
 /// <reference path="cdc.d.ts" />
+/// <reference path="../lib/angularjs/angular.d.ts" />
 declare var AWS: any;
-declare module AngularCloudDataConnector {
+declare module CloudDataConnector {
     class AWSDataService implements IDataService {
         AWSClient: any;
         dataAvailableCallback: (any: any) => void;
@@ -18,4 +18,4 @@ declare module AngularCloudDataConnector {
         add(tableName: string, entity: any, onsuccess: (newEntity: any) => void, onerror: (error: string) => void): void;
     }
 }
-declare var angularCDCAWS: AngularCloudDataConnector.AWSDataService;
+declare var angularCDCAWS: CloudDataConnector.AWSDataService;

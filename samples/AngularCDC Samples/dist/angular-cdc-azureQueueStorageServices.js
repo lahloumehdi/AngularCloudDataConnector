@@ -297,8 +297,8 @@ var AzureStorageAPI;
 /// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var AzureQueueStorageService = (function () {
         function AzureQueueStorageService() {
             this.tableNames = new Array();
@@ -344,8 +344,10 @@ var AngularCloudDataConnector;
         };
         return AzureQueueStorageService;
     })();
-    AngularCloudDataConnector.AzureQueueStorageService = AzureQueueStorageService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.AzureQueueStorageService = AzureQueueStorageService;
+})(CloudDataConnector || (CloudDataConnector = {}));
+/// <reference path="../../../lib/angularjs/angular.d.ts" />
+/// <reference path="azurequeuestorageservices.ts" />
 // Angular
-var angularCDCAzureQueueStorageServices = new AngularCloudDataConnector.AzureQueueStorageService();
+var angularCDCAzureQueueStorageServices = new CloudDataConnector.AzureQueueStorageService();
 angular.module('AngularCDC.AzureQueueStorageServices', []).value('angularCDCAzureQueueStorageServices', angularCDCAzureQueueStorageServices);

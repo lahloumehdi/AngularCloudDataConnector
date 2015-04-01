@@ -7,8 +7,8 @@
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var ConnectivityService = (function () {
         function ConnectivityService() {
             // Members
@@ -50,7 +50,7 @@ var AngularCloudDataConnector;
             var notifyChange = value != this.onlineStatus;
             this.onlineStatus = value;
             if (notifyChange) {
-                angular.forEach(this.statusChangeFns, function (fn, index) {
+                this.statusChangeFns.forEach(function (fn, index) {
                     fn();
                 });
             }
@@ -76,13 +76,13 @@ var AngularCloudDataConnector;
         ConnectivityService._LocalStatus = "online";
         return ConnectivityService;
     })();
-    AngularCloudDataConnector.ConnectivityService = ConnectivityService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.ConnectivityService = ConnectivityService;
+})(CloudDataConnector || (CloudDataConnector = {}));
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
     if (!indexedDB) {
         console.log("IDB not supported. Offline mode Framework will not be available.");
@@ -118,7 +118,7 @@ var AngularCloudDataConnector;
                 return;
             }
             if (!indexedDB) {
-                indexedDB = new AngularCloudDataConnector.Internals.InMemoryDatabase();
+                indexedDB = new CloudDataConnector.Internals.InMemoryDatabase();
             }
             var request = indexedDB.open("syncbase", version);
             this._objectStorage = objectStorage;
@@ -560,16 +560,16 @@ var AngularCloudDataConnector;
         };
         return DataService;
     })();
-    AngularCloudDataConnector.DataService = DataService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.DataService = DataService;
+})(CloudDataConnector || (CloudDataConnector = {}));
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var Internals;
     (function (Internals) {
         // The goal of this class is to provide a IDB API using only in-memory storage
@@ -686,14 +686,14 @@ var AngularCloudDataConnector;
             return InMemoryDatabase;
         })();
         Internals.InMemoryDatabase = InMemoryDatabase;
-    })(Internals = AngularCloudDataConnector.Internals || (AngularCloudDataConnector.Internals = {}));
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    })(Internals = CloudDataConnector.Internals || (CloudDataConnector.Internals = {}));
+})(CloudDataConnector || (CloudDataConnector = {}));
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var OfflineService = (function () {
         function OfflineService() {
             this._offlineIndex = 0;
@@ -810,5 +810,5 @@ var AngularCloudDataConnector;
         };
         return OfflineService;
     })();
-    AngularCloudDataConnector.OfflineService = OfflineService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.OfflineService = OfflineService;
+})(CloudDataConnector || (CloudDataConnector = {}));

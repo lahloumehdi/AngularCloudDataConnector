@@ -27,7 +27,7 @@ module.exports = function (grunt) {
             },
             azure: {
                 src: ['src/providers/AzureMobileServices/azureDataService.ts'],
-                dest: 'dist/angular-cdc-azuremobileservices.js',	
+                dest: 'dist/cdc-azuremobileservices.js',	
                 options: {
                     declaration: true,
                     module: 'amd',
@@ -36,7 +36,18 @@ module.exports = function (grunt) {
                     
                 },				
             },
-				azuretableapi: {
+            azureangular: {
+                src: ['src/providers/AzureMobileServices/azureDataServiceForAngular.ts'],
+                dest: 'dist/angular-cdc-azuremobileservices.js',	
+                options: {
+                    declaration: true,
+                    module: 'amd',
+                    sourcemap: true,
+                    target: 'ES5',
+                    
+                },				
+            },			
+			azuretableapi: {
                  src: ['src/providers/AzureTableStorageServices/azureStorageTableApi.ts'],
                  dest: 'dist/azureStorageTableApi.js',	
                  options: {
@@ -49,7 +60,7 @@ module.exports = function (grunt) {
             },
 			azuretable: {
                 src: ['src/providers/AzureTableStorageServices/azureTableStorageServices.ts'],
-                dest: 'dist/angular-cdc-azureTableStorageServices.js',	
+                dest: 'dist/cdc-azureTableStorageServices.js',	
                 options: {
                     declaration: true,
                     module: 'amd',
@@ -58,7 +69,19 @@ module.exports = function (grunt) {
                     
                 },				
             },
-		azurequeueapi: {
+			azuretableangular: {
+				src: ['src/providers/AzureTableStorageServices/AzureTableStorageServicesForAngular.ts'],
+                dest: 'dist/angular-cdc-azureTableStorageServices.js',	
+                options: {
+                    declaration: true,
+                    module: 'amd',
+                    sourcemap: true,
+                    target: 'ES5',
+                    
+                },				
+
+            },						
+			azurequeueapi: {
                 src: ['src/providers/AzureQueueStorageServices/azureStorageQueueApi.ts'],
                 dest: 'dist/azureStorageQueueApi.js',	
                 options: {
@@ -71,7 +94,7 @@ module.exports = function (grunt) {
             },	
 			azurequeue: {
                 src: ['src/providers/AzureQueueStorageServices/AzureQueueStorageServices.ts'],
-                dest: 'dist/angular-cdc-azureQueueStorageServices.js',	
+                dest: 'dist/cdc-azureQueueStorageServices.js',	
                 options: {
                     declaration: true,
                     module: 'amd',
@@ -80,21 +103,9 @@ module.exports = function (grunt) {
                     
                 },				
             },
-				
-			couchdb: {
-                src: ['src/providers/CouchDB/CouchDB.ts'],
-                dest: 'dist/angular-cdc-couchDB.js',	
-                options: {
-                    declaration: true,
-                    module: 'amd',
-                    sourcemap: true,
-                    target: 'ES5',
-                    
-                },				
-            },		
-			restfull: {
-                src: ['src/providers/ResetfulWebService/restfulDataService.ts'],
-                dest: 'dist/angular-cdc-restfulDataService.js',	
+			azurequeueangular: {
+                src: ['src/providers/AzureQueueStorageServices/azureQueueStorageServicesForAngular.ts'],
+                dest: 'dist/angular-cdc-azureQueueStorageServices.js',	
                 options: {
                     declaration: true,
                     module: 'amd',
@@ -103,8 +114,63 @@ module.exports = function (grunt) {
                     
                 },				
             },			
+			couchdb: {
+                src: ['src/providers/CouchDB/CouchDB.ts'],
+                dest: 'dist/cdc-couchDB.js',	
+                options: {
+                    declaration: true,
+                    module: 'amd',
+                    sourcemap: true,
+                    target: 'ES5',
+                    
+                },				
+            },	
+			couchdbangular: {
+                src: ['src/providers/CouchDB/couchDbForAngular.ts'],
+                dest: 'dist/angular-cdc-couchDB.js',	
+                options: {
+                    declaration: true,
+                    module: 'amd',
+                    sourcemap: true,
+                    target: 'ES5',
+                    
+                },				
+            },			
+			restfull: {
+                src: ['src/providers/ResetfulWebService/restfulDataService.ts'],
+                dest: 'dist/cdc-restfulDataService.js',	
+                options: {
+                    declaration: true,
+                    module: 'amd',
+                    sourcemap: true,
+                    target: 'ES5',
+                    
+                },				
+            },	
+			restfullangular: {
+                src: ['src/providers/ResetfulWebService/restfulDataServiceForAngular.ts'],
+                dest: 'dist/angular-cdc-restfulDataService.js',	
+                options: {
+                    declaration: true,
+                    module: 'amd',
+                    sourcemap: true,
+                    target: 'ES5',
+                    
+                },				
+            },	
 			amazon: {
                 src: ['src/providers/AmazonWebServices/amazonDataService.ts'],
+                dest: 'dist/cdc-amazonDataService.js',	
+                options: {
+                    declaration: true,
+                    module: 'amd',
+                    sourcemap: true,
+                    target: 'ES5',
+                    
+                },				
+            },
+    		amazonangular: {
+                src: ['src/providers/AmazonWebServices/amazonDataServiceForAngular.ts'],
                 dest: 'dist/angular-cdc-amazonDataService.js',	
                 options: {
                     declaration: true,
@@ -114,7 +180,7 @@ module.exports = function (grunt) {
                     
                 },				
             },
-            facebook: {
+			facebook: {
                 src: ['lib/angularjs/*.d.ts', 'lib/jquery/*.d.ts','src/providers/FacebookServices/facebookDataService.ts'],
                 dest: 'dist/experimental/angular-cdc-facebook.js',	
                 options: {
@@ -200,6 +266,14 @@ module.exports = function (grunt) {
             },
 			azuretable: {
                 files: ['src/providers/AzureMobileServices/AzureTableStorageServices.ts'],
+                tasks: ['typescript:azuretable'],
+                options: {
+                    spawn: false,
+                },
+            },
+
+			azuretableangular: {
+                files: ['src/providers/AzureMobileServices/AzureTableStorageServicesForAngular.ts'],
                 tasks: ['typescript:azuretable'],
                 options: {
                     spawn: false,

@@ -24,7 +24,7 @@ declare module AzureStorageAPI {
         deleteEntity(queueName: string, entity: any, callback: (result: any) => void, errorCallback: (result: any) => void): void;
     }
 }
-declare module AngularCloudDataConnector {
+declare module CloudDataConnector {
     class AzureQueueStorageService implements IDataService {
         azureClient: AzureStorageAPI.AzureStorageQueueApi;
         dataAvailableCallback: (any: any) => void;
@@ -39,4 +39,4 @@ declare module AngularCloudDataConnector {
         add(queueName: string, entity: any, onsuccess: (newEntity: any) => void, onerror: (error: string) => void): void;
     }
 }
-declare var angularCDCAzureQueueStorageServices: AngularCloudDataConnector.AzureQueueStorageService;
+declare var angularCDCAzureQueueStorageServices: CloudDataConnector.AzureQueueStorageService;

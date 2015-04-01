@@ -1,13 +1,12 @@
 ﻿/// <reference path="azurestoragetableapi.ts" />
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 
-/// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
 
 
 
-module AngularCloudDataConnector {
+module CloudDataConnector {
     export class AzureTableStorageService implements IDataService {
         public azureClient: AzureStorageTableApi;
         public dataAvailableCallback: (any) => void;
@@ -65,6 +64,3 @@ module AngularCloudDataConnector {
     }
 }
 
-// Angular
-var angularCDCAzureTableStorageServices = new AngularCloudDataConnector.AzureTableStorageService();
-angular.module('AngularCDC.AzureTableStorageServices', []).value('angularCDCAzureTableStorageServices', angularCDCAzureTableStorageServices);

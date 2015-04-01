@@ -4,7 +4,7 @@
 interface JQueryStatic {
     couch: any;
 }
-declare module AngularCloudDataConnector {
+declare module CloudDataConnector {
     class couchDBDataService implements IDataService {
         azureClient: any;
         dataAvailableCallback: (any: any) => void;
@@ -19,4 +19,4 @@ declare module AngularCloudDataConnector {
         add(tableName: string, entity: any, onsuccess: (newEntity: any) => void, onerror: (error: string) => void): void;
     }
 }
-declare var angularCDCCouchDB: AngularCloudDataConnector.couchDBDataService;
+declare var angularCDCCouchDB: CloudDataConnector.couchDBDataService;

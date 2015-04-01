@@ -187,11 +187,10 @@ var AzureStorageTableApi = (function () {
 ;
 /// <reference path="azurestoragetableapi.ts" />
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
-/// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var AzureTableStorageService = (function () {
         function AzureTableStorageService() {
             this.tableNames = new Array();
@@ -237,8 +236,10 @@ var AngularCloudDataConnector;
         };
         return AzureTableStorageService;
     })();
-    AngularCloudDataConnector.AzureTableStorageService = AzureTableStorageService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.AzureTableStorageService = AzureTableStorageService;
+})(CloudDataConnector || (CloudDataConnector = {}));
+/// <reference path="../../../lib/angularjs/angular.d.ts" />
+/// <reference path="azuretablestorageservices.ts" />
 // Angular
-var angularCDCAzureTableStorageServices = new AngularCloudDataConnector.AzureTableStorageService();
+var angularCDCAzureTableStorageServices = new CloudDataConnector.AzureTableStorageService();
 angular.module('AngularCDC.AzureTableStorageServices', []).value('angularCDCAzureTableStorageServices', angularCDCAzureTableStorageServices);

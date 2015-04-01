@@ -2,8 +2,8 @@
 /// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var AzureDataService = (function () {
         function AzureDataService() {
             this.tableNames = new Array();
@@ -70,8 +70,13 @@ var AngularCloudDataConnector;
         };
         return AzureDataService;
     })();
-    AngularCloudDataConnector.AzureDataService = AzureDataService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.AzureDataService = AzureDataService;
+})(CloudDataConnector || (CloudDataConnector = {}));
 // Angular
-var angularCDCAzureMobileService = new AngularCloudDataConnector.AzureDataService();
+var angularCDCAzureMobileService = new CloudDataConnector.AzureDataService();
+angular.module('AngularCDC.AzureMobileServices', []).value('angularCDCAzureMobileService', angularCDCAzureMobileService);
+/// <reference path="../../../lib/angularjs/angular.d.ts" />
+/// <reference path="azuredataservice.ts" />
+// Angular
+var angularCDCAzureMobileService = new CloudDataConnector.AzureDataService();
 angular.module('AngularCDC.AzureMobileServices', []).value('angularCDCAzureMobileService', angularCDCAzureMobileService);

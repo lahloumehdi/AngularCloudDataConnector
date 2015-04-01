@@ -1,7 +1,8 @@
-﻿/* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */ /// <reference path="../../lib/angularjs/angular.d.ts" />
+﻿/* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
+/// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var ConnectivityService = (function () {
         function ConnectivityService() {
             // Members
@@ -48,7 +49,7 @@ var AngularCloudDataConnector;
             var notifyChange = value != this.onlineStatus;
             this.onlineStatus = value;
             if (notifyChange) {
-                angular.forEach(this.statusChangeFns, function (fn, index) {
+                this.statusChangeFns.forEach(function (fn, index) {
                     fn();
                 });
             }
@@ -76,6 +77,6 @@ var AngularCloudDataConnector;
         ConnectivityService._LocalStatus = "online";
         return ConnectivityService;
     })();
-    AngularCloudDataConnector.ConnectivityService = ConnectivityService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.ConnectivityService = ConnectivityService;
+})(CloudDataConnector || (CloudDataConnector = {}));
 //# sourceMappingURL=connectivityService.js.map

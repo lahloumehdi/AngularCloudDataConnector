@@ -18,7 +18,7 @@ declare class AzureStorageTableApi {
     updateEntity(tableName: string, data: any, callback: (result: any) => void, errorCallback: (result: any) => void): void;
     deleteEntity(tableName: string, entity: any, callback: (result: any) => void, errorCallback: (result: any) => void): void;
 }
-declare module AngularCloudDataConnector {
+declare module CloudDataConnector {
     class AzureTableStorageService implements IDataService {
         azureClient: AzureStorageTableApi;
         dataAvailableCallback: (any: any) => void;
@@ -33,4 +33,4 @@ declare module AngularCloudDataConnector {
         add(tableName: string, entity: any, onsuccess: (newEntity: any) => void, onerror: (error: string) => void): void;
     }
 }
-declare var angularCDCAzureTableStorageServices: AngularCloudDataConnector.AzureTableStorageService;
+declare var angularCDCAzureTableStorageServices: CloudDataConnector.AzureTableStorageService;

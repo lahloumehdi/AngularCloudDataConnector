@@ -4,8 +4,8 @@
 /// <reference path="../../../dist/cdc.d.ts" />
 "use strict";
 //! Get rid of the above.
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var FacebookDataService = (function () {
         function FacebookDataService(facebook) {
             this.tableNames = new Array();
@@ -98,8 +98,8 @@ var AngularCloudDataConnector;
         };
         return FacebookDataService;
     })();
-    AngularCloudDataConnector.FacebookDataService = FacebookDataService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.FacebookDataService = FacebookDataService;
+})(CloudDataConnector || (CloudDataConnector = {}));
 // Angular
 var facebookDataModule = angular.module('FacebookDataModule', ['facebook']);
 facebookDataModule.config(['FacebookProvider', function (FacebookProvider) {
@@ -108,5 +108,5 @@ facebookDataModule.config(['FacebookProvider', function (FacebookProvider) {
     FacebookProvider.init('704100033000816');
 }]);
 facebookDataModule.service('facebookDataService', function (Facebook) {
-    return new AngularCloudDataConnector.FacebookDataService(Facebook);
+    return new CloudDataConnector.FacebookDataService(Facebook);
 });

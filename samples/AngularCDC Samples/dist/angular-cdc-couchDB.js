@@ -2,8 +2,8 @@
 /// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var couchDBDataService = (function () {
         function couchDBDataService() {
             this.tableNames = new Array();
@@ -95,8 +95,13 @@ var AngularCloudDataConnector;
         };
         return couchDBDataService;
     })();
-    AngularCloudDataConnector.couchDBDataService = couchDBDataService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.couchDBDataService = couchDBDataService;
+})(CloudDataConnector || (CloudDataConnector = {}));
 // Angular
-var angularCDCCouchDB = new AngularCloudDataConnector.couchDBDataService();
+var angularCDCCouchDB = new CloudDataConnector.couchDBDataService();
+angular.module('AngularCDC.CouchDB', []).value('angularCDCCouchDB', angularCDCCouchDB);
+/// <reference path="../../../lib/angularjs/angular.d.ts" />
+/// <reference path="couchdb.ts" />
+// Angular
+var angularCDCCouchDB = new CloudDataConnector.couchDBDataService();
 angular.module('AngularCDC.CouchDB', []).value('angularCDCCouchDB', angularCDCCouchDB);

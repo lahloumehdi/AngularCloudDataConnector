@@ -238,8 +238,3 @@ var CloudDataConnector;
     })();
     CloudDataConnector.AzureTableStorageService = AzureTableStorageService;
 })(CloudDataConnector || (CloudDataConnector = {}));
-/// <reference path="../../../lib/angularjs/angular.d.ts" />
-/// <reference path="azuretablestorageservices.ts" />
-// Angular
-var angularCDCAzureTableStorageServices = new CloudDataConnector.AzureTableStorageService();
-angular.module('AngularCDC.AzureTableStorageServices', []).value('angularCDCAzureTableStorageServices', angularCDCAzureTableStorageServices);

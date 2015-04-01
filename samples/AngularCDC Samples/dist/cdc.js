@@ -7,8 +7,8 @@
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var ConnectivityService = (function () {
         function ConnectivityService() {
             // Members
@@ -50,7 +50,7 @@ var AngularCloudDataConnector;
             var notifyChange = value != this.onlineStatus;
             this.onlineStatus = value;
             if (notifyChange) {
-                angular.forEach(this.statusChangeFns, function (fn, index) {
+                this.statusChangeFns.forEach(function (fn, index) {
                     fn();
                 });
             }
@@ -76,13 +76,13 @@ var AngularCloudDataConnector;
         ConnectivityService._LocalStatus = "online";
         return ConnectivityService;
     })();
-    AngularCloudDataConnector.ConnectivityService = ConnectivityService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.ConnectivityService = ConnectivityService;
+})(CloudDataConnector || (CloudDataConnector = {}));
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
     if (!indexedDB) {
         console.log("IDB not supported. Offline mode Framework will not be available.");
@@ -110,19 +110,19 @@ var AngularCloudDataConnector;
             }
             this._lastSyncDates.push(lastSyncDates);
         };
-        DataService.prototype.connect = function (callback, scope, version) {
+        DataService.prototype.connect = function (callback, objectStorage, objectStorageCallback, version) {
             var _this = this;
-            if (scope === void 0) { scope = null; }
             if (version === void 0) { version = 1; }
             if (this._dataServices.length === 0) {
                 throw "Initializing DataService is incomplete without first adding a provider via addSource";
                 return;
             }
             if (!indexedDB) {
-                indexedDB = new AngularCloudDataConnector.Internals.InMemoryDatabase();
+                indexedDB = new CloudDataConnector.Internals.InMemoryDatabase();
             }
             var request = indexedDB.open("syncbase", version);
-            this._scope = scope;
+            this._objectStorage = objectStorage;
+            this._objectStorageCallback = objectStorageCallback;
             request.onerror = function (event) {
                 if (callback)
                     callback(false);
@@ -180,7 +180,7 @@ var AngularCloudDataConnector;
             this._markItem(result, tableName, angularCDCService);
             return result;
         };
-        // Sync callback gets an object where the keys on the object will be placed into the $scope of the controller.
+        // Sync callback gets an object where the keys on the object will be placed into the objectStorage of the controller.
         // The values associate the key are arrays that correspond to the "Tables" from various cloud databases.
         DataService.prototype.sync = function (callback) {
             var _this = this;
@@ -191,13 +191,15 @@ var AngularCloudDataConnector;
                     for (var index = 0; index < partialResult.table.length; index++) {
                         results.table.push(_this._prepareAndClone(partialResult.table[index], partialResult.tableName, _this._dataServices[count]));
                     }
-                    if (_this._scope) {
+                    if (_this._objectStorage) {
                         // Syncing the scope
-                        if (_this._scope.$apply) {
-                            _this._scope.$apply(_this._scope[results.tableName] = results.table);
-                        }
+                        //if (this._scope.$apply) { // This is an angular scope
+                        //    this._scope.$apply(this._scope[results.tableName] = results.table);
+                        //} else {
+                        if (_this._objectStorageCallback)
+                            _this._objectStorageCallback(_this._objectStorage[results.tableName] = results.table);
                         else {
-                            _this._scope[results.tableName] = results.table;
+                            _this._objectStorage[results.tableName] = results.table;
                         }
                     }
                     // Calling onSuccess
@@ -522,24 +524,27 @@ var AngularCloudDataConnector;
                 var entity = entities[index];
                 var controlledItem = this._markItem(entity, tableName, angularCDCService);
                 itemFunc(controlledItem);
-                if (this._scope) {
+                if (this._objectStorage) {
                     // Syncing the scope
                     if (controlledItem.isDeleted) {
-                        var position = this._scope[tableName].indexOf(entity);
+                        var position = this._objectStorage[tableName].indexOf(entity);
                         if (position > -1) {
-                            this._scope[tableName].splice(position, 1);
+                            this._objectStorage[tableName].splice(position, 1);
                         }
                         continue;
                     }
                     if (controlledItem.isNew) {
-                        this._scope[tableName].push(entity);
+                        this._objectStorage[tableName].push(entity);
                         continue;
                     }
                 }
             }
-            if (this._scope && this._scope.$apply && !this._scope.$$phase) {
-                this._scope.$apply();
+            if (this._objectStorage && this._objectStorageCallback) {
+                this._objectStorageCallback();
             }
+            //if (this._scope && this._scope.$apply && !this._scope.$$phase) {
+            //    this._scope.$apply();
+            //}
         };
         DataService.prototype.add = function (tableName, entityOrArray) {
             this._processFunction(tableName, entityOrArray, function (item) {
@@ -555,16 +560,16 @@ var AngularCloudDataConnector;
         };
         return DataService;
     })();
-    AngularCloudDataConnector.DataService = DataService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.DataService = DataService;
+})(CloudDataConnector || (CloudDataConnector = {}));
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var Internals;
     (function (Internals) {
         // The goal of this class is to provide a IDB API using only in-memory storage
@@ -681,14 +686,14 @@ var AngularCloudDataConnector;
             return InMemoryDatabase;
         })();
         Internals.InMemoryDatabase = InMemoryDatabase;
-    })(Internals = AngularCloudDataConnector.Internals || (AngularCloudDataConnector.Internals = {}));
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    })(Internals = CloudDataConnector.Internals || (CloudDataConnector.Internals = {}));
+})(CloudDataConnector || (CloudDataConnector = {}));
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var OfflineService = (function () {
         function OfflineService() {
             this._offlineIndex = 0;
@@ -805,5 +810,5 @@ var AngularCloudDataConnector;
         };
         return OfflineService;
     })();
-    AngularCloudDataConnector.OfflineService = OfflineService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.OfflineService = OfflineService;
+})(CloudDataConnector || (CloudDataConnector = {}));

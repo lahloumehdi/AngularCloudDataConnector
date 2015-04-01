@@ -2,7 +2,7 @@
 /// <reference path="../../lib/jquery/jquery.d.ts" />
 /// <reference path="../cdc.d.ts" />
 declare var WindowsAzure: any;
-declare module AngularCloudDataConnector {
+declare module CloudDataConnector {
     interface TableNameAndPath {
         tableName: string;
         path: string;

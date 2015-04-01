@@ -4,7 +4,7 @@
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
 
-module AngularCloudDataConnector {
+module CloudDataConnector {
     export class TwitterService implements IDataService {
         public tableNames = new Array<string>();
         public _dataId: number;
@@ -73,5 +73,5 @@ module AngularCloudDataConnector {
 
 // Angular
 angular.module('TwitterDataModule', []).service('twitterDataService', ($http) => {
-    return new AngularCloudDataConnector.TwitterService($http);
+    return new CloudDataConnector.TwitterService($http);
 });

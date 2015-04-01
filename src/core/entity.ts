@@ -3,7 +3,7 @@
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
 
-module AngularCloudDataConnector {
+module CloudDataConnector {
     export interface IEntity {
         id: string;
         sync_deleted: boolean;

@@ -4,7 +4,7 @@
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
 
-module AngularCloudDataConnector {
+module CloudDataConnector {
     export class OrdrinService implements IDataService {
         public tableNames = new Array<string>();
         public _dataId: number;
@@ -84,5 +84,5 @@ module AngularCloudDataConnector {
 
 // Angular
 angular.module('OrdrinDataModule', []).service('ordrinDataService', ($http) => {
-    return new AngularCloudDataConnector.OrdrinService($http);
+    return new CloudDataConnector.OrdrinService($http);
 });

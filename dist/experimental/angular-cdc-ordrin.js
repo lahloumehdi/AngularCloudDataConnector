@@ -2,8 +2,8 @@
 /// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var OrdrinService = (function () {
         function OrdrinService(http) {
             this.tableNames = new Array();
@@ -73,9 +73,9 @@ var AngularCloudDataConnector;
         };
         return OrdrinService;
     })();
-    AngularCloudDataConnector.OrdrinService = OrdrinService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.OrdrinService = OrdrinService;
+})(CloudDataConnector || (CloudDataConnector = {}));
 // Angular
 angular.module('OrdrinDataModule', []).service('ordrinDataService', function ($http) {
-    return new AngularCloudDataConnector.OrdrinService($http);
+    return new CloudDataConnector.OrdrinService($http);
 });

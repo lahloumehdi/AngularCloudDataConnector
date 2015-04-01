@@ -1,7 +1,7 @@
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
 /// <reference path="../angular-cdc.d.ts" />
-declare module AngularCloudDataConnector {
+declare module CloudDataConnector {
     class OrdrinService implements IDataService {
         tableNames: string[];
         _dataId: number;

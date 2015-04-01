@@ -1,8 +1,8 @@
 ﻿/* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
     if (!indexedDB) {
         console.log("IDB not supported. Offline mode Framework will not be available.");
@@ -43,7 +43,7 @@ var AngularCloudDataConnector;
             }
 
             if (!indexedDB) {
-                indexedDB = new AngularCloudDataConnector.Internals.InMemoryDatabase();
+                indexedDB = new CloudDataConnector.Internals.InMemoryDatabase();
             }
 
             var request = indexedDB.open("syncbase", version);
@@ -549,6 +549,6 @@ var AngularCloudDataConnector;
         };
         return DataService;
     })();
-    AngularCloudDataConnector.DataService = DataService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
+    CloudDataConnector.DataService = DataService;
+})(CloudDataConnector || (CloudDataConnector = {}));
 //# sourceMappingURL=database.js.map

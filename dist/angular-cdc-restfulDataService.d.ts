@@ -1,7 +1,7 @@
 /// <reference path="../lib/angularjs/angular.d.ts" />
 /// <reference path="../lib/jquery/jquery.d.ts" />
 /// <reference path="cdc.d.ts" />
-declare module AngularCloudDataConnector {
+declare module CloudDataConnector {
     class RestfulDataService implements IDataService {
         _dataId: number;
         servicePath: string;
@@ -18,4 +18,4 @@ declare module AngularCloudDataConnector {
         private _getTable(tableName, callback, lastDate);
     }
 }
-declare var angularCDCRest: AngularCloudDataConnector.RestfulDataService;
+declare var angularCDCRest: CloudDataConnector.RestfulDataService;

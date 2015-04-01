@@ -1,13 +1,12 @@
 ﻿/* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 
-/// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
 
 
 declare var AWS;
 
-module AngularCloudDataConnector {
+module CloudDataConnector {
     export class AWSDataService implements IDataService {
         public AWSClient: any;
         public dataAvailableCallback: (any) => void;
@@ -133,7 +132,3 @@ module AngularCloudDataConnector {
         }
     }
 }
-
-// Angular
-var angularCDCAWS = new AngularCloudDataConnector.AWSDataService();
-angular.module('AngularCDC.AWS', []).value('angularCDCAWS', angularCDCAWS);

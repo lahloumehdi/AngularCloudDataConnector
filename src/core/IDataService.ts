@@ -3,7 +3,7 @@
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
 
-module AngularCloudDataConnector {
+module CloudDataConnector {
     export interface IDataService {
         _dataId: number;
         tableNames: Array<string>;

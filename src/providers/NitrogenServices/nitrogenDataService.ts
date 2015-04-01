@@ -12,7 +12,7 @@ declare var nitrogen;
 
 
 
-module AngularCloudDataConnector {
+module CloudDataConnector {
     
 
     //! The following classes exist only to help Tim identify the APIs that we really want for app development.  This will come down in the NitrogenApp.js file.
@@ -263,6 +263,6 @@ module AngularCloudDataConnector {
 }
 
 // Angular
-var nitrogenDataService = new AngularCloudDataConnector.NitrogenDataService();
+var nitrogenDataService = new CloudDataConnector.NitrogenDataService();
 angular.module('NitrogenDataModule', []).value('nitrogenDataService', nitrogenDataService);
  

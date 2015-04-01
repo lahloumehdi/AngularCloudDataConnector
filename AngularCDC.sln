@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angular CDC Providers", "src\providers\Angular CDC Providers.csproj", "{707BC5A3-9504-4AB9-9121-0B9567F55FAC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDC Providers", "src\providers\CDC Providers.csproj", "{707BC5A3-9504-4AB9-9121-0B9567F55FAC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDC Core", "src\core\CDC Core.csproj", "{F2AEA0AB-31A9-4EF0-A2BC-F7B31342E71B}"
 EndProject

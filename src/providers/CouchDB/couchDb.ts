@@ -1,13 +1,12 @@
 ﻿/* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 
-/// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
 
 interface JQueryStatic {
     couch: any;
 }
-module AngularCloudDataConnector {
+module CloudDataConnector {
     export class couchDBDataService implements IDataService {
         public azureClient: any;
         public dataAvailableCallback: (any) => void;
@@ -114,6 +113,3 @@ module AngularCloudDataConnector {
     }
 }
 
-// Angular
-var angularCDCCouchDB = new AngularCloudDataConnector.couchDBDataService();
-angular.module('AngularCDC.CouchDB', []).value('angularCDCCouchDB', angularCDCCouchDB);

@@ -1,7 +1,7 @@
 ﻿/* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */ /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
-var AngularCloudDataConnector;
-(function (AngularCloudDataConnector) {
+var CloudDataConnector;
+(function (CloudDataConnector) {
     var OfflineService = (function () {
         function OfflineService() {
             this._offlineIndex = 0;
@@ -133,13 +133,6 @@ var AngularCloudDataConnector;
         };
         return OfflineService;
     })();
-    AngularCloudDataConnector.OfflineService = OfflineService;
-})(AngularCloudDataConnector || (AngularCloudDataConnector = {}));
-
-// Angular
-var dataModule = angular.module('AngularCDC.OfflineModule', []);
-
-dataModule.factory('angularCDCOfflineService', function () {
-    return new AngularCloudDataConnector.OfflineService();
-});
+    CloudDataConnector.OfflineService = OfflineService;
+})(CloudDataConnector || (CloudDataConnector = {}));
 //# sourceMappingURL=offlineService.js.map

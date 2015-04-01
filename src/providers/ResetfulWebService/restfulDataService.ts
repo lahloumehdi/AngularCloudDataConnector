@@ -1,8 +1,7 @@
-﻿/// <reference path="../../../lib/angularjs/angular.d.ts" />
-/// <reference path="../../../lib/jquery/jquery.d.ts" />
+﻿/// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
 
-module AngularCloudDataConnector {
+module CloudDataConnector {
 
     export class RestfulDataService implements IDataService {
         _dataId: number;
@@ -124,6 +123,3 @@ module AngularCloudDataConnector {
         }
     }
 }
-
-var angularCDCRest = new AngularCloudDataConnector.RestfulDataService();
-angular.module('AngularCDC.RestWebServices', []).value('angularCDCRestWebServices', angularCDCRest);

@@ -1,0 +1,45 @@
+﻿<!-- Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+
+<!DOCTYPE html>
+<html ng-app="demoApp">
+<head>
+    <title>CouchDB</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/winjs/4.0.0-preview/js/WinJS.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/winjs/4.0.0-preview/js/en-US/ui.strings.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/winjs/4.0.0-preview/css/ui-light.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-2.0.3.min.js" data-require="jquery@*" data-semver="2.0.3"></script>
+    <link href="css/page.css" rel="stylesheet" />
+    <script src="https://ajax.aspnetcdn.com/ajax/mobileservices/MobileServices.Web-1.1.0.min.js"></script>
+    <script src="../dist/cdc.js"></script>
+    <script src="../dist/cdc-azuremobileservices.js"></script>
+    <script src="js/default.js"></script>
+    <!-- Shared references -->
+    <script src="/js/navigator.js"></script>
+</head>
+<body>
+    <section style="" aria-label="Main content" role="main">
+        <div class="top">
+            <input type="text" id="firstname" placeholder="firstname" />
+            <input type="text" id="lastname" placeholder="lastname" />
+            <input type="text" id="adress" placeholder="adress" />
+            <div>
+                <button id="add">add</button>
+                <button id="change" class="hide">change</button>
+                <button id="delete" class="hide">delete</button>
+            </div>   
+        </div>
+        <div data-win-control="WinJS.Binding.Template" id="listViewTemplate">
+            <div class="person">
+                <div class="head"><span data-win-bind="innerText:firstname"></span> <span data-win-bind="innerText:lastname"></span></div>
+                <div class="adress" data-win-bind="innerText:adress"></div>
+            </div>
+        </div>
+        <div data-win-control="WinJS.UI.ListView" id="listview"
+             data-win-options="{itemDataSource:model.ContactList.dataSource, layout: {type: WinJS.UI.GridLayout},
+        itemTemplate:select('#listViewTemplate')}"></div>
+
+
+    </section>
+</body>
+</html>

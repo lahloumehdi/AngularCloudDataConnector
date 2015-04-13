@@ -1,0 +1,67 @@
+﻿section {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    display: webkit-flex;
+    display: flex;
+    -ms-flex-direction: column;
+    webkit-flex-direction: column;
+    flex-direction: column;
+}
+
+.hide {
+    display: none;
+}
+
+#listview {
+    -ms-flex: 1;
+    flex: 1;
+    width: 100%;
+}
+
+.top {
+    padding-left: 20px;
+    background-color: #009587;
+}
+
+    .top input {
+        color: white;
+    }
+
+    .top button {
+        margin-bottom: 5px;
+        color: white;
+    }
+
+#listview.win-listview > .win-horizontal.win-viewport .win-surface {
+    padding-left: 20px;
+}
+
+#listview .person {
+    height: 90px;
+    width: 250px;
+    border-radius: 2px;
+    padding-bottom: 20px;
+}
+
+.win-container {
+    box-shadow: 0px 1px 6px rgba(0,0,0,0.12), 0px 1px 6px rgba(0,0,0,0.12);
+}
+
+.adress {
+    padding: 10px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#listview .person .head {
+    border-radius: 2px;
+    background-color: #009587;
+    color: white;
+    height: 40px;
+    padding: 10px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}

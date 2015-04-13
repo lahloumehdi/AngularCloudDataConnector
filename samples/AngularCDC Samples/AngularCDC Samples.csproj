@@ -218,6 +218,9 @@
     <Content Include="couchdb\bootstrapmaterial\fonts\Material-Design-Icons.woff" />
     <Content Include="couchdb\bootstrapmaterial\js\material.min.js.map" />
     <Content Include="couchdb\bootstrapmaterial\js\ripples.min.js.map" />
+    <Content Include="WinJS\css\page.css" />
+    <Content Include="WinJS\index.html" />
+    <Content Include="WinJS\js\default.js" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -284,6 +287,9 @@
     <TypeScriptCompile Include="lib\angularjs\angular-scenario.d.ts" />
     <TypeScriptCompile Include="lib\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="lib\jquery\jquery.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="WinJS\pages\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

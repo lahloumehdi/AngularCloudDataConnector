@@ -1,6 +1,6 @@
-var app = angular.module('demoApp', ['ngAnimate', 'AngularCDC', 'AngularCDC.RestWebServices', 'ui.bootstrap']);
-app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCRestWebServices', '$modal',
-    function ($scope, angularCDCService, angularCDCRestWebService, $modal) {
+var app = angular.module('demoApp', ['ngAnimate', 'CDC', 'AngularCDC.RestWebServices', 'ui.bootstrap']);
+app.controller('demoController', ['$scope', 'CDCService', 'angularCDCRestWebServices', '$modal',
+    function ($scope, CDCService, angularCDCRestWebService, $modal) {
         //define global scope variables
         $scope.sortField = 'FirstName';
         $scope.ascending = true;
@@ -9,13 +9,13 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCRest
 
         //Delete person
         $scope.Delete = function (tableName, entity) {
-            angularCDCService.remove(tableName, entity);
+            CDCService.remove(tableName, entity);
 
             // hack to always update data
-            angularCDCService._lastSyncDates[angularCDCRestWebService._dataId][tableName] = null;
+            CDCService._lastSyncDates[angularCDCRestWebService._dataId][tableName] = null;
 
-            angularCDCService.commit(function () {
-                // Things went well, call a sync (is not necessary if you added the scope to connect function of angularCDCService)
+            CDCService.commit(function () {
+                // Things went well, call a sync (is not necessary if you added the scope to connect function of CDCService)
                 // $scope.sync();
             }, function (err) {
                 console.log('Problem deleting data: ' + err.message);
@@ -27,10 +27,10 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCRest
 
         //Add a new person
         $scope.Add = function (tableName, entity) {
-            angularCDCService.add(tableName, entity);
+            CDCService.add(tableName, entity);
 
-            angularCDCService.commit(function () {
-                // Things went well, call a sync  (is not necessary if you added the scope to connect function of angularCDCService)
+            CDCService.commit(function () {
+                // Things went well, call a sync  (is not necessary if you added the scope to connect function of CDCService)
                 //$scope.sync();
             }, function () {
                 console.log('Problem adding data');
@@ -43,8 +43,8 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCRest
         //Update entity
         $scope.Change = function (tableName, entity) {
             // entity is already controlled, we just need to call a commit
-            angularCDCService.commit(function () {
-                // Things went well, call a sync (is not necessary if you added the scope to connect function of angularCDCService)
+            CDCService.commit(function () {
+                // Things went well, call a sync (is not necessary if you added the scope to connect function of CDCService)
                 //$scope.sync();
             }, function (err) {
                 console.log('Problem updating data: ' + err.message);
@@ -60,8 +60,8 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCRest
             angularCDCRestWebService.initSource(
                 'http://localhost:6131//api/',  // url
                  [{ objectName: 'people', keyProperyName: "Id" }]);      // access paths
-            angularCDCService.addSource(angularCDCRestWebService);
-            angularCDCService.connect(function (results) {
+            CDCService.addSource(angularCDCRestWebService);
+            CDCService.connect(function (results) {
                 // We are good to go
             }, $scope, 3);
         };

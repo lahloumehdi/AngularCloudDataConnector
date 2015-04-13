@@ -1,4 +1,3 @@
-/// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
 var CloudDataConnector;
@@ -116,5 +115,7 @@ var CloudDataConnector;
     })();
     CloudDataConnector.RestfulDataService = RestfulDataService;
 })(CloudDataConnector || (CloudDataConnector = {}));
+/// <reference path="../../../lib/angularjs/angular.d.ts" />
+/// <reference path="restfuldataservice.ts" />
 var angularCDCRest = new CloudDataConnector.RestfulDataService();
 angular.module('AngularCDC.RestWebServices', []).value('angularCDCRestWebServices', angularCDCRest);

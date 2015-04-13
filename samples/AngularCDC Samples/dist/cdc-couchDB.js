@@ -1,5 +1,4 @@
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
-/// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
 var CloudDataConnector;
@@ -97,6 +96,8 @@ var CloudDataConnector;
     })();
     CloudDataConnector.couchDBDataService = couchDBDataService;
 })(CloudDataConnector || (CloudDataConnector = {}));
+/// <reference path="../../../lib/angularjs/angular.d.ts" />
+/// <reference path="couchdb.ts" />
 // Angular
 var angularCDCCouchDB = new CloudDataConnector.couchDBDataService();
 angular.module('AngularCDC.CouchDB', []).value('angularCDCCouchDB', angularCDCCouchDB);

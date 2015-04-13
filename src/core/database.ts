@@ -23,20 +23,20 @@ module CloudDataConnector {
         // Temp space
         private _pendingEntities = {};
 
-        constructor(public angularCDCOfflineService: OfflineService, public angularCDCConnectivityService: ConnectivityService) {
+        constructor(public CDCOfflineService: OfflineService, public CDCConnectivityService: ConnectivityService) {
         }
 
-        public addSource(angularCDCService: IDataService): void {
-            if (angularCDCService._dataId !== undefined) {
+        public addSource(CDCService: IDataService): void {
+            if (CDCService._dataId !== undefined) {
                 return; // No need to register twice the same data service
             }
-            angularCDCService._dataId = this._dataServices.length;
+            CDCService._dataId = this._dataServices.length;
 
-            this._dataServices.push(angularCDCService);
+            this._dataServices.push(CDCService);
 
             var lastSyncDates: { [tableName: string]: Date; } = {};
-            for (var i = 0; i < angularCDCService.tableNames.length; i++) {
-                lastSyncDates[angularCDCService.tableNames[i]] = null;
+            for (var i = 0; i < CDCService.tableNames.length; i++) {
+                lastSyncDates[CDCService.tableNames[i]] = null;
             }
             this._lastSyncDates.push(lastSyncDates);
         }
@@ -72,7 +72,7 @@ module CloudDataConnector {
                 this._db = request.result;
 
                 // If online, check for pending orders
-                if (this.angularCDCConnectivityService.isOnline()) {
+                if (this.CDCConnectivityService.isOnline()) {
                     this.processPendingEntities(callback);
                 }
                 else {
@@ -80,12 +80,12 @@ module CloudDataConnector {
                 }
 
                 // Offline support
-                this.angularCDCConnectivityService.addStatusChangeNotify(() => {
-                    if (this.angularCDCConnectivityService.isOnline()) {
+                this.CDCConnectivityService.addStatusChangeNotify(() => {
+                    if (this.CDCConnectivityService.isOnline()) {
                         this.processPendingEntities(callback);
                     }
                     else {
-                        this.angularCDCOfflineService.reset();
+                        this.CDCOfflineService.reset();
                     }
                 });
             };
@@ -94,12 +94,12 @@ module CloudDataConnector {
             request.onupgradeneeded = event => {
                 this._db = event.target.result;
                 for (var i = 0; i < this._dataServices.length; i++) {
-                    var angularCDCService = this._dataServices[i];
-                    for (var j = 0; j < angularCDCService.tableNames.length; j++) {
-                        var tableName = angularCDCService.tableNames[j];
+                    var CDCService = this._dataServices[i];
+                    for (var j = 0; j < CDCService.tableNames.length; j++) {
+                        var tableName = CDCService.tableNames[j];
                         try {
-                            this._db.createObjectStore(tableName + "LocalDB" + angularCDCService._dataId, { keyPath: "id" });
-                            this._db.createObjectStore(tableName + "OfflineDB" + angularCDCService._dataId, { keyPath: "index" });
+                            this._db.createObjectStore(tableName + "LocalDB" + CDCService._dataId, { keyPath: "id" });
+                            this._db.createObjectStore(tableName + "OfflineDB" + CDCService._dataId, { keyPath: "index" });
                             console.log("Created object store in DB for " + tableName);
                         } catch (ex) {
                             console.log("Error while creating object stores for " + tableName + " Exception: " + ex.message);
@@ -109,14 +109,14 @@ module CloudDataConnector {
             };
         }
 
-        private _prepareAndClone(objectToClone: any, tableName: string, angularCDCService: IDataService): any {
+        private _prepareAndClone(objectToClone: any, tableName: string, CDCService: IDataService): any {
             var result = {};
 
             for (var prop in objectToClone) {
                 result[prop] = objectToClone[prop];
             }
 
-            this._markItem(result, tableName, angularCDCService);
+            this._markItem(result, tableName, CDCService);
 
             return result;
         }
@@ -161,16 +161,16 @@ module CloudDataConnector {
         }
 
         // onsuccess needs to be called with an object where the keys are the tablename and the values are the "tables"
-        syncDataService(angularCDCService: IDataService, onsuccess: (result: any) => void): void {
-            if (this.angularCDCConnectivityService.isOnline()) {
+        syncDataService(CDCService: IDataService, onsuccess: (result: any) => void): void {
+            if (this.CDCConnectivityService.isOnline()) {
                 // Get the updated rows since last sync date
-                angularCDCService.get(tables => {
+                CDCService.get(tables => {
                     var tableCount = tables.length;
 
                     for (var i = 0; i < tableCount; i++) {
                         var tableName = tables[i].tableName;
                         var list = tables[i].table;
-                        var lastSyncDate = this._lastSyncDates[angularCDCService._dataId][tableName];
+                        var lastSyncDate = this._lastSyncDates[CDCService._dataId][tableName];
                         var firstCall = (lastSyncDate === null);
 
                         // get sync date and delete status
@@ -178,15 +178,15 @@ module CloudDataConnector {
                             var entity = list[index];
                             var updatedate = new Date(entity.sync_updated);
                             if (!lastSyncDate || updatedate > lastSyncDate) {
-                                this._lastSyncDates[angularCDCService._dataId][tableName] = updatedate;
+                                this._lastSyncDates[CDCService._dataId][tableName] = updatedate;
                             }
                         }
 
-                        this.updateEntriesForTable(tableName, angularCDCService, firstCall, list, (currentTableName) => {
-                            this.getEntriesForServiceTable(angularCDCService, currentTableName, onsuccess);
+                        this.updateEntriesForTable(tableName, CDCService, firstCall, list, (currentTableName) => {
+                            this.getEntriesForServiceTable(CDCService, currentTableName, onsuccess);
                         });
                     }
-                }, this._lastSyncDates[angularCDCService._dataId]);
+                }, this._lastSyncDates[CDCService._dataId]);
                 return;
             }
 
@@ -198,22 +198,22 @@ module CloudDataConnector {
         public get tableCount(): number {
             var result = 0;
             for (var i = 0; i < this._dataServices.length; i++) {
-                var angularCDCService = this._dataServices[i];
-                result += angularCDCService.tableNames.length;
+                var CDCService = this._dataServices[i];
+                result += CDCService.tableNames.length;
             }
 
             return result;
         }
 
-        public doThisForAllTables(action: (angularCDCService: IDataService, tableName: string, callback: (result: any) => void) => void, onsuccess: (results: Array<any>) => void): void {
+        public doThisForAllTables(action: (CDCService: IDataService, tableName: string, callback: (result: any) => void) => void, onsuccess: (results: Array<any>) => void): void {
             var total = this.tableCount;
             var count = 0;
             var results = [];
             for (var i = 0; i < this._dataServices.length; i++) {
-                var angularCDCService = this._dataServices[i];
-                for (var j = 0; j < angularCDCService.tableNames.length; j++) {
-                    var tableName = angularCDCService.tableNames[j];
-                    action(angularCDCService, tableName, result => {
+                var CDCService = this._dataServices[i];
+                for (var j = 0; j < CDCService.tableNames.length; j++) {
+                    var tableName = CDCService.tableNames[j];
+                    action(CDCService, tableName, result => {
                         count++;
                         results.push(result);
                         if (count === total) {
@@ -225,8 +225,8 @@ module CloudDataConnector {
         }
 
         // this updates the values in the local index.db store - when it completes onsuccess is called with no value.
-        public updateEntriesForTable(tableName: string, angularCDCService: IDataService, firstCall: boolean, entities: Array<IEntity>, onsuccess: (string) => void): void {
-            var dbName = tableName + "LocalDB" + angularCDCService._dataId;
+        public updateEntriesForTable(tableName: string, CDCService: IDataService, firstCall: boolean, entities: Array<IEntity>, onsuccess: (string) => void): void {
+            var dbName = tableName + "LocalDB" + CDCService._dataId;
             var transaction = this._db.transaction([dbName], "readwrite");
 
             // the transaction could abort because of a QuotaExceededError error
@@ -265,8 +265,8 @@ module CloudDataConnector {
 
             this.doThisForAllTables(
                 // action
-                (angularCDCService, tableName, doNext) => {
-                    this.getEntriesForServiceTable(angularCDCService, tableName, doNext);
+                (CDCService, tableName, doNext) => {
+                    this.getEntriesForServiceTable(CDCService, tableName, doNext);
                 },
                 // Below is called with an array that this result passed to the onsuccess function for each table
                 partialResultArray => {
@@ -281,8 +281,8 @@ module CloudDataConnector {
         }
 
         // onsuccess is called with an Object where the key is the tableName and the value is the table.
-        public getEntriesForServiceTable(angularCDCService: IDataService, tableName: string, onsuccess: (result: any) => void): void {
-            var dbName = tableName + "LocalDB" + angularCDCService._dataId;
+        public getEntriesForServiceTable(CDCService: IDataService, tableName: string, onsuccess: (result: any) => void): void {
+            var dbName = tableName + "LocalDB" + CDCService._dataId;
             var storeObject = this._db.transaction(dbName).objectStore(dbName);
             var resultTable = [];
 
@@ -297,7 +297,7 @@ module CloudDataConnector {
                         var result = {
                             tableName: tableName,
                             table: resultTable,
-                            angularCDCService: angularCDCService
+                            CDCService: CDCService
                         };
 
                         this[tableName] = resultTable;
@@ -311,11 +311,11 @@ module CloudDataConnector {
         public processPendingEntities(onsuccess: (result: any) => void): void {
             var remainingTables = 0;
             for (var i = 0; i < this._dataServices.length; i++) {
-                var angularCDCService = this._dataServices[i];
-                remainingTables += angularCDCService.tableNames.length;
-                for (var j = 0; j < angularCDCService.tableNames.length; j++) {
-                    var tableName = angularCDCService.tableNames[j];
-                    this.angularCDCOfflineService.checkForPendingEntities(this._db, tableName, angularCDCService, () => {
+                var CDCService = this._dataServices[i];
+                remainingTables += CDCService.tableNames.length;
+                for (var j = 0; j < CDCService.tableNames.length; j++) {
+                    var tableName = CDCService.tableNames[j];
+                    this.CDCOfflineService.checkForPendingEntities(this._db, tableName, CDCService, () => {
                         remainingTables--;
                         if (remainingTables === 0) {
                             this.sync(onsuccess);
@@ -326,9 +326,9 @@ module CloudDataConnector {
         }
 
         public findDataService(tableName: string): IDataService {
-            var angularCDCService = $.grep(this._dataServices, service => $.inArray(tableName, service.tableNames) != -1);
-            if (angularCDCService.length >= 0) {
-                return angularCDCService[0];
+            var CDCService = $.grep(this._dataServices, service => $.inArray(tableName, service.tableNames) != -1);
+            if (CDCService.length >= 0) {
+                return CDCService[0];
             }
             return null;
         }
@@ -345,7 +345,7 @@ module CloudDataConnector {
             });
         }
 
-        private _markItem(objectToMark: any, tableName: string, angularCDCService: IDataService): IControlledEntity {
+        private _markItem(objectToMark: any, tableName: string, CDCService: IDataService): IControlledEntity {
             if (this._pendingEntities[tableName] && objectToMark._getControllerItem) {
                 // Existing one
                 var controlledEntity = objectToMark._getControllerItem();
@@ -354,7 +354,7 @@ module CloudDataConnector {
                 // New one
                 controlledEntity = {
                     isDirty: false,
-                    angularCDCService: angularCDCService,
+                    CDCService: CDCService,
                     tableName: tableName,
                     entity: objectToMark,
                     isNew: false,
@@ -424,7 +424,7 @@ module CloudDataConnector {
 
             // onerror
             var processOnError = () => {
-                if (!this.angularCDCConnectivityService.isOnline()) {
+                if (!this.CDCConnectivityService.isOnline()) {
                     this.readAll(onerror);
                 } else {
                     this.sync(onerror);
@@ -445,13 +445,13 @@ module CloudDataConnector {
                     var onlineFunc;
                     if (entity.isNew) {                         // Add
                         offlineOrder = "put";
-                        onlineFunc = entity.angularCDCService.add;
+                        onlineFunc = entity.CDCService.add;
                     } else if (entity.isDeleted) {              // Remove
                         offlineOrder = "delete";
-                        onlineFunc = entity.angularCDCService.remove;
+                        onlineFunc = entity.CDCService.remove;
                     } else {                                    // Update
                         offlineOrder = "put";
-                        onlineFunc = entity.angularCDCService.update;
+                        onlineFunc = entity.CDCService.update;
                     }
 
                     // Resetting states
@@ -460,8 +460,8 @@ module CloudDataConnector {
                     entity.isDeleted = false;
 
                     // Sending orders
-                    if (!this.angularCDCConnectivityService.isOnline()) { // Offline Mode
-                        this.angularCDCOfflineService.processOfflineEntity(this._db, tableName, entity.angularCDCService, offlineOrder, entity.entity, () => {
+                    if (!this.CDCConnectivityService.isOnline()) { // Offline Mode
+                        this.CDCOfflineService.processOfflineEntity(this._db, tableName, entity.CDCService, offlineOrder, entity.entity, () => {
                             count--;
 
                             if (count === 0) {
@@ -472,7 +472,7 @@ module CloudDataConnector {
                     }
 
                     // Online mode
-                    onlineFunc.call(entity.angularCDCService, tableName, entity.entity, () => {
+                    onlineFunc.call(entity.CDCService, tableName, entity.entity, () => {
                         count--;
 
                         if (count === 0) { // All done
@@ -492,7 +492,7 @@ module CloudDataConnector {
             this._pendingEntities = {};
 
             // Sync
-            if (!this.angularCDCConnectivityService.isOnline()) {
+            if (!this.CDCConnectivityService.isOnline()) {
                 this.readAll(onsuccess);
                 return;
             }
@@ -501,7 +501,7 @@ module CloudDataConnector {
         }
 
         private _processFunction(tableName: string, entityOrArray: any, itemFunc: (entity: any) => void): void {
-            var angularCDCService = this.findDataService(tableName);
+            var CDCService = this.findDataService(tableName);
             var entities = entityOrArray;
             if (!Array.isArray(entityOrArray)) {
                 entities = (entityOrArray === null) ? [] : [entityOrArray];
@@ -509,7 +509,7 @@ module CloudDataConnector {
 
             for (var index = 0; index < entities.length; index++) {
                 var entity = entities[index];
-                var controlledItem = this._markItem(entity, tableName, angularCDCService);
+                var controlledItem = this._markItem(entity, tableName, CDCService);
                 itemFunc(controlledItem);
 
 

@@ -1,7 +1,6 @@
-/* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
-/// <reference path="../../../lib/angularjs/angular.d.ts" />
-/// <reference path="../../../lib/jquery/jquery.d.ts" />
+﻿/* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */ /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
+
 var CloudDataConnector;
 (function (CloudDataConnector) {
     var AzureDataService = (function () {
@@ -13,12 +12,15 @@ var CloudDataConnector;
             this.azureClient = client;
             this.tableNames = tableNames;
         };
+
         // the callback is called with an array of objects { tableName: <tableName>, table: <array> }
         AzureDataService.prototype.get = function (updateCallback, lastSyncDates) {
             this.dataAvailableCallback = updateCallback;
+
             var count = 0;
             var total = this.tableNames.length;
             var result = [];
+
             var tableName;
             for (var x = 0; x < total; x++) {
                 tableName = this.tableNames[x];
@@ -27,18 +29,21 @@ var CloudDataConnector;
                     count++;
                     updateCallback([resultElement]);
                     if (count == total) {
-                    } //!+ request is finished.  Might be interesting to have a callback to top level code called at this point.
+                    }
                 }, lastSyncDate);
             }
         };
+
         AzureDataService.prototype._getTable = function (tableName, callback, lastDate) {
             var Table = this.azureClient.getTable(tableName);
             var firstCall = false;
+
             if (!lastDate) {
                 lastDate = new Date(null);
                 firstCall = true;
             }
-            // Since the server sets the updateData and we are doiug a sort on date we assume we will never miss an item as long as we query from our latest update date.  
+
+            // Since the server sets the updateData and we are doiug a sort on date we assume we will never miss an item as long as we query from our latest update date.
             Table.where(function (lastDateParam, firstCallParam) {
                 return (firstCallParam && !this.sync_deleted) || (!firstCallParam && this.sync_updated > lastDateParam);
             }, lastDate, firstCall).orderBy("sync_updated").take(100).read().done(function (table) {
@@ -50,10 +55,12 @@ var CloudDataConnector;
                 callback(null);
             });
         };
+
         AzureDataService.prototype.remove = function (tableName, entity, onsuccess, onerror) {
             var Table = this.azureClient.getTable(tableName);
             Table.del({ id: entity.id }).then(onsuccess, onerror);
         };
+
         AzureDataService.prototype.update = function (tableName, entity, onsuccess, onerror) {
             var Table = this.azureClient.getTable(tableName);
             delete entity.$$hashKey;
@@ -61,6 +68,7 @@ var CloudDataConnector;
                 onsuccess(newProperty);
             }, onerror);
         };
+
         AzureDataService.prototype.add = function (tableName, entity, onsuccess, onerror) {
             var Table = this.azureClient.getTable(tableName);
             delete entity.$$hashKey;
@@ -72,11 +80,4 @@ var CloudDataConnector;
     })();
     CloudDataConnector.AzureDataService = AzureDataService;
 })(CloudDataConnector || (CloudDataConnector = {}));
-// Angular
-var angularCDCAzureMobileService = new CloudDataConnector.AzureDataService();
-angular.module('AngularCDC.AzureMobileServices', []).value('angularCDCAzureMobileService', angularCDCAzureMobileService);
-/// <reference path="../../../lib/angularjs/angular.d.ts" />
-/// <reference path="azuredataservice.ts" />
-// Angular
-var angularCDCAzureMobileService = new CloudDataConnector.AzureDataService();
-angular.module('AngularCDC.AzureMobileServices', []).value('angularCDCAzureMobileService', angularCDCAzureMobileService);
+//# sourceMappingURL=azureDataService.js.map

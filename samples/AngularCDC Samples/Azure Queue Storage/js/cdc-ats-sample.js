@@ -1,6 +1,6 @@
-var app = angular.module('demoApp', ['ngAnimate', 'AngularCDC', 'AngularCDC.AzureTableStorageServices', 'ui.bootstrap']);
-app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAzureTableStorageServices', '$modal',
-    function ($scope, angularCDCService, angularCDCAzureMobileService, $modal) {
+var app = angular.module('demoApp', ['ngAnimate', 'CDC', 'AngularCDC.AzureQueueStorageServices', 'ui.bootstrap']);
+app.controller('demoController', ['$scope', 'CDCService', 'angularCDCAzureQueueStorageServices', '$modal',
+    function ($scope, CDCService, angularCDCAzureQueueStorageServices, $modal) {
         //define global scope variables
         $scope.sortField = 'firstname';
         $scope.ascending = true;
@@ -9,11 +9,11 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAzur
 
         //Delete person
         $scope.Delete = function (tableName, entity) {
-            angularCDCService.remove(tableName, entity);
-            angularCDCService._lastSyncDates[angularCDCRestWebService._dataId][tableName] = null;
+            CDCService.remove(tableName, entity);
+            CDCService._lastSyncDates[angularCDCAzureQueueStorageServices._dataId][tableName] = null;
 
-            angularCDCService.commit(function () {
-                // Things went well, call a sync (is not necessary if you added the scope to connect function of angularCDCService)
+            CDCService.commit(function () {
+                // Things went well, call a sync (is not necessary if you added the scope to connect function of CDCService)
           //      $scope.sync();
             }, function (err) {
                 console.log('Problem deleting data: ' + err.message);
@@ -25,11 +25,11 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAzur
 
         //Add a new person
         $scope.Add = function (tableName, entity) {
-            angularCDCService.add(tableName, entity);
-            angularCDCService._lastSyncDates[angularCDCRestWebService._dataId][tableName] = null;
+            CDCService.add(tableName, entity);
+            CDCService._lastSyncDates[angularCDCAzureQueueStorageServices._dataId][tableName] = null;
 
-            angularCDCService.commit(function () {
-                // Things went well, call a sync  (is not necessary if you added the scope to connect function of angularCDCService)
+            CDCService.commit(function () {
+                // Things went well, call a sync  (is not necessary if you added the scope to connect function of CDCService)
                 // $scope.sync();
             }, function (e) {
                 console.log('Problem adding data');
@@ -40,14 +40,14 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAzur
         };
         //function to sync the data
         $scope.sync = function () {
-            angularCDCService.readAll();
+            CDCService.readAll();
         };
 
         //Update entity
         $scope.Change = function (tableName, entity) {
             // entity is already controlled, we just need to call a commit
-            angularCDCService.commit(function () {
-                // Things went well, call a sync (is not necessary if you added the scope to connect function of angularCDCService)
+            CDCService.commit(function () {
+                // Things went well, call a sync (is not necessary if you added the scope to connect function of CDCService)
                 // $scope.sync();
             }, function (err) {
                 console.log('Problem updating data: ' + err.message);
@@ -60,18 +60,18 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAzur
 
         //intialize the connection to Azure Mobile Services, and register provider to AngularCDC
         $scope.initialize = function () {
-            angularCDCAzureTableStorageServices.addSource('testmehdi', // accountName
+            angularCDCAzureQueueStorageServices.addSource('testmehdi', // accountName
               'RnomjpHwjX1KkD3Ymd+iZFFfftoIU7H3Xy8OmM04tahF4Ra4eXtQAiy/IdEGINqvXxC58QwNlwbJSEH0FBNyuA==',  // secretKey
                  ['people']);      // table name
-            angularCDCService.addSource(angularCDCAzureTableStorageServices);
-            angularCDCService.connect(function (results) {
+            CDCService.addSource(angularCDCAzureQueueStorageServices);
+            CDCService.connect(function (results) {
                 if (results === false) {
-                    throw "angularCDCService must first be successfully initialized";
+                    throw "CDCService must first be successfully initialized";
                 }
                 else {
                     // We are good to go
                 }
-            }, $scope, 3);
+            }, $scope,$scope.$apply, 3);
         };
 
         //trigger modal dialog 
@@ -96,9 +96,7 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAzur
                 } else if (res.action == 'update') {
                     $scope.Change('people', person);
                 } else if (res.action == 'create') {
-                    person.RowKey = Math.random() + '';
-                    person.id = person.RowKey;
-                    person.PartitionKey = 'people';
+                    person.id = Math.random() + '';
                     $scope.Add('people', person);
                 }
             }, function () {

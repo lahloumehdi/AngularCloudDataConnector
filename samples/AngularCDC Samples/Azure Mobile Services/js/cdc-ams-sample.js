@@ -1,6 +1,6 @@
-var app = angular.module('demoApp', ['ngAnimate', 'AngularCDC', 'AngularCDC.AzureMobileServices', 'ui.bootstrap']);
-app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAzureMobileService', '$modal',
-    function ($scope, angularCDCService, angularCDCAzureMobileService, $modal) {
+var app = angular.module('demoApp', ['ngAnimate', 'CDC', 'AngularCDC.AzureMobileServices', 'ui.bootstrap']);
+app.controller('demoController', ['$scope', 'CDCService', 'angularCDCAzureMobileService', '$modal',
+    function ($scope, CDCService, angularCDCAzureMobileService, $modal) {
         //define global scope variables
         $scope.sortField = 'firstname';
         $scope.ascending = true;
@@ -9,10 +9,10 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAzur
 
         //Delete person
         $scope.Delete = function (tableName, entity) {
-            angularCDCService.remove(tableName, entity);
+            CDCService.remove(tableName, entity);
 
-            angularCDCService.commit(function () {
-                // Things went well, call a sync (is not necessary if you added the scope to connect function of angularCDCService)
+            CDCService.commit(function () {
+                // Things went well, call a sync (is not necessary if you added the scope to connect function of CDCService)
                 // $scope.sync();
             }, function (err) {
                 console.log('Problem deleting data: ' + err.message);
@@ -24,10 +24,10 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAzur
 
         //Add a new person
         $scope.Add = function (tableName, entity) {
-            angularCDCService.add(tableName, entity);
+            CDCService.add(tableName, entity);
 
-            angularCDCService.commit(function () {
-                // Things went well, call a sync  (is not necessary if you added the scope to connect function of angularCDCService)
+            CDCService.commit(function () {
+                // Things went well, call a sync  (is not necessary if you added the scope to connect function of CDCService)
                 //$scope.sync();
             }, function () {
                 console.log('Problem adding data');
@@ -40,8 +40,8 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAzur
         //Update entity
         $scope.Change = function (tableName, entity) {
             // entity is already controlled, we just need to call a commit
-            angularCDCService.commit(function () {
-                // Things went well, call a sync (is not necessary if you added the scope to connect function of angularCDCService)
+            CDCService.commit(function () {
+                // Things went well, call a sync (is not necessary if you added the scope to connect function of CDCService)
                 //$scope.sync();
             }, function (err) {
                 console.log('Problem updating data: ' + err.message);
@@ -57,10 +57,10 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAzur
             angularCDCAzureMobileService.addSource('https://angularpeoplev2.azure-mobile.net/', // appUrl
                 'DDJpBYxoQEUznagCnyYNRYfkDxpYyz90',  // appKey
                  ['people']);      // table name
-            angularCDCService.addSource(angularCDCAzureMobileService);
-            angularCDCService.connect(function (results) {
+            CDCService.addSource(angularCDCAzureMobileService);
+            CDCService.connect(function (results) {
                 // We are good to go
-            }, $scope, 3);
+            }, $scope, $scope.$apply, 3);
         };
         //trigger modal dialog 
         $scope.Edit = function (mode, person) {

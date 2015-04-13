@@ -1,17 +1,19 @@
-var app = angular.module('demoApp', ['ngAnimate', 'AngularCDC', 'AngularCDC.AWS', 'ui.bootstrap']);
-app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAWS', '$modal',
-            function ($scope, angularCDCService, angularCDCAWS, $modal) {
+var app = angular.module('demoApp', ['ngAnimate', 'CDC', 'AngularCDC.CouchDB', 'ui.bootstrap']);
+app.controller('demoController', ['$scope', 'CDCService', 'angularCDCCouchDB', '$modal',
+            function ($scope, CDCService, angularCDCCouchDB, $modal) {
                 //define global scope variables
                 $scope.sortField = 'firstname';
                 $scope.ascending = true;
                 $scope.currentColumn = 0;
+                $scope.people = [];
                 $scope.menu = "main";
-
                 //Delete person
                 $scope.Delete = function (tableName, entity) {
-                    angularCDCService.remove(tableName, entity);
+                    CDCService.remove(tableName, entity);
 
-                    angularCDCService.commit(function () {
+                    CDCService.commit(function () {
+                        // Things went well, call a sync (is not necessary if you added the scope to connect function of CDCService)
+                        // $scope.sync();
                     }, function (err) {
                         console.log('Problem deleting data: ' + err.message);
                     });
@@ -22,9 +24,11 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAWS'
 
                 //Add a new person
                 $scope.Add = function (tableName, entity) {
-                    angularCDCService.add(tableName, entity);
+                    CDCService.add(tableName, entity);
 
-                    angularCDCService.commit(function () {
+                    CDCService.commit(function () {
+                        // Things went well, call a sync (is not necessary if you added the scope to connect function of CDCService)
+                        // $scope.sync();
                     }, function () {
                         console.log('Problem adding data');
                     });
@@ -36,7 +40,10 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAWS'
                 //Update entity
                 $scope.Change = function (tableName, entity) {
                     // entity is already controlled, we just need to call a commit
-                    angularCDCService.commit(function () {
+                    CDCService.commit(function () {
+                        CDCService._lastSyncDates[angularCDCCouchDB._dataId][tableName] = null;
+                        // Things went well, call a sync (is not necessary if you added the scope to connect function of CDCService)
+                        // $scope.sync();
                     }, function (err) {
                         console.log('Problem updating data: ' + err.message);
                     });
@@ -45,13 +52,23 @@ app.controller('demoController', ['$scope', 'angularCDCService', 'angularCDCAWS'
 
                 };
 
+                //function to sync the data
+                $scope.sync = function () {
+                    CDCService.readAll();
+                };
+
                 //intialize the connection to Amazon Web Services, and register provider to AngularCDC
                 $scope.initialize = function () {
 
-                    angularCDCAWS.initSource('659273569624', 'arn:aws:iam::659273569624:role/ACDCRole', 'us-east-1:d0023d8a-3369-4d1a-9f3e-a5f5c0dabbce', 'us-east-1', ['people']);
-                    angularCDCService.addSource(angularCDCAWS);
-                    angularCDCService.connect(function (results) {
-                        // We are good to go
+                    angularCDCCouchDB.initSource('https://acdc.iriscouch.com', ['people']);
+                    CDCService.addSource(angularCDCCouchDB);
+                    CDCService.connect(function (results) {
+                        if (results === false) {
+                            throw "CDCService must first be successfully initialized";
+                        }
+                        else {
+                            // We are good to go
+                        }
                     }, $scope, 3);
                 };
 

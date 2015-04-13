@@ -88,9 +88,9 @@ var CloudDataConnector;
         console.log("IDB not supported. Offline mode Framework will not be available.");
     }
     var DataService = (function () {
-        function DataService(angularCDCOfflineService, angularCDCConnectivityService) {
-            this.angularCDCOfflineService = angularCDCOfflineService;
-            this.angularCDCConnectivityService = angularCDCConnectivityService;
+        function DataService(CDCOfflineService, CDCConnectivityService) {
+            this.CDCOfflineService = CDCOfflineService;
+            this.CDCConnectivityService = CDCConnectivityService;
             this._dataServices = new Array();
             // On a per table basis we keep track of the latest date we got data.  Ideally the data set contains the ability to query from a given time
             // So _lastSyncDate[0]['tableName']returns date.
@@ -98,15 +98,15 @@ var CloudDataConnector;
             // Temp space
             this._pendingEntities = {};
         }
-        DataService.prototype.addSource = function (angularCDCService) {
-            if (angularCDCService._dataId !== undefined) {
+        DataService.prototype.addSource = function (CDCService) {
+            if (CDCService._dataId !== undefined) {
                 return; // No need to register twice the same data service
             }
-            angularCDCService._dataId = this._dataServices.length;
-            this._dataServices.push(angularCDCService);
+            CDCService._dataId = this._dataServices.length;
+            this._dataServices.push(CDCService);
             var lastSyncDates = {};
-            for (var i = 0; i < angularCDCService.tableNames.length; i++) {
-                lastSyncDates[angularCDCService.tableNames[i]] = null;
+            for (var i = 0; i < CDCService.tableNames.length; i++) {
+                lastSyncDates[CDCService.tableNames[i]] = null;
             }
             this._lastSyncDates.push(lastSyncDates);
         };
@@ -137,19 +137,19 @@ var CloudDataConnector;
                 console.log("DB successfully opened");
                 _this._db = request.result;
                 // If online, check for pending orders
-                if (_this.angularCDCConnectivityService.isOnline()) {
+                if (_this.CDCConnectivityService.isOnline()) {
                     _this.processPendingEntities(callback);
                 }
                 else {
                     _this.sync(callback);
                 }
                 // Offline support
-                _this.angularCDCConnectivityService.addStatusChangeNotify(function () {
-                    if (_this.angularCDCConnectivityService.isOnline()) {
+                _this.CDCConnectivityService.addStatusChangeNotify(function () {
+                    if (_this.CDCConnectivityService.isOnline()) {
                         _this.processPendingEntities(callback);
                     }
                     else {
-                        _this.angularCDCOfflineService.reset();
+                        _this.CDCOfflineService.reset();
                     }
                 });
             };
@@ -157,12 +157,12 @@ var CloudDataConnector;
             request.onupgradeneeded = function (event) {
                 _this._db = event.target.result;
                 for (var i = 0; i < _this._dataServices.length; i++) {
-                    var angularCDCService = _this._dataServices[i];
-                    for (var j = 0; j < angularCDCService.tableNames.length; j++) {
-                        var tableName = angularCDCService.tableNames[j];
+                    var CDCService = _this._dataServices[i];
+                    for (var j = 0; j < CDCService.tableNames.length; j++) {
+                        var tableName = CDCService.tableNames[j];
                         try {
-                            _this._db.createObjectStore(tableName + "LocalDB" + angularCDCService._dataId, { keyPath: "id" });
-                            _this._db.createObjectStore(tableName + "OfflineDB" + angularCDCService._dataId, { keyPath: "index" });
+                            _this._db.createObjectStore(tableName + "LocalDB" + CDCService._dataId, { keyPath: "id" });
+                            _this._db.createObjectStore(tableName + "OfflineDB" + CDCService._dataId, { keyPath: "index" });
                             console.log("Created object store in DB for " + tableName);
                         }
                         catch (ex) {
@@ -172,12 +172,12 @@ var CloudDataConnector;
                 }
             };
         };
-        DataService.prototype._prepareAndClone = function (objectToClone, tableName, angularCDCService) {
+        DataService.prototype._prepareAndClone = function (objectToClone, tableName, CDCService) {
             var result = {};
             for (var prop in objectToClone) {
                 result[prop] = objectToClone[prop];
             }
-            this._markItem(result, tableName, angularCDCService);
+            this._markItem(result, tableName, CDCService);
             return result;
         };
         // Sync callback gets an object where the keys on the object will be placed into the objectStorage of the controller.
@@ -214,29 +214,29 @@ var CloudDataConnector;
             }
         };
         // onsuccess needs to be called with an object where the keys are the tablename and the values are the "tables"
-        DataService.prototype.syncDataService = function (angularCDCService, onsuccess) {
+        DataService.prototype.syncDataService = function (CDCService, onsuccess) {
             var _this = this;
-            if (this.angularCDCConnectivityService.isOnline()) {
+            if (this.CDCConnectivityService.isOnline()) {
                 // Get the updated rows since last sync date
-                angularCDCService.get(function (tables) {
+                CDCService.get(function (tables) {
                     var tableCount = tables.length;
                     for (var i = 0; i < tableCount; i++) {
                         var tableName = tables[i].tableName;
                         var list = tables[i].table;
-                        var lastSyncDate = _this._lastSyncDates[angularCDCService._dataId][tableName];
+                        var lastSyncDate = _this._lastSyncDates[CDCService._dataId][tableName];
                         var firstCall = (lastSyncDate === null);
                         for (var index = 0; index < list.length; index++) {
                             var entity = list[index];
                             var updatedate = new Date(entity.sync_updated);
                             if (!lastSyncDate || updatedate > lastSyncDate) {
-                                _this._lastSyncDates[angularCDCService._dataId][tableName] = updatedate;
+                                _this._lastSyncDates[CDCService._dataId][tableName] = updatedate;
                             }
                         }
-                        _this.updateEntriesForTable(tableName, angularCDCService, firstCall, list, function (currentTableName) {
-                            _this.getEntriesForServiceTable(angularCDCService, currentTableName, onsuccess);
+                        _this.updateEntriesForTable(tableName, CDCService, firstCall, list, function (currentTableName) {
+                            _this.getEntriesForServiceTable(CDCService, currentTableName, onsuccess);
                         });
                     }
-                }, this._lastSyncDates[angularCDCService._dataId]);
+                }, this._lastSyncDates[CDCService._dataId]);
                 return;
             }
             // Offline
@@ -246,8 +246,8 @@ var CloudDataConnector;
             get: function () {
                 var result = 0;
                 for (var i = 0; i < this._dataServices.length; i++) {
-                    var angularCDCService = this._dataServices[i];
-                    result += angularCDCService.tableNames.length;
+                    var CDCService = this._dataServices[i];
+                    result += CDCService.tableNames.length;
                 }
                 return result;
             },
@@ -259,10 +259,10 @@ var CloudDataConnector;
             var count = 0;
             var results = [];
             for (var i = 0; i < this._dataServices.length; i++) {
-                var angularCDCService = this._dataServices[i];
-                for (var j = 0; j < angularCDCService.tableNames.length; j++) {
-                    var tableName = angularCDCService.tableNames[j];
-                    action(angularCDCService, tableName, function (result) {
+                var CDCService = this._dataServices[i];
+                for (var j = 0; j < CDCService.tableNames.length; j++) {
+                    var tableName = CDCService.tableNames[j];
+                    action(CDCService, tableName, function (result) {
                         count++;
                         results.push(result);
                         if (count === total) {
@@ -273,8 +273,8 @@ var CloudDataConnector;
             }
         };
         // this updates the values in the local index.db store - when it completes onsuccess is called with no value.
-        DataService.prototype.updateEntriesForTable = function (tableName, angularCDCService, firstCall, entities, onsuccess) {
-            var dbName = tableName + "LocalDB" + angularCDCService._dataId;
+        DataService.prototype.updateEntriesForTable = function (tableName, CDCService, firstCall, entities, onsuccess) {
+            var dbName = tableName + "LocalDB" + CDCService._dataId;
             var transaction = this._db.transaction([dbName], "readwrite");
             // the transaction could abort because of a QuotaExceededError error
             transaction.onabort = function (event) {
@@ -308,8 +308,8 @@ var CloudDataConnector;
             var _this = this;
             this.doThisForAllTables(
             // action
-            function (angularCDCService, tableName, doNext) {
-                _this.getEntriesForServiceTable(angularCDCService, tableName, doNext);
+            function (CDCService, tableName, doNext) {
+                _this.getEntriesForServiceTable(CDCService, tableName, doNext);
             }, 
             // Below is called with an array that this result passed to the onsuccess function for each table
             function (partialResultArray) {
@@ -323,9 +323,9 @@ var CloudDataConnector;
             });
         };
         // onsuccess is called with an Object where the key is the tableName and the value is the table.
-        DataService.prototype.getEntriesForServiceTable = function (angularCDCService, tableName, onsuccess) {
+        DataService.prototype.getEntriesForServiceTable = function (CDCService, tableName, onsuccess) {
             var _this = this;
-            var dbName = tableName + "LocalDB" + angularCDCService._dataId;
+            var dbName = tableName + "LocalDB" + CDCService._dataId;
             var storeObject = this._db.transaction(dbName).objectStore(dbName);
             var resultTable = [];
             storeObject.openCursor().onsuccess = function (event) {
@@ -339,7 +339,7 @@ var CloudDataConnector;
                         var result = {
                             tableName: tableName,
                             table: resultTable,
-                            angularCDCService: angularCDCService
+                            CDCService: CDCService
                         };
                         _this[tableName] = resultTable;
                         onsuccess(result);
@@ -351,11 +351,11 @@ var CloudDataConnector;
             var _this = this;
             var remainingTables = 0;
             for (var i = 0; i < this._dataServices.length; i++) {
-                var angularCDCService = this._dataServices[i];
-                remainingTables += angularCDCService.tableNames.length;
-                for (var j = 0; j < angularCDCService.tableNames.length; j++) {
-                    var tableName = angularCDCService.tableNames[j];
-                    this.angularCDCOfflineService.checkForPendingEntities(this._db, tableName, angularCDCService, function () {
+                var CDCService = this._dataServices[i];
+                remainingTables += CDCService.tableNames.length;
+                for (var j = 0; j < CDCService.tableNames.length; j++) {
+                    var tableName = CDCService.tableNames[j];
+                    this.CDCOfflineService.checkForPendingEntities(this._db, tableName, CDCService, function () {
                         remainingTables--;
                         if (remainingTables === 0) {
                             _this.sync(onsuccess);
@@ -365,9 +365,9 @@ var CloudDataConnector;
             }
         };
         DataService.prototype.findDataService = function (tableName) {
-            var angularCDCService = $.grep(this._dataServices, function (service) { return $.inArray(tableName, service.tableNames) != -1; });
-            if (angularCDCService.length >= 0) {
-                return angularCDCService[0];
+            var CDCService = $.grep(this._dataServices, function (service) { return $.inArray(tableName, service.tableNames) != -1; });
+            if (CDCService.length >= 0) {
+                return CDCService[0];
             }
             return null;
         };
@@ -382,7 +382,7 @@ var CloudDataConnector;
                 configurable: true
             });
         };
-        DataService.prototype._markItem = function (objectToMark, tableName, angularCDCService) {
+        DataService.prototype._markItem = function (objectToMark, tableName, CDCService) {
             if (this._pendingEntities[tableName] && objectToMark._getControllerItem) {
                 // Existing one
                 var controlledEntity = objectToMark._getControllerItem();
@@ -392,7 +392,7 @@ var CloudDataConnector;
                 // New one
                 controlledEntity = {
                     isDirty: false,
-                    angularCDCService: angularCDCService,
+                    CDCService: CDCService,
                     tableName: tableName,
                     entity: objectToMark,
                     isNew: false,
@@ -451,7 +451,7 @@ var CloudDataConnector;
             }
             // onerror
             var processOnError = function () {
-                if (!_this.angularCDCConnectivityService.isOnline()) {
+                if (!_this.CDCConnectivityService.isOnline()) {
                     _this.readAll(onerror);
                 }
                 else {
@@ -469,23 +469,23 @@ var CloudDataConnector;
                     var onlineFunc;
                     if (entity.isNew) {
                         offlineOrder = "put";
-                        onlineFunc = entity.angularCDCService.add;
+                        onlineFunc = entity.CDCService.add;
                     }
                     else if (entity.isDeleted) {
                         offlineOrder = "delete";
-                        onlineFunc = entity.angularCDCService.remove;
+                        onlineFunc = entity.CDCService.remove;
                     }
                     else {
                         offlineOrder = "put";
-                        onlineFunc = entity.angularCDCService.update;
+                        onlineFunc = entity.CDCService.update;
                     }
                     // Resetting states
                     entity.isNew = false;
                     entity.isDirty = false;
                     entity.isDeleted = false;
                     // Sending orders
-                    if (!this.angularCDCConnectivityService.isOnline()) {
-                        this.angularCDCOfflineService.processOfflineEntity(this._db, tableName, entity.angularCDCService, offlineOrder, entity.entity, function () {
+                    if (!this.CDCConnectivityService.isOnline()) {
+                        this.CDCOfflineService.processOfflineEntity(this._db, tableName, entity.CDCService, offlineOrder, entity.entity, function () {
                             count--;
                             if (count === 0) {
                                 _this.readAll(onsuccess);
@@ -494,7 +494,7 @@ var CloudDataConnector;
                         continue;
                     }
                     // Online mode
-                    onlineFunc.call(entity.angularCDCService, tableName, entity.entity, function () {
+                    onlineFunc.call(entity.CDCService, tableName, entity.entity, function () {
                         count--;
                         if (count === 0) {
                             _this.sync(onsuccess);
@@ -508,21 +508,21 @@ var CloudDataConnector;
             // This is where the magic happens. We just need to clear the pendingEntities and ask for a sync
             this._pendingEntities = {};
             // Sync
-            if (!this.angularCDCConnectivityService.isOnline()) {
+            if (!this.CDCConnectivityService.isOnline()) {
                 this.readAll(onsuccess);
                 return;
             }
             this.sync(onsuccess);
         };
         DataService.prototype._processFunction = function (tableName, entityOrArray, itemFunc) {
-            var angularCDCService = this.findDataService(tableName);
+            var CDCService = this.findDataService(tableName);
             var entities = entityOrArray;
             if (!Array.isArray(entityOrArray)) {
                 entities = (entityOrArray === null) ? [] : [entityOrArray];
             }
             for (var index = 0; index < entities.length; index++) {
                 var entity = entities[index];
-                var controlledItem = this._markItem(entity, tableName, angularCDCService);
+                var controlledItem = this._markItem(entity, tableName, CDCService);
                 itemFunc(controlledItem);
                 if (this._objectStorage) {
                     // Syncing the scope
@@ -699,8 +699,8 @@ var CloudDataConnector;
             this._offlineIndex = 0;
         }
         // Check for pending commands generated when offline
-        OfflineService.prototype.checkForPendingEntities = function (db, tableName, angularCDCService, onsuccess) {
-            var dbName = tableName + "OfflineDB" + angularCDCService._dataId;
+        OfflineService.prototype.checkForPendingEntities = function (db, tableName, CDCService, onsuccess) {
+            var dbName = tableName + "OfflineDB" + CDCService._dataId;
             var objectStore = db.transaction(dbName).objectStore(dbName);
             var commands = new Array();
             var deleteCommand = function (command, then) {
@@ -730,7 +730,7 @@ var CloudDataConnector;
                         case "put":
                             var localId = entity.id;
                             delete entity.id; // Let data provider generate the ID for us
-                            angularCDCService.add(currentTableName, entity, function (newEntity) {
+                            CDCService.add(currentTableName, entity, function (newEntity) {
                                 for (var i = 0; i < commands.length; i++) {
                                     if (commands[i].entity.id === localId) {
                                         commands[i].entity.id = newEntity.id;
@@ -745,7 +745,7 @@ var CloudDataConnector;
                             });
                             break;
                         case "delete":
-                            angularCDCService.remove(currentTableName, entity, function () {
+                            CDCService.remove(currentTableName, entity, function () {
                                 deleteCommand(command, function () {
                                     processCommand(index + 1);
                                 });
@@ -776,9 +776,9 @@ var CloudDataConnector;
             this._offlineIndex = 0;
         };
         // Generate offline commands
-        OfflineService.prototype.processOfflineEntity = function (db, tableName, angularCDCService, order, entity, onsuccess, onerror) {
-            var dbNameLocal = tableName + "LocalDB" + angularCDCService._dataId;
-            var dbNameOffline = tableName + "OfflineDB" + angularCDCService._dataId;
+        OfflineService.prototype.processOfflineEntity = function (db, tableName, CDCService, order, entity, onsuccess, onerror) {
+            var dbNameLocal = tableName + "LocalDB" + CDCService._dataId;
+            var dbNameOffline = tableName + "OfflineDB" + CDCService._dataId;
             var transaction = db.transaction([dbNameLocal, dbNameOffline], "readwrite");
             transaction.onabort = function (event) {
                 onerror(event);

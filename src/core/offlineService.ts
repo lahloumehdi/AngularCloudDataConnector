@@ -8,8 +8,8 @@ module CloudDataConnector {
         _offlineIndex = 0;
 
         // Check for pending commands generated when offline
-        public checkForPendingEntities(db: IDBDatabase, tableName: string, angularCDCService: IDataService, onsuccess: () => void): void {
-            var dbName = tableName + "OfflineDB" + angularCDCService._dataId;
+        public checkForPendingEntities(db: IDBDatabase, tableName: string, CDCService: IDataService, onsuccess: () => void): void {
+            var dbName = tableName + "OfflineDB" + CDCService._dataId;
             var objectStore = db.transaction(dbName).objectStore(dbName);
             var commands = new Array<ICommand>();
 
@@ -47,7 +47,7 @@ module CloudDataConnector {
                         case "put":
                             var localId = entity.id;
                             delete entity.id; // Let data provider generate the ID for us
-                            angularCDCService.add(currentTableName, entity, newEntity => {
+                            CDCService.add(currentTableName, entity, newEntity => {
                                 // Fixing id for subsequent delete or update commands
                                 for (var i = 0; i < commands.length; i++) {
                                     if (commands[i].entity.id === localId) {
@@ -64,7 +64,7 @@ module CloudDataConnector {
                                 });
                             break;
                         case "delete":
-                            angularCDCService.remove(currentTableName, entity, () => {
+                            CDCService.remove(currentTableName, entity, () => {
                                 deleteCommand(command, () => {
                                     processCommand(index + 1);
                                 });
@@ -98,9 +98,9 @@ module CloudDataConnector {
         }
 
         // Generate offline commands
-        public processOfflineEntity(db: IDBDatabase, tableName: string, angularCDCService: IDataService, order: string, entity: IEntity, onsuccess: () => void, onerror: (evt: any) => void): void {
-            var dbNameLocal = tableName + "LocalDB" + angularCDCService._dataId;
-            var dbNameOffline = tableName + "OfflineDB" + angularCDCService._dataId;
+        public processOfflineEntity(db: IDBDatabase, tableName: string, CDCService: IDataService, order: string, entity: IEntity, onsuccess: () => void, onerror: (evt: any) => void): void {
+            var dbNameLocal = tableName + "LocalDB" + CDCService._dataId;
+            var dbNameOffline = tableName + "OfflineDB" + CDCService._dataId;
             var transaction = db.transaction([dbNameLocal, dbNameOffline], "readwrite");
 
             transaction.onabort = event => {

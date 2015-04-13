@@ -40,8 +40,8 @@ declare module CloudDataConnector {
 }
 declare module CloudDataConnector {
     class DataService {
-        angularCDCOfflineService: OfflineService;
-        angularCDCConnectivityService: ConnectivityService;
+        CDCOfflineService: OfflineService;
+        CDCConnectivityService: ConnectivityService;
         private _dataServices;
         private _db;
         private _lastSyncDates;
@@ -49,21 +49,21 @@ declare module CloudDataConnector {
         private _objectStorageCallback;
         onSync: (results: any) => void;
         private _pendingEntities;
-        constructor(angularCDCOfflineService: OfflineService, angularCDCConnectivityService: ConnectivityService);
-        addSource(angularCDCService: IDataService): void;
+        constructor(CDCOfflineService: OfflineService, CDCConnectivityService: ConnectivityService);
+        addSource(CDCService: IDataService): void;
         connect(callback: (any: any) => void, objectStorage: any, objectStorageCallback: (result: any) => void, version?: number): void;
-        private _prepareAndClone(objectToClone, tableName, angularCDCService);
+        private _prepareAndClone(objectToClone, tableName, CDCService);
         sync(callback: (result: any) => void): void;
-        syncDataService(angularCDCService: IDataService, onsuccess: (result: any) => void): void;
+        syncDataService(CDCService: IDataService, onsuccess: (result: any) => void): void;
         tableCount: number;
-        doThisForAllTables(action: (angularCDCService: IDataService, tableName: string, callback: (result: any) => void) => void, onsuccess: (results: any[]) => void): void;
-        updateEntriesForTable(tableName: string, angularCDCService: IDataService, firstCall: boolean, entities: IEntity[], onsuccess: (string: any) => void): void;
+        doThisForAllTables(action: (CDCService: IDataService, tableName: string, callback: (result: any) => void) => void, onsuccess: (results: any[]) => void): void;
+        updateEntriesForTable(tableName: string, CDCService: IDataService, firstCall: boolean, entities: IEntity[], onsuccess: (string: any) => void): void;
         readAll(onsuccess: (result: any) => void): void;
-        getEntriesForServiceTable(angularCDCService: IDataService, tableName: string, onsuccess: (result: any) => void): void;
+        getEntriesForServiceTable(CDCService: IDataService, tableName: string, onsuccess: (result: any) => void): void;
         processPendingEntities(onsuccess: (result: any) => void): void;
         findDataService(tableName: string): IDataService;
         private _addProperty(objectToMark, prop, currentValue, controlledEntity);
-        private _markItem(objectToMark, tableName, angularCDCService);
+        private _markItem(objectToMark, tableName, CDCService);
         private isDirtyIncludingNewProperties(controller);
         commit(onsuccess: (newEntity: any) => void, onerror: (error: string) => void): void;
         rollback(onsuccess: (newEntity: any) => void): void;
@@ -81,7 +81,7 @@ declare module CloudDataConnector {
     interface IControlledEntity {
         entity: IEntity;
         isDirty: boolean;
-        angularCDCService: IDataService;
+        CDCService: IDataService;
         tableName: string;
         isNew: boolean;
         isDeleted: boolean;
@@ -143,8 +143,8 @@ interface Window {
 declare module CloudDataConnector {
     class OfflineService {
         _offlineIndex: number;
-        checkForPendingEntities(db: IDBDatabase, tableName: string, angularCDCService: IDataService, onsuccess: () => void): void;
+        checkForPendingEntities(db: IDBDatabase, tableName: string, CDCService: IDataService, onsuccess: () => void): void;
         reset(): void;
-        processOfflineEntity(db: IDBDatabase, tableName: string, angularCDCService: IDataService, order: string, entity: IEntity, onsuccess: () => void, onerror: (evt: any) => void): void;
+        processOfflineEntity(db: IDBDatabase, tableName: string, CDCService: IDataService, order: string, entity: IEntity, onsuccess: () => void, onerror: (evt: any) => void): void;
     }
 }

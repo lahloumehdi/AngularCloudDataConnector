@@ -1,6 +1,6 @@
-/// <reference path="../lib/angularjs/angular.d.ts" />
 /// <reference path="../lib/jquery/jquery.d.ts" />
-/// <reference path="angular-cdc.d.ts" />
+/// <reference path="cdc.d.ts" />
+/// <reference path="../lib/angularjs/angular.d.ts" />
 declare module CloudDataConnector {
     class RestfulDataService implements IDataService {
         _dataId: number;

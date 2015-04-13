@@ -13,7 +13,7 @@ module CloudDataConnector {
     export interface IControlledEntity {
         entity: IEntity;
         isDirty: boolean;
-        angularCDCService: IDataService;
+        CDCService: IDataService;
         tableName: string;
         isNew: boolean;
         isDeleted: boolean;

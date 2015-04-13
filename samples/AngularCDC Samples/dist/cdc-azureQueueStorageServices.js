@@ -294,7 +294,6 @@ var AzureStorageAPI;
 })(AzureStorageAPI || (AzureStorageAPI = {}));
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="azurestoragequeueapi.ts" />
-/// <reference path="../../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
 var CloudDataConnector;
@@ -346,3 +345,8 @@ var CloudDataConnector;
     })();
     CloudDataConnector.AzureQueueStorageService = AzureQueueStorageService;
 })(CloudDataConnector || (CloudDataConnector = {}));
+/// <reference path="../../../lib/angularjs/angular.d.ts" />
+/// <reference path="azurequeuestorageservices.ts" />
+// Angular
+var angularCDCAzureQueueStorageServices = new CloudDataConnector.AzureQueueStorageService();
+angular.module('AngularCDC.AzureQueueStorageServices', []).value('angularCDCAzureQueueStorageServices', angularCDCAzureQueueStorageServices);

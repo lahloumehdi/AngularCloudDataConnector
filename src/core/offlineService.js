@@ -7,8 +7,8 @@ var CloudDataConnector;
             this._offlineIndex = 0;
         }
         // Check for pending commands generated when offline
-        OfflineService.prototype.checkForPendingEntities = function (db, tableName, angularCDCService, onsuccess) {
-            var dbName = tableName + "OfflineDB" + angularCDCService._dataId;
+        OfflineService.prototype.checkForPendingEntities = function (db, tableName, CDCService, onsuccess) {
+            var dbName = tableName + "OfflineDB" + CDCService._dataId;
             var objectStore = db.transaction(dbName).objectStore(dbName);
             var commands = new Array();
 
@@ -45,7 +45,7 @@ var CloudDataConnector;
                         case "put":
                             var localId = entity.id;
                             delete entity.id; // Let data provider generate the ID for us
-                            angularCDCService.add(currentTableName, entity, function (newEntity) {
+                            CDCService.add(currentTableName, entity, function (newEntity) {
                                 for (var i = 0; i < commands.length; i++) {
                                     if (commands[i].entity.id === localId) {
                                         commands[i].entity.id = newEntity.id;
@@ -61,7 +61,7 @@ var CloudDataConnector;
                             });
                             break;
                         case "delete":
-                            angularCDCService.remove(currentTableName, entity, function () {
+                            CDCService.remove(currentTableName, entity, function () {
                                 deleteCommand(command, function () {
                                     processCommand(index + 1);
                                 });
@@ -93,9 +93,9 @@ var CloudDataConnector;
         };
 
         // Generate offline commands
-        OfflineService.prototype.processOfflineEntity = function (db, tableName, angularCDCService, order, entity, onsuccess, onerror) {
-            var dbNameLocal = tableName + "LocalDB" + angularCDCService._dataId;
-            var dbNameOffline = tableName + "OfflineDB" + angularCDCService._dataId;
+        OfflineService.prototype.processOfflineEntity = function (db, tableName, CDCService, order, entity, onsuccess, onerror) {
+            var dbNameLocal = tableName + "LocalDB" + CDCService._dataId;
+            var dbNameOffline = tableName + "OfflineDB" + CDCService._dataId;
             var transaction = db.transaction([dbNameLocal, dbNameOffline], "readwrite");
 
             transaction.onabort = function (event) {

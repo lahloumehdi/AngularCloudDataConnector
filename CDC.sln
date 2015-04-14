@@ -12,9 +12,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{85FA3755
 		Gruntfile.js = Gruntfile.js
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngularCDC Samples", "samples\AngularCDC Samples\AngularCDC Samples.csproj", "{CFDCBA5B-8B3E-4E24-A14C-8EE580F66A8F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDC Samples", "samples\AngularCDC Samples\CDC Samples.csproj", "{CFDCBA5B-8B3E-4E24-A14C-8EE580F66A8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngularCDC REST Service", "samples\AngularCDC REST Service\AngularCDC REST Service.csproj", "{306B3AEB-214C-492F-B27C-0491EBBD3328}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDC REST Service", "samples\AngularCDC REST Service\CDC REST Service.csproj", "{306B3AEB-214C-492F-B27C-0491EBBD3328}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{1F762450-FE34-47CA-B1A4-4BF7F46A20B5}"
 EndProject

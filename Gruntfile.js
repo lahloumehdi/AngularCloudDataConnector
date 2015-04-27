@@ -38,7 +38,7 @@ module.exports = function (grunt) {
             },
             azureangular: {
                 src: ['src/providers/AzureMobileServices/azureDataServiceForAngular.ts'],
-                dest: 'dist/cdc-azuremobileservices.js',	
+                dest: 'dist/cdc-azuremobileservicesForAngular.js',	
                 options: {
                     declaration: true,
                     module: 'amd',
@@ -71,7 +71,7 @@ module.exports = function (grunt) {
             },
 			azuretableangular: {
 				src: ['src/providers/AzureTableStorageServices/AzureTableStorageServicesForAngular.ts'],
-                dest: 'dist/cdc-azureTableStorageServices.js',	
+                dest: 'dist/cdc-azureTableStorageServicesForAngular.js',	
                 options: {
                     declaration: true,
                     module: 'amd',
@@ -105,7 +105,7 @@ module.exports = function (grunt) {
             },
 			azurequeueangular: {
                 src: ['src/providers/AzureQueueStorageServices/azureQueueStorageServicesForAngular.ts'],
-                dest: 'dist/cdc-azureQueueStorageServices.js',	
+                dest: 'dist/cdc-azureQueueStorageServicesForAngular.js',	
                 options: {
                     declaration: true,
                     module: 'amd',
@@ -127,7 +127,7 @@ module.exports = function (grunt) {
             },	
 			couchdbangular: {
                 src: ['src/providers/CouchDB/couchDbForAngular.ts'],
-                dest: 'dist/cdc-couchDB.js',	
+                dest: 'dist/cdc-couchDBForAngular.js',	
                 options: {
                     declaration: true,
                     module: 'amd',
@@ -149,7 +149,7 @@ module.exports = function (grunt) {
             },	
 			restfullangular: {
                 src: ['src/providers/ResetfulWebService/restfulDataServiceForAngular.ts'],
-                dest: 'dist/cdc-restfulDataService.js',	
+                dest: 'dist/cdc-restfulDataServiceForAngular.js',	
                 options: {
                     declaration: true,
                     module: 'amd',
@@ -171,7 +171,7 @@ module.exports = function (grunt) {
             },
     		amazonangular: {
                 src: ['src/providers/AmazonWebServices/amazonDataServiceForAngular.ts'],
-                dest: 'dist/cdc-amazonDataService.js',	
+                dest: 'dist/cdc-amazonDataServiceForAngular.js',	
                 options: {
                     declaration: true,
                     module: 'amd',

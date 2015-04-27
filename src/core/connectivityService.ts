@@ -2,6 +2,7 @@
 
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
+var __global = this;
 
 module CloudDataConnector {
     export class ConnectivityService {
@@ -51,11 +52,11 @@ module CloudDataConnector {
         private resetStatus(): void {
             this.setStatus(navigator.onLine ? ConnectivityService.OnlineStatus : ConnectivityService.LocalStatus);
 
-            if (window.addEventListener) {
-                window.addEventListener("online", () => {
+            if (__global.addEventListener) {
+                __global.addEventListener("online", () => {
                     this.setStatus(ConnectivityService.OnlineStatus);
                 }, true);
-                window.addEventListener("offline", () => {
+                __global.addEventListener("offline", () => {
                     this.setStatus(ConnectivityService.LocalStatus);
                 }, true);
             }

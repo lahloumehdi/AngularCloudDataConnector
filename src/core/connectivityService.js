@@ -1,6 +1,8 @@
 ﻿/* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
+var __global = this;
+
 var CloudDataConnector;
 (function (CloudDataConnector) {
     var ConnectivityService = (function () {
@@ -59,11 +61,11 @@ var CloudDataConnector;
             var _this = this;
             this.setStatus(navigator.onLine ? ConnectivityService.OnlineStatus : ConnectivityService.LocalStatus);
 
-            if (window.addEventListener) {
-                window.addEventListener("online", function () {
+            if (__global.addEventListener) {
+                __global.addEventListener("online", function () {
                     _this.setStatus(ConnectivityService.OnlineStatus);
                 }, true);
-                window.addEventListener("offline", function () {
+                __global.addEventListener("offline", function () {
                     _this.setStatus(ConnectivityService.LocalStatus);
                 }, true);
             }

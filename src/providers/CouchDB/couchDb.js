@@ -1,4 +1,4 @@
-/* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
+﻿/* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
 var CloudDataConnector;
@@ -11,6 +11,7 @@ var CloudDataConnector;
             $.couch.urlPrefix = urlPrefix;
             this.tableNames = tableNames;
         };
+
         // the callback is called with an array of objects { tableName: <tableName>, table: <array> }
         couchDBDataService.prototype.get = function (updateCallback, lastSyncDates) {
             this.dataAvailableCallback = updateCallback;
@@ -29,13 +30,16 @@ var CloudDataConnector;
                 }, lastSyncDate);
             }
         };
+
         couchDBDataService.prototype._getTable = function (tableName, callback, lastDate) {
             var firstCall = false;
             if (!lastDate) {
                 lastDate = new Date(null);
                 firstCall = true;
             }
+
             var that = this;
+
             // Since the server sets the updateData and we are doing a sort on date we assume we will never miss an item as long as we query from our latest update date.
             $.couch.db(tableName).allDocs({
                 success: function (data) {
@@ -61,6 +65,7 @@ var CloudDataConnector;
                 }
             });
         };
+
         couchDBDataService.prototype.remove = function (tableName, entity, onsuccess, onerror) {
             $.couch.db(tableName).removeDoc({ _id: entity._id, _rev: entity._rev })({
                 success: function (data) {
@@ -71,6 +76,7 @@ var CloudDataConnector;
                 }
             });
         };
+
         couchDBDataService.prototype.update = function (tableName, entity, onsuccess, onerror) {
             $.couch.db(tableName).saveDoc(entity, {
                 success: function (data) {
@@ -81,6 +87,7 @@ var CloudDataConnector;
                 }
             });
         };
+
         couchDBDataService.prototype.add = function (tableName, entity, onsuccess, onerror) {
             delete entity.$$hashKey;
             $.couch.db(tableName).saveDoc(entity, {
@@ -96,3 +103,4 @@ var CloudDataConnector;
     })();
     CloudDataConnector.couchDBDataService = couchDBDataService;
 })(CloudDataConnector || (CloudDataConnector = {}));
+//# sourceMappingURL=couchDb.js.map

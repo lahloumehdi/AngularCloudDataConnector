@@ -3,22 +3,22 @@
 /// <reference path="../offlineservice.ts" />
 
 // Angular
-var dataModule = angular.module('AngularCDC', ['AngularCDC.OfflineModule', 'AngularCDC.ConnectivityModule']);
+var dataModule = angular.module('CDC', ['CDC.OfflineModule', 'CDC.ConnectivityModule']);
 
-dataModule.factory('angularCDCService', [
-    'angularCDCOfflineService', 'angularCDCConnectivityService', function (angularCDCOfflineService, angularCDCConnectivityService) {
-        return new CloudDataConnector.DataService(angularCDCOfflineService, angularCDCConnectivityService);
+dataModule.factory('CDCService', [
+    'CDCOfflineService', 'CDCConnectivityService', function (CDCOfflineService, CDCConnectivityService) {
+        return new CloudDataConnector.DataService(CDCOfflineService, CDCConnectivityService);
     }]);
 
-var connectivityModule = angular.module('AngularCDC.ConnectivityModule', []);
+var connectivityModule = angular.module('CDC.ConnectivityModule', []);
 
-connectivityModule.service('angularCDCConnectivityService', function () {
+connectivityModule.service('CDCConnectivityService', function () {
     return new CloudDataConnector.ConnectivityService();
 });
 
-var dataModule = angular.module('AngularCDC.OfflineModule', []);
+var dataModule = angular.module('CDC.OfflineModule', []);
 
-dataModule.factory('angularCDCOfflineService', function () {
+dataModule.factory('CDCOfflineService', function () {
     return new CloudDataConnector.OfflineService();
 });
 //# sourceMappingURL=angularModule.js.map

@@ -10,7 +10,7 @@ app.controller('demoController', ['$scope', 'CDCService', 'angularCDCAzureTableS
         //Delete person
         $scope.Delete = function (tableName, entity) {
             CDCService.remove(tableName, entity);
-            CDCService._lastSyncDates[angularCDCRestWebService._dataId][tableName] = null;
+            CDCService._lastSyncDates[angularCDCAzureTableStorageServices._dataId][tableName] = null;
 
             CDCService.commit(function () {
                 // Things went well, call a sync (is not necessary if you added the scope to connect function of CDCService)
@@ -26,7 +26,7 @@ app.controller('demoController', ['$scope', 'CDCService', 'angularCDCAzureTableS
         //Add a new person
         $scope.Add = function (tableName, entity) {
             CDCService.add(tableName, entity);
-            CDCService._lastSyncDates[angularCDCRestWebService._dataId][tableName] = null;
+            CDCService._lastSyncDates[angularCDCAzureTableStorageServices._dataId][tableName] = null;
 
             CDCService.commit(function () {
                 // Things went well, call a sync  (is not necessary if you added the scope to connect function of CDCService)

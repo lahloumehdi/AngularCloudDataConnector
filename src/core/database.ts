@@ -2,12 +2,21 @@
 
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
+var __global = this;
+declare var sqlite3;
+declare var indexeddbjs;
 
 module CloudDataConnector {
 
-    var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    var indexedDB = __global.indexedDB || __global.mozIndexedDB || __global.webkitIndexedDB || __global.msIndexedDB;
     if (!indexedDB) {
-        console.log("IDB not supported. Offline mode Framework will not be available.");
+        if (__global.sqlite3 && __global.indexeddbjs) {
+            var engine = new __global.sqlite3.Database(':memory:');
+            indexedDB = new __global.indexeddbjs.indexedDB('sqlite3', engine);
+        }
+        else {
+            console.log("IDB not supported. Offline mode Framework will not be available.");
+        }
     }
 
     export class DataService {

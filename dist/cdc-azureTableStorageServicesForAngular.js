@@ -148,3 +148,61 @@ var AzureStorageTableApi = (function () {
     return AzureStorageTableApi;
 })();
 ;
+/// <reference path="azurestoragetableapi.ts" />
+/* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
+/// <reference path="../../../lib/jquery/jquery.d.ts" />
+/// <reference path="../../../dist/cdc.d.ts" />
+var CloudDataConnector;
+(function (CloudDataConnector) {
+    var AzureTableStorageService = (function () {
+        function AzureTableStorageService() {
+            this.tableNames = new Array();
+        }
+        AzureTableStorageService.prototype.addSource = function (accountName, secretKey, tableNames) {
+            var client = new AzureStorageTableApi(secretKey, accountName);
+            this.azureClient = client;
+            this.tableNames = tableNames;
+        };
+        // the callback is called with an array of objects { tableName: <tableName>, table: <array> }
+        AzureTableStorageService.prototype.get = function (updateCallback, lastSyncDates) {
+            this.dataAvailableCallback = updateCallback;
+            var count = 0;
+            var total = this.tableNames.length;
+            var tableName;
+            for (var x = 0; x < total; x++) {
+                tableName = this.tableNames[x];
+                var lastSyncDate = lastSyncDates[tableName];
+                this._getTable(tableName, function (resultElement) {
+                    count++;
+                    updateCallback([resultElement]);
+                    if (count === total) {
+                    } //!+ request is finished.  Might be interesting to have a callback to top level code called at this point.
+                }, lastSyncDate);
+            }
+        };
+        AzureTableStorageService.prototype._getTable = function (tableName, callback, lastDate) {
+            this.azureClient.getTable(tableName, function (table) {
+                var result = { 'tableName': tableName, 'table': table };
+                callback(result);
+            });
+        };
+        AzureTableStorageService.prototype.remove = function (tableName, entity, onsuccess, onerror) {
+            this.azureClient.deleteEntity(tableName, entity, onsuccess, onerror);
+        };
+        AzureTableStorageService.prototype.update = function (tableName, entity, onsuccess, onerror) {
+            delete entity.$$hashKey;
+            this.azureClient.updateEntity(tableName, entity, onsuccess, onerror);
+        };
+        AzureTableStorageService.prototype.add = function (tableName, entity, onsuccess, onerror) {
+            delete entity.$$hashKey;
+            this.azureClient.insertEntity(tableName, entity, onsuccess, onerror);
+        };
+        return AzureTableStorageService;
+    })();
+    CloudDataConnector.AzureTableStorageService = AzureTableStorageService;
+})(CloudDataConnector || (CloudDataConnector = {}));
+/// <reference path="../../../lib/angularjs/angular.d.ts" />
+/// <reference path="azuretablestorageservices.ts" />
+// Angular
+var angularCDCAzureTableStorageServices = new CloudDataConnector.AzureTableStorageService();
+angular.module('AngularCDC.AzureTableStorageServices', []).value('angularCDCAzureTableStorageServices', angularCDCAzureTableStorageServices);

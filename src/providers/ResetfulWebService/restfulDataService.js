@@ -1,4 +1,4 @@
-/// <reference path="../../../lib/jquery/jquery.d.ts" />
+﻿/// <reference path="../../../lib/jquery/jquery.d.ts" />
 /// <reference path="../../../dist/cdc.d.ts" />
 var CloudDataConnector;
 (function (CloudDataConnector) {
@@ -23,6 +23,7 @@ var CloudDataConnector;
                 _this.keyNames[path.objectName] = path.keyProperyName;
             });
         };
+
         RestfulDataService.prototype.add = function (tableName, entity, onsuccess, onerror) {
             delete entity.$$hashKey;
             $.ajax({
@@ -46,6 +47,7 @@ var CloudDataConnector;
             var eid = entity.id;
             if (this.keyNames[tableName] !== "id")
                 delete entity.id;
+
             $.ajax({
                 type: "PUT",
                 url: this.servicePath + tableName + "/" + eid,
@@ -82,6 +84,7 @@ var CloudDataConnector;
             var _this = this;
             $.each(this.tableNames, function (i, table) {
                 var lastSyncDate = lastSyncDates[table];
+
                 _this._getTable(table, function (resultElement) {
                     updateCallback([resultElement]);
                 }, lastSyncDate);
@@ -115,3 +118,4 @@ var CloudDataConnector;
     })();
     CloudDataConnector.RestfulDataService = RestfulDataService;
 })(CloudDataConnector || (CloudDataConnector = {}));
+//# sourceMappingURL=restfulDataService.js.map

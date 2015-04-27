@@ -1,8 +1,4 @@
 ﻿declare var CryptoJS;
-interface JQueryStatic {
-    ajax(settings: any);
-}
-declare var jQuery: JQueryStatic;
 
 class AzureStorageTableApi {
 
@@ -12,9 +8,6 @@ class AzureStorageTableApi {
     constructor(secretKey: string, accountName: string) {
         this.secretKey = secretKey;
         this.accountName = accountName;
-        if (!jQuery || !jQuery.ajax) {
-            throw "JQuery is required";
-        }
         if (!CryptoJS || !CryptoJS.enc || !CryptoJS.HmacSHA256 || !CryptoJS.enc.Base64 || !CryptoJS.enc.Utf8) {
             throw "CryptoJS is required";
         }
@@ -24,80 +17,90 @@ class AzureStorageTableApi {
         return CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(CryptoJS.enc.Utf8.parse(stringToSign), CryptoJS.enc.Base64.parse(this.secretKey)));
     }
 
-
-    private xhrParams(xhr: any, path: string): any {
-        var date = (<any>new Date()).toUTCString();
+    private setHeaders(path: string) {
+        var headers = {};
+        var date = (new Date()).toUTCString();
         var stringToSign = date + "\n" + "/" + this.accountName + "/" + path;
-        xhr.setRequestHeader('Authorization', "SharedKeyLite " + this.accountName + ":" + this.getSignature(stringToSign));
-        xhr.setRequestHeader('x-ms-date', date);
-        xhr.setRequestHeader('x-ms-version', '2014-02-14');
-        xhr.setRequestHeader('Accept', 'application/json;odata=nometadata');
-        xhr.setRequestHeader('DataServiceVersion', '3.0;NetFx');
-        xhr.setRequestHeader('MaxDataServiceVersion', '3.0;NetFx');
-        return xhr;
+        headers['Authorization'] = "SharedKeyLite " + this.accountName + ":" + this.getSignature(stringToSign);
+        headers['x-ms-date'] = date;
+        headers['x-ms-version'] = '2014-02-14';
+        headers['Accept'] = 'application/json;odata=nometadata';
+        headers['DataServiceVersion'] = '3.0;NetFx';
+        headers['MaxDataServiceVersion'] = '3.0;NetFx';
+        return headers;
     }
 
+    private performRequest(request: any, callback: (result: any) => void, error: (result: any) => void) {
+        var headers = request.headers || {},
+            url = request.url.replace(/#.*$/, ""), // Strip hash part of URL for consistency across browsers
+            httpMethod = request.type ? request.type.toUpperCase() : "GET",
+            xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status == 200) {
+                    try {
+                        var data = JSON.parse(xhr.responseText)
+                            callback(data);
+                    }
+                    catch (e) {
+                        callback(null);
+                    }
+                }
+                else {
+                    error(xhr);
+                }
+            }
+        };
+
+        xhr.open(httpMethod, url);
+
+        for (var key in headers) {
+            if (request.headers.hasOwnProperty(key)) {
+                xhr.setRequestHeader(key, request.headers[key]);
+            }
+        }
+
+        xhr.send(request.data);
+    }
     getTable(tableName: string, callback: (result: any) => void) {
         var that = this;
         var path = "Tables('" + tableName + "')";
         var urlPath = "https://" + this.accountName + ".table.core.windows.net/" + path;
-        jQuery.ajax({
-            url: urlPath,
-            type: 'GET',
-            success: function (data) {
-                that.getListItemsInTable(tableName, tableName, callback)
-                //do something to data
-            },
-            beforeSend: function (xhr) {
-                xhr = that.xhrParams(xhr, path);
-            },
-            error: function (rcvData) {
-                if (rcvData && rcvData.status === 404) {
+        var req = { url: urlPath, type: "GET", headers: that.setHeaders(path) };
+        that.performRequest(req,
+            function (data) {
+                that.getListItemsInTable(tableName, tableName, callback);
+            }, function error(xhr) {
+                if (xhr && xhr.status === 404) {
                     var path = "Tables()";
                     var urlPath = "https://" + that.accountName + ".table.core.windows.net/" + path;
                     var jsondata = '{"TableName":"' + tableName + '"}';
-                    jQuery.ajax({
-                        url: urlPath,
-                        data: jsondata,
-                        type: 'POST',
-                        success: function (data) {
-                            that.getListItemsInTable(tableName, tableName, callback);
-                            //do something to data
-                        },
-                        beforeSend: function (xhr) {
-                            xhr = that.xhrParams(xhr, path);
-                            xhr.setRequestHeader('Content-Length', jsondata.length + "");
-                            xhr.setRequestHeader('Content-Type', "application/json");
-                        },
-                        error: function (rcvData) {
-                            console.log(rcvData);
-                        }
+                    var req = { url: urlPath, type: "POST", headers: that.setHeaders(path), data: jsondata };
+                    req.headers['Content-Length'] = jsondata.length + "";
+                    req.headers['Content-Type'] = "application/json";
+                    that.performRequest(req, function () {
+                        that.getListItemsInTable(tableName, tableName, callback);
+                    }, function (xhr) {
+                            console.log(xhr);
                     });
                 }
-                console.log(rcvData);
-            }
-        });
+            });
     }
 
     getListItemsInTable(tableName: string, partitionKey: string, callback: (result: any) => void) {
         var that = this;
         var path = tableName;
         var urlPath = "https://" + this.accountName + ".table.core.windows.net/" + path;
-        jQuery.ajax({
-            url: urlPath + encodeURI("?$filter=PartitionKey eq '" + partitionKey + "'"),
-            type: 'GET',
-            success(data) {
+        var req = { url: urlPath + encodeURI("?$filter=PartitionKey eq '" + partitionKey + "'"), type: "GET", headers: that.setHeaders(path) };
+        that.performRequest(req,
+            function (data) {
                 callback(data.value);
-                //do something to data
-            },
-            beforeSend(xhr) {
-                xhr = that.xhrParams(xhr, path);
-            },
-            error(rcvData) {
+            }, function error(xhr) {
                 callback([]);
-                console.log(rcvData);
-            }
-        });
+                console.log(xhr);
+            });
+
     }
 
     insertEntity(tableName: string, data: any, callback: (result: any) => void, errorCallback: (result: any) => void) {
@@ -108,23 +111,18 @@ class AzureStorageTableApi {
             throw "PartitionKey and RowKey is required";
         }
         var jsondata = JSON.stringify(data);
-        jQuery.ajax({
-            url: urlPath ,
-            type: 'POST',
-            data: jsondata,
-            success(data) {
+
+        var urlPath = "https://" + this.accountName + ".table.core.windows.net/" + path;
+        var req = { url: urlPath, type: "POST", headers: that.setHeaders(path), data: jsondata };
+        req.headers['Content-Length'] = jsondata.length + "";
+        req.headers['Content-Type'] = "application/json";
+        that.performRequest(req,
+            function (data) {
                 callback(data);
-            },
-            beforeSend(xhr) {
-                xhr = that.xhrParams(xhr, path);
-                xhr.setRequestHeader('Content-Length', jsondata.length + "");
-                xhr.setRequestHeader('Content-Type', "application/json");
-            },
-            error(rcvData) {
-                console.log(rcvData);
-                errorCallback(rcvData);
-            }
-        });
+            }, function error(xhr) {
+                console.log(xhr);
+                errorCallback(xhr);
+            });
     }
 
     updateEntity(tableName: string, data: any, callback: (result: any) => void, errorCallback: (result: any) => void) {
@@ -134,37 +132,26 @@ class AzureStorageTableApi {
         delete data.RowKey;
         delete data.PartitionKey;
         var jsondata = JSON.stringify(data);
-        jQuery.ajax({
-            url: urlPath,
-            type: 'GET',
-            data: jsondata,
-            success(d) {
-                jQuery.ajax({
-                    url: urlPath,
-                    type: 'PUT',
-                    data: jsondata,
-                    success(data) {
-                        callback(data);
-                    },
-                    beforeSend(xhr) {
-                        xhr = that.xhrParams(xhr, path);
-                        xhr.setRequestHeader('If-Match', "W/\"datetime'" + encodeURIComponent(d.Timestamp) + "'\"");
-                        xhr.setRequestHeader('Content-Type', "application/json");
-                    },
-                    error(rcvData) {
-                        console.log(rcvData);
-                        errorCallback(rcvData);
-                    }
-                });
-            },
-            beforeSend(xhr) {
-                xhr = that.xhrParams(xhr, path);
-            },
-            error(rcvData) {
-                console.log(rcvData);
-                errorCallback(rcvData);
+
+        var urlPath = "https://" + this.accountName + ".table.core.windows.net/" + path;
+        var req = { url: urlPath, type: "GET", headers: that.setHeaders(path), data: jsondata };
+        that.performRequest(req,
+            function (data) {
+                var urlPath = "https://" + that.accountName + ".table.core.windows.net/" + path;
+                var req = { url: urlPath, type: "PUT", headers: that.setHeaders(path), data: jsondata };
+                req.headers['If-Match'] = "W/\"datetime'" + encodeURIComponent(data.Timestamp) + "'\"";
+                req.headers['Content-Type'] = "application/json";
+                that.performRequest(req, function (data) {
+                    callback(data);
+                }, function error(xhr) {
+                        console.log(xhr);
+                        errorCallback(xhr);
+                    })
             }
-        });
+            , function error(xhr) {
+                console.log(xhr);
+                errorCallback(xhr);
+            });
     }
 
 
@@ -172,34 +159,22 @@ class AzureStorageTableApi {
         var that = this;
         var path = tableName + "(PartitionKey='" + entity.PartitionKey + "',RowKey='" + entity.RowKey + "')";
         var urlPath = "https://" + this.accountName + ".table.core.windows.net/" + path;
-        jQuery.ajax({
-            url: urlPath,
-            type: 'GET',
-            success(d) {
-                jQuery.ajax({
-                    url: urlPath,
-                    type: 'DELETE',
-                    success(data) {
-                        callback(data);
-                    },
-                    beforeSend(xhr) {
-                        xhr = that.xhrParams(xhr, path);
-                        xhr.setRequestHeader('If-Match', "W/\"datetime'" + encodeURIComponent(d.Timestamp) + "'\"");
-                    },
-                    error(rcvData) {
-                        console.log(rcvData);
-                        errorCallback(rcvData);
-                    }
-                });
-            },
-            beforeSend(xhr) {
-                xhr = that.xhrParams(xhr, path);
-            },
-            error(rcvData) {
-                errorCallback(rcvData);
-                console.log(rcvData);
+        var req = { url: urlPath, type: "GET", headers: that.setHeaders(path) };
+        that.performRequest(req,
+            function (data) {
+                var req = { url: urlPath, type: "DELETE", headers: that.setHeaders(path) };
+                req.headers['If-Match'] = "W/\"datetime'" + encodeURIComponent(data.Timestamp) + "'\"";
+                that.performRequest(req, function (data) {
+                    callback(data);
+                }, function error(xhr) {
+                        console.log(xhr);
+                        errorCallback(xhr);
+                    })
             }
-        });
+            , function error(xhr) {
+                console.log(xhr);
+                errorCallback(xhr);
+            });
     }
 
 };

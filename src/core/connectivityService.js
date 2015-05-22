@@ -59,8 +59,11 @@ var CloudDataConnector;
 
         ConnectivityService.prototype.resetStatus = function () {
             var _this = this;
-            this.setStatus(navigator.onLine ? ConnectivityService.OnlineStatus : ConnectivityService.LocalStatus);
-
+            if (!__global.navigator) {
+                this.setStatus(ConnectivityService.OnlineStatus);
+            } else {
+                this.setStatus(navigator.onLine ? ConnectivityService.OnlineStatus : ConnectivityService.LocalStatus);
+            }
             if (__global.addEventListener) {
                 __global.addEventListener("online", function () {
                     _this.setStatus(ConnectivityService.OnlineStatus);

@@ -50,8 +50,13 @@ module CloudDataConnector {
         }
 
         private resetStatus(): void {
-            this.setStatus(navigator.onLine ? ConnectivityService.OnlineStatus : ConnectivityService.LocalStatus);
 
+            if (!__global.navigator) {
+                this.setStatus(ConnectivityService.OnlineStatus);
+            }
+            else {
+                this.setStatus(navigator.onLine ? ConnectivityService.OnlineStatus : ConnectivityService.LocalStatus);
+            }
             if (__global.addEventListener) {
                 __global.addEventListener("online", () => {
                     this.setStatus(ConnectivityService.OnlineStatus);

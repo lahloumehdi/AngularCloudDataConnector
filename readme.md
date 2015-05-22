@@ -10,7 +10,7 @@ List of stable providers:
 - Azure Mobile Services
 - Amazon Web Services (DynamoDB)
 - Azure Table Storage
-- Azure Table Storage for NodeJS
+- Azure Table Storage for Node.js
 - Azure Queue Storage
 - CouchDB
 - Restful 

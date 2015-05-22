@@ -1,13 +1,19 @@
-ACDC - Angular Cloud Data Connector
+CDC - Cloud Data Connector
 ==========
 
-ACDC is a library for angular.js that allows you to work seamlessly with many data sources.
-ACDC supports offline mode and can handle for you all CRUD operations. 
+CDC is a library that allows you to work seamlessly with many data sources.
+CDC supports offline mode and can handle for you all CRUD operations. 
 
 ## Providers
 Data sources are provided by custom providers.
 List of stable providers:
 - Azure Mobile Services
+- Amazon Web Services (DynamoDB)
+- Azure Table Storage
+- Azure Table Storage for NodeJS
+- Azure Queue Storage
+- CouchDB
+- Restful 
 
 List of experimentals providers:
 - Amazon Web Services (DynamoDB) 

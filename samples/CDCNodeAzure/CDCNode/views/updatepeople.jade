@@ -1,0 +1,12 @@
+﻿extends layout
+
+block content
+    .container
+    h1 Add a person
+    form.form-signin( method="post")
+        input(type="text", name="firstname", id="editPeoplefirstname" placeholder="firstName" value="#{viewpost.firstname._}") 
+        input(type="text", name="lastname", id="editPeoplelastname" placeholder="lastname"  value="#{viewpost.lastname._}") 
+        input(type="text", name="address1", id="editPeopleaddress1" placeholder="address" value="#{viewpost.address1._}") 
+        button.btn.btn-large.btn-primary(type="submit") Update
+
+    a(href='/people/delete/'+viewpost.id)!= "Delete this item"

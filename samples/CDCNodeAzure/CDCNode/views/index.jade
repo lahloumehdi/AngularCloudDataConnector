@@ -1,0 +1,15 @@
+﻿extends layout
+
+block content
+    .container-fluid
+        div.row.peoplelist
+            - each people in peopleList
+                div.people
+                    a(class="people col-sm-6 col-md-4 col-lg-2 clickable"  href='/people/update/' + people.id)
+                        div.panel.panel-primary.card
+                            if people!=null
+                                div.panel-heading
+                                    div.firstname= people.firstname._
+                                    div.lastname= people.lastname._
+                                div.panel-body 
+                                    div.address= people.address1._

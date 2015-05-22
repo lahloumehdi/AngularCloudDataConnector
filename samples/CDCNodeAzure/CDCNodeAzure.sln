@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "CDCNodeAzure", "CDCNodeAzure\CDCNodeAzure.ccproj", "{8DB09DC4-E046-4742-B5FC-152B7A1306FF}"
+EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "CDCNode", "CDCNode\CDCNode.njsproj", "{1D757C84-7014-451E-A4BF-F79F8473E498}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8DB09DC4-E046-4742-B5FC-152B7A1306FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DB09DC4-E046-4742-B5FC-152B7A1306FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DB09DC4-E046-4742-B5FC-152B7A1306FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DB09DC4-E046-4742-B5FC-152B7A1306FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D757C84-7014-451E-A4BF-F79F8473E498}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D757C84-7014-451E-A4BF-F79F8473E498}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D757C84-7014-451E-A4BF-F79F8473E498}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D757C84-7014-451E-A4BF-F79F8473E498}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,11 @@
+﻿extends layout
+
+block content
+    .container
+    h1 Add a person
+    form.form-signin( method="post")
+        input(type="text", name="firstname", id="editPeoplefirstname" placeholder="firstName") 
+        input(type="text", name="lastname", id="editPeoplelastname" placeholder="lastname") 
+        input(type="text", name="address1", id="editPeopleaddress1" placeholder="address") 
+        button.btn.btn-large.btn-primary(type="submit") Save
+    a(href="/")!= "Back to People List"

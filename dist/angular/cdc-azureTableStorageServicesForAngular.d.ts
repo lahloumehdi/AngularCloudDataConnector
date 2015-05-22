@@ -1,6 +1,6 @@
-/// <reference path="../lib/jquery/jquery.d.ts" />
-/// <reference path="cdc.d.ts" />
-/// <reference path="../lib/angularjs/angular.d.ts" />
+/// <reference path="../../lib/jquery/jquery.d.ts" />
+/// <reference path="../cdc.d.ts" />
+/// <reference path="../../lib/angularjs/angular.d.ts" />
 declare var CryptoJS: any;
 declare class AzureStorageTableApi {
     private secretKey;

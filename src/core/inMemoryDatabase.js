@@ -123,7 +123,7 @@
                 return new InMemoryRequest(this);
             };
 
-            InMemoryDatabase.prototype.createStoreObject = function (name, def) {
+            InMemoryDatabase.prototype.createObjectStore = function (name, def) {
                 this._objectStores[name] = new InMemoryStoreObject(def.keyPath);
             };
 

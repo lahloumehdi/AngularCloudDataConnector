@@ -372,8 +372,36 @@ var CloudDataConnector;
                 }
             }
         };
+        DataService.prototype.inArray = function (elem, array, i) {
+            var len;
+            if (array) {
+                if (array.indexOf) {
+                    return array.indexOf.call(array, elem, i);
+                }
+                len = array.length;
+                i = i ? i < 0 ? Math.max(0, len + i) : i : 0;
+                for (; i < len; i++) {
+                    // Skip accessing in sparse arrays
+                    if (i in array && array[i] === elem) {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        };
+        DataService.prototype.grep = function (elems, callback, invert) {
+            var callbackInverse, matches = [], i = 0, length = elems.length, callbackExpect = !invert;
+            for (; i < length; i++) {
+                callbackInverse = !callback(elems[i], i);
+                if (callbackInverse !== callbackExpect) {
+                    matches.push(elems[i]);
+                }
+            }
+            return matches;
+        };
         DataService.prototype.findDataService = function (tableName) {
-            var CDCService = $.grep(this._dataServices, function (service) { return $.inArray(tableName, service.tableNames) != -1; });
+            var _this = this;
+            var CDCService = this.grep(this._dataServices, function (service) { return _this.inArray(tableName, service.tableNames) != -1; });
             if (CDCService.length >= 0) {
                 return CDCService[0];
             }
@@ -685,7 +713,7 @@ var CloudDataConnector;
             InMemoryDatabase.prototype.open = function (name, version) {
                 return new InMemoryRequest(this);
             };
-            InMemoryDatabase.prototype.createStoreObject = function (name, def) {
+            InMemoryDatabase.prototype.createObjectStore = function (name, def) {
                 this._objectStores[name] = new InMemoryStoreObject(def.keyPath);
             };
             InMemoryDatabase.prototype.transaction = function (name) {

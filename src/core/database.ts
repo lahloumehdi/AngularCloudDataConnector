@@ -333,9 +333,44 @@ module CloudDataConnector {
                 }
             }
         }
+        private inArray(elem, array, i?: any) {
+            var len;
+            if (array) {
+                if (array.indexOf) {
+                    return array.indexOf.call(array, elem, i);
+                }
+                len = array.length;
+                i = i ? i < 0 ? Math.max(0, len + i) : i : 0;
+                for (; i < len; i++) {
+                    // Skip accessing in sparse arrays
+                    if (i in array && array[i] === elem) {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
+        private grep(elems, callback, invert?) {
+            var callbackInverse,
+                matches = [],
+                i = 0,
+                length = elems.length,
+                callbackExpect = !invert;
+
+            // Go through the array, only saving the items
+            // that pass the validator function
+            for (; i < length; i++) {
+                callbackInverse = !callback(elems[i], i);
+                if (callbackInverse !== callbackExpect) {
+                    matches.push(elems[i]);
+                }
+            }
+
+            return matches;
+        }
 
         public findDataService(tableName: string): IDataService {
-            var CDCService = $.grep(this._dataServices, service => $.inArray(tableName, service.tableNames) != -1);
+            var CDCService = this.grep(this._dataServices, service => this.inArray(tableName, service.tableNames) != -1);
             if (CDCService.length >= 0) {
                 return CDCService[0];
             }

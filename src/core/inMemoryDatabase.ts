@@ -116,7 +116,7 @@ module CloudDataConnector.Internals {
             return new InMemoryRequest(this);
         }
 
-        public createStoreObject(name: string, def: { keyPath: string }): void {
+        public createObjectStore(name: string, def: { keyPath: string }): void {
             this._objectStores[name] = new InMemoryStoreObject(def.keyPath);
         }
 

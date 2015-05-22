@@ -1,0 +1,135 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/core-ajax/core-ajax.html">
+<!--
+  `<post-service>` provides an API for a fake service --
+  _unquote_, the read-only social networking service!
+
+  Provides a very simple API: `posts` returns the list of posts.
+  `setFavorite` pretends to persist a user's favorite choice.
+
+  @element post-service
+  @demo
+  @homepage http://www.polymer-project.org/docs/start/tutorial.html
+-->
+<!--
+  An array of post objects, with the following format:
+
+  <table border="0">
+    <tr>
+      <td><code>uid</code></td>
+      <td>Number</td>
+      <td>Unique ID for this post.</td>
+    </tr>
+     <tr>
+      <td><code>username</code></td>
+      <td>String</td>
+      <td>Poster's username.</td>
+    </tr>
+    <tr>
+      <td><code>avatar</code></td>
+      <td>String</td>
+      <td>URL for the user's avatar.</td>
+    </tr>
+    <tr>
+      <td><code>text</code></td>
+      <td>String</td>
+      <td>Post text.</td>
+    </tr>
+    <tr>
+      <td><code>favorite</code></td>
+      <td>Boolean</td>
+      <td>True if the current user favorited this post.</td>
+    </tr>
+  </table>
+
+  @attribute posts
+  @type Array
+  @default []
+-->
+<polymer-element name="post-service" attributes="posts">
+    <template>
+        <style>
+            :host {
+                display: none;
+            }
+        </style>
+    </template>
+    <script>
+        Polymer('post-service', {
+            created: function () {
+                this.dataContext = {};
+                var that = this;
+                var angularCDCAzureMobileService = new CloudDataConnector.AzureDataService();
+                this.CDCService = new CloudDataConnector.DataService(new CloudDataConnector.OfflineService(), new CloudDataConnector.ConnectivityService());
+                angularCDCAzureMobileService.addSource('https://angularpeoplev2.azure-mobile.net/', // appUrl
+                    'DDJpBYxoQEUznagCnyYNRYfkDxpYyz90',  // appKey
+                     ['people']);      // table name
+                this.CDCService.addSource(angularCDCAzureMobileService);
+
+                var onUpdateDataContext = function (data) {
+                    if (data && data.length) {
+                        that.posts = data;
+                        console.log(data[0]);
+                    }
+                }
+
+                this.CDCService.connect(function (results) {
+                    if (results === false) {
+                        throw "CDCService must first be successfully initialized";
+                    }
+                    else {
+                        // We are good to go
+                        var test = "";
+                    }
+                }, this.dataContext, onUpdateDataContext, 3);
+
+                this.posts = [];
+            },
+            getPosts: function () {
+                return this.posts;
+            },
+
+            addPerson: function (lastname, firstname, address) {
+                var that = this;
+                that.CDCService.add("people",
+                    { "firstname": firstname, "lastname": lastname, "address1": address, "sync_updated": (new Date()).toJSON(), "sync_deleted": false, "address": null, "homephone": null, "email": null, "imageurl": null, "facebookurl": null, "instagramurl": null });
+                that.CDCService.commit(function () {
+                    // Things went well, call a sync  (is not necessary if you added the scope to connect function of CDCService)
+                    //$scope.sync();
+                }, function (e) {
+                    console.log('Problem adding data');
+                });
+
+            },
+            deletePerson: function (currentIndex) {
+                var that = this;
+                var item = that.dataContext['people'][currentIndex];
+
+                // entity is already controlled, we just need to call a commit
+                that.CDCService.remove("people", item);
+                that.CDCService.commit(function () {
+                }, function (err) {
+                    console.log('Problem deleting data: ' + err.message);
+                });
+
+
+            }  ,
+            changePerson: function (lastname, firstname, address, currentIndex) {
+                var that = this;
+                that.dataContext['people'][currentIndex].firstname = firstname;
+                that.dataContext['people'][currentIndex].lastname = lastname;
+                that.dataContext['people'][currentIndex].address1 = address;
+                that.dataContext['people'][currentIndex].isDirty = true;
+
+                // entity is already controlled, we just need to call a commit
+                that.CDCService.commit(function () {
+                }, function (err) {
+                    console.log('Problem updating data: ' + err.message);
+                });
+
+            }
+
+
+        });
+    </script>
+</polymer-element>

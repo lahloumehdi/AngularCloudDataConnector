@@ -1,0 +1,142 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../post-service/post-service.html">
+<link rel="import" href="post-card.html">
+<link rel="import"
+      href="../components/paper-tabs/paper-tabs.html">
+<link rel="import"
+      href="../components/paper-tabs/paper-tabs.html">
+<link href="../font-roboto/roboto.html" rel="import">
+<link href="../components/paper-button/paper-button.html" rel="import">
+
+<link href="../components/paper-dialog/paper-dialog.html" rel="import">
+<link href="../components/paper-dialog/paper-action-dialog.html" rel="import">
+<!--<link href="../components/paper-input/paper-input.html" rel="import">-->
+
+<polymer-element name="post-list" attributes="show">
+    <template>
+        <style>
+            paper-button.colored {
+                color: #4285f4;
+            }
+
+            .buttons {
+                display: flex;
+            }
+
+            post-list .dialog {
+                background: rgb(255, 255, 255);
+                margin: 32px;
+                padding: 20px;
+                left: 50%;
+                top: 118px;
+                margin-left: -250px;
+                width: 450px;
+                color: rgba(0, 0, 0, 0.87);
+                overflow: visible !important;
+                position: fixed;
+                z-index: 12;
+            }
+
+
+                post-list .dialog input {
+                    height: 30px;
+                    margin-bottom: 10px;
+                }
+
+            paper-button[raised].colored {
+                background: #4285f4;
+                color: #fff;
+            }
+
+            paper-button.custom > core-icon {
+                margin-right: 4px;
+            }
+
+            paper-button.hover:hover {
+                background: #eee;
+            }
+
+            paper-button.blue-ripple::shadow #ripple {
+                color: #4285f4;
+            }
+
+            :host {
+                display: block;
+                width: 100%;
+            }
+
+            post-card {
+                margin-bottom: 30px;
+            }
+        </style>
+
+        <post-service id="service" posts="{{posts}}"></post-service>
+
+        <div layout vertical center>
+            <section id="auto-binding">
+                <paper-button raised class="colored" on-tap="{{toggleDialog}}">new person</paper-button>
+
+                <div style="display:none" id="dialog1" heading="Person" class="size-position dialog">
+                    <input id="firstname" placeholder="firstname" label="First Name" />
+                    <input id="lastname" placeholder="lastname" label="Last Name" />
+                    <input label="Address" placeholder="Address" id="address" />
+                    <div class="buttons">
+                        <paper-button raised class="colored" style="width:50px" on-tap="{{savePerson}}">save</paper-button>
+                        <paper-button raised class="" id="deletePerson" style="width:50px" on-tap="{{deletePerson}}">remove</paper-button>
+                        <paper-button raised class="" id="close" style="width:50px" on-tap="{{close}}">close</paper-button>
+                    </div>
+
+                </div>
+            </section>
+            <template repeat="{{post in posts}}">
+                <post-card on-settings-tap="{{handleSettings}}">
+                    <h2>{{post.firstname}} {{post.lastname}}</h2>
+                    <p>{{post.address1}}</p>
+                </post-card>
+            </template>
+        </div>
+    </template>
+
+    <script>
+
+        Polymer({
+            handleSettings: function (event, detail, sender) {
+                var post = sender.templateInstance.model.post;
+                console.log(detail);
+                this.$.lastname.value = post.lastname;
+                this.$.firstname.value = post.firstname;
+                this.$.address.value = post.address1;
+                this.$.deletePerson.style.display = 'block';
+                this.$.dialog1.style.display = 'block';
+                this.currentIndex = this.$.service.getPosts().indexOf(post);
+                this.isChanging = true;
+            },
+            toggleDialog: function () {
+                this.isChanging = false;
+                this.$.lastname.value = "";
+                this.$.firstname.value = "";
+                this.$.deletePerson.style.display = 'none';
+                this.$.address.value = "";
+                this.$.dialog1.style.display = 'block';
+            },
+            savePerson: function () {
+                var that = this;
+                if (this.isChanging)
+                    this.$.service.changePerson(that.$.lastname.value, that.$.firstname.value, that.$.address.value, this.currentIndex);
+                else
+                    this.$.service.addPerson(that.$.lastname.value, that.$.firstname.value, that.$.address.value);
+                this.$.dialog1.style.display = 'none';
+            },
+            deletePerson: function () {
+                var that = this;
+                if (this.isChanging)
+                    this.$.service.deletePerson(this.currentIndex);
+                this.$.dialog1.style.display = 'none';
+            },
+            close: function () {
+                this.$.dialog1.style.display = 'none';
+            }
+        });
+
+    </script>
+</polymer-element>

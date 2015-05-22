@@ -1,6 +1,6 @@
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
-/// <reference path="../angular-cdc.d.ts" />
+/// <reference path="../cdc.d.ts" />
 declare var WindowsAzure: any;
 declare module CloudDataConnector {
     interface TableNameAndPath {

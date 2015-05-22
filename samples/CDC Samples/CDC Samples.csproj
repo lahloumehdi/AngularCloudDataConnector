@@ -134,9 +134,14 @@
     <Content Include="couchdb\css\cdc-couchdb-sample.css" />
     <Content Include="couchdb\index.html" />
     <Content Include="couchdb\js\cdc-couchdb-sample.js" />
-    <Content Include="dist\dc-couchDB.js" />
+    <Content Include="dist\angular\angularModule.js" />
+    <Content Include="dist\angular\cdc-amazonDataServiceForAngular.js" />
+    <Content Include="dist\angular\cdc-azuremobileservicesForAngular.js" />
+    <Content Include="dist\angular\cdc-azureQueueStorageServicesForAngular.js" />
+    <Content Include="dist\angular\cdc-azureTableStorageServicesForAngular.js" />
+    <Content Include="dist\angular\cdc-couchDBForAngular.js" />
+    <Content Include="dist\angular\cdc-restfulDataServiceForAngular.js" />
     <Content Include="dist\cdc-restfulDataService.js" />
-    <Content Include="dist\angularModule.js" />
     <Content Include="dist\azureStorageQueueApi.js" />
     <Content Include="dist\azureStorageTableApi.js" />
     <Content Include="dist\cdc-azuremobileservices.js" />
@@ -263,6 +268,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="dist\angular\cdc-amazonDataServiceForAngular.d.ts" />
+    <TypeScriptCompile Include="dist\angular\cdc-azuremobileservicesForAngular.d.ts" />
+    <TypeScriptCompile Include="dist\angular\cdc-azureQueueStorageServicesForAngular.d.ts" />
+    <TypeScriptCompile Include="dist\angular\cdc-azureTableStorageServicesForAngular.d.ts" />
+    <TypeScriptCompile Include="dist\angular\cdc-couchDBForAngular.d.ts" />
+    <TypeScriptCompile Include="dist\angular\cdc-restfulDataServiceForAngular.d.ts" />
     <TypeScriptCompile Include="dist\cdc-azureQueueStorageServices.d.ts" />
     <TypeScriptCompile Include="dist\cdc-azureTableStorageServices.d.ts" />
     <TypeScriptCompile Include="dist\cdc-couchDB.d.ts" />

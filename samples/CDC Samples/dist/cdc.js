@@ -7,6 +7,7 @@
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
+var __global = this;
 var CloudDataConnector;
 (function (CloudDataConnector) {
     var ConnectivityService = (function () {
@@ -57,12 +58,17 @@ var CloudDataConnector;
         };
         ConnectivityService.prototype.resetStatus = function () {
             var _this = this;
-            this.setStatus(navigator.onLine ? ConnectivityService.OnlineStatus : ConnectivityService.LocalStatus);
-            if (window.addEventListener) {
-                window.addEventListener("online", function () {
+            if (!__global.navigator) {
+                this.setStatus(ConnectivityService.OnlineStatus);
+            }
+            else {
+                this.setStatus(navigator.onLine ? ConnectivityService.OnlineStatus : ConnectivityService.LocalStatus);
+            }
+            if (__global.addEventListener) {
+                __global.addEventListener("online", function () {
                     _this.setStatus(ConnectivityService.OnlineStatus);
                 }, true);
-                window.addEventListener("offline", function () {
+                __global.addEventListener("offline", function () {
                     _this.setStatus(ConnectivityService.LocalStatus);
                 }, true);
             }
@@ -81,11 +87,18 @@ var CloudDataConnector;
 /* Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. */
 /// <reference path="../../lib/angularjs/angular.d.ts" />
 /// <reference path="../../lib/jquery/jquery.d.ts" />
+var __global = this;
 var CloudDataConnector;
 (function (CloudDataConnector) {
-    var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    var indexedDB = __global.indexedDB || __global.mozIndexedDB || __global.webkitIndexedDB || __global.msIndexedDB;
     if (!indexedDB) {
-        console.log("IDB not supported. Offline mode Framework will not be available.");
+        if (__global.sqlite3 && __global.indexeddbjs) {
+            var engine = new __global.sqlite3.Database(':memory:');
+            indexedDB = new __global.indexeddbjs.indexedDB('sqlite3', engine);
+        }
+        else {
+            console.log("IDB not supported. Offline mode Framework will not be available.");
+        }
     }
     var DataService = (function () {
         function DataService(CDCOfflineService, CDCConnectivityService) {
@@ -364,8 +377,36 @@ var CloudDataConnector;
                 }
             }
         };
+        DataService.prototype.inArray = function (elem, array, i) {
+            var len;
+            if (array) {
+                if (array.indexOf) {
+                    return array.indexOf.call(array, elem, i);
+                }
+                len = array.length;
+                i = i ? i < 0 ? Math.max(0, len + i) : i : 0;
+                for (; i < len; i++) {
+                    // Skip accessing in sparse arrays
+                    if (i in array && array[i] === elem) {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        };
+        DataService.prototype.grep = function (elems, callback, invert) {
+            var callbackInverse, matches = [], i = 0, length = elems.length, callbackExpect = !invert;
+            for (; i < length; i++) {
+                callbackInverse = !callback(elems[i], i);
+                if (callbackInverse !== callbackExpect) {
+                    matches.push(elems[i]);
+                }
+            }
+            return matches;
+        };
         DataService.prototype.findDataService = function (tableName) {
-            var CDCService = $.grep(this._dataServices, function (service) { return $.inArray(tableName, service.tableNames) != -1; });
+            var _this = this;
+            var CDCService = this.grep(this._dataServices, function (service) { return _this.inArray(tableName, service.tableNames) != -1; });
             if (CDCService.length >= 0) {
                 return CDCService[0];
             }
@@ -677,7 +718,7 @@ var CloudDataConnector;
             InMemoryDatabase.prototype.open = function (name, version) {
                 return new InMemoryRequest(this);
             };
-            InMemoryDatabase.prototype.createStoreObject = function (name, def) {
+            InMemoryDatabase.prototype.createObjectStore = function (name, def) {
                 this._objectStores[name] = new InMemoryStoreObject(def.keyPath);
             };
             InMemoryDatabase.prototype.transaction = function (name) {

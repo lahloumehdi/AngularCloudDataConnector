@@ -19,6 +19,7 @@ declare module CloudDataConnector {
         order: string;
     }
 }
+declare var __global: any;
 declare module CloudDataConnector {
     class ConnectivityService {
         private static _NotDefinedStatus;
@@ -38,6 +39,9 @@ declare module CloudDataConnector {
         isOnline(): boolean;
     }
 }
+declare var __global: any;
+declare var sqlite3: any;
+declare var indexeddbjs: any;
 declare module CloudDataConnector {
     class DataService {
         CDCOfflineService: OfflineService;
@@ -61,6 +65,8 @@ declare module CloudDataConnector {
         readAll(onsuccess: (result: any) => void): void;
         getEntriesForServiceTable(CDCService: IDataService, tableName: string, onsuccess: (result: any) => void): void;
         processPendingEntities(onsuccess: (result: any) => void): void;
+        private inArray(elem, array, i?);
+        private grep(elems, callback, invert?);
         findDataService(tableName: string): IDataService;
         private _addProperty(objectToMark, prop, currentValue, controlledEntity);
         private _markItem(objectToMark, tableName, CDCService);
@@ -130,7 +136,7 @@ declare module CloudDataConnector.Internals {
     class InMemoryDatabase {
         _objectStores: {};
         open(name: string, version: number): InMemoryRequest;
-        createStoreObject(name: string, def: {
+        createObjectStore(name: string, def: {
             keyPath: string;
         }): void;
         transaction(name: string): InMemoryTransaction;

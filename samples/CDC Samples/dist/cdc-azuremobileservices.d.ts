@@ -1,6 +1,5 @@
 /// <reference path="../lib/jquery/jquery.d.ts" />
 /// <reference path="cdc.d.ts" />
-/// <reference path="../lib/angularjs/angular.d.ts" />
 declare var WindowsAzure: any;
 declare module CloudDataConnector {
     class AzureDataService implements IDataService {
@@ -17,4 +16,3 @@ declare module CloudDataConnector {
         add(tableName: string, entity: any, onsuccess: (newEntity: any) => void, onerror: (error: string) => void): void;
     }
 }
-declare var angularCDCAzureMobileService: CloudDataConnector.AzureDataService;

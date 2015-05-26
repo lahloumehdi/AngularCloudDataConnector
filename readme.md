@@ -22,7 +22,7 @@ List of experimentals providers:
 - Ordrin (read only)
 - Nitrogen (read only)
 
-For more information, please check our [homepage](http://acdc.azurewebsites.net/)
+For more information, please check our [homepage](http://clouddataconnector.azurewebsites.net/)
 
 ## License
 Copyright (c) Microsoft Open Technologies, Inc. All rights reserved.
